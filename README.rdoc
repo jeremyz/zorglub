@@ -1,0 +1,37 @@
+zorglub
+    by Jéérmy Zurcher
+    http://cgit.asynk.ch/cgi-bin/cgit/zorglub
+
+== DESCRIPTION:
+
+a very very light and tiny web application framework based on rack[http://rack.rubyforge.org/]
+
+== FEATURES/PROBLEMS:
+
+* FIXME
+
+== SYNOPSIS:
+
+* FIXME
+
+For less minimalistic and more sane examples you may look at:
+
+* the spec/ folder
+
+== REQUIREMENTS:
+
+* rack
+
+== DOWNLOAD/INSTALL:
+
+* FIXME
+
+== CREDITS:
+
+Special thanks to:
+
+* FIXME
+
+== LICENSE:
+
+See MIT-LICENSE file.
