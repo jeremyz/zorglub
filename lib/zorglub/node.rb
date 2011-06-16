@@ -22,8 +22,9 @@ module Zorglub
                 @app.map location, self
             end
             #
-            def r
+            def r *args
                 @r ||= @app.to self
+                File.join @r, *args
             end
             #
             def call env
