@@ -16,6 +16,7 @@ module Zorglub
         def map location, object
             return unless location and object
             raise Exception.new "#{@map[location]} already mapped to #{location}" if @map.has_key? location
+            object.app = self
             @map.merge! location.to_s=>object
             remap @map
         end
