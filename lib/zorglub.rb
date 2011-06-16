@@ -5,8 +5,9 @@ module Zorglub
     #
     VERSION = '0.0.1'
     #
-    autoload :App,  './lib/zorglub/app.rb'
-    autoload :Node, './lib/zorglub/node.rb'
+    autoload :App,      './lib/zorglub/app.rb'
+    autoload :Config,   './lib/zorglub/config.rb'
+    autoload :Node,     './lib/zorglub/node.rb'
     #
 end
 #
