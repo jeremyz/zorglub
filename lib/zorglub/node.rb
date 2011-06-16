@@ -31,8 +31,9 @@ module Zorglub
                 meth||= 'index'
                 node = self.new Rack::Request.new(env), Rack::Response.new, {:engine=>engine,:layout=>layout,:view=>File.join(r,meth),:method=>meth,:args=>args}
                 return error_404 node if not node.respond_to? meth
-                # TODO session
-                node.send meth, *args
+                # TODO
+                #  - session
+                node.realize
             end
             #
             def error_404 node
@@ -51,6 +52,15 @@ module Zorglub
             @action = act
             @request = req
             @response = res
+        end
+        #
+        def realize
+            # TODO
+            #  - use view
+            #  - use layout
+            r = self.send @action[:method], *@action[:args]
+            response.write r
+            response.finish
         end
         #
         def engine engine=nil
