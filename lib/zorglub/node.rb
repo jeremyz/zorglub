@@ -55,11 +55,13 @@ module Zorglub
         end
         #
         def realize
-            # TODO
-            #  - use view
-            #  - use layout
-            r = self.send @action[:method], *@action[:args]
-            response.write r
+            @content = self.send @action[:method], *@action[:args]
+            e = Config.engine_proc @action[:engine]
+            v = view
+            l = layout
+            @content = e.call v, self if e and File.exists? v
+            @content = e.call l, self if e and File.exists? l
+            response.write @content
             response.finish
         end
         #

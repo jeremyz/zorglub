@@ -5,14 +5,12 @@ module Zorglub
     class Config
         @options = {
             :root => '.',
-            :engine => 'haml',
+            :engine => nil,
             :view_dir => 'view',
             :layout_dir => 'layout',
             :default_layout => 'default'
         }
-        @engines = {
-            'haml' => 'haml'
-        }
+        @engines = { }
         class << self
             #
             def [] k
@@ -39,14 +37,21 @@ module Zorglub
                 end
             end
             #
-            def register_engine name, ext
+            def register_engine name, ext, proc
                 return unless name and ext
-                @engines[name]=ext
+                @engines[name]=[ ext, proc ]
             end
             #
             def engine_ext engine
-                @engines[engine]
+                e = @engines[engine]
+                ( e.nil? ? '' : e[0] )
             end
+            #
+            def engine_proc engine
+                e = @engines[engine]
+                ( e.nil? ? nil : e[1] )
+            end
+            #
         end
         #
         def self.method_missing m, *args, &block
