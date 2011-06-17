@@ -1,4 +1,4 @@
-#! /usr/bin/ruby
+# -*- coding: UTF-8 -*-
 #
 module Zorglub
     #
@@ -101,3 +101,4 @@ module Zorglub
     #
 end
 #
+# EOF

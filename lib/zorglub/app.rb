@@ -1,4 +1,4 @@
-#! /usr/bin/ruby
+# -*- coding: UTF-8 -*-
 #
 require 'rack'
 #
@@ -42,3 +42,4 @@ module Zorglub
     #
 end
 #
+# EOF
