@@ -30,7 +30,8 @@ module Zorglub
             def call env
                 meth, *args =  env['PATH_INFO'][1..-1].split '/'
                 meth||= 'index'
-                node = self.new Rack::Request.new(env), Rack::Response.new, {:engine=>engine,:layout=>layout,:view=>File.join(r,meth),:method=>meth,:args=>args}
+                action = {:engine=>engine,:layout=>layout,:view=>File.join(r,meth),:method=>meth,:args=>args}
+                node = self.new Rack::Request.new(env), Rack::Response.new, action
                 return error_404 node if not node.respond_to? meth
                 # TODO
                 #  - session

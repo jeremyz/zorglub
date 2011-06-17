@@ -9,6 +9,7 @@ module Zorglub
     autoload :Config,   './lib/zorglub/config.rb'
     autoload :Helpers,  './lib/zorglub/helpers.rb'
     autoload :Node,     './lib/zorglub/node.rb'
+    autoload :Session,  './lib/zorglub/session.rb'
     #
 end
 #
