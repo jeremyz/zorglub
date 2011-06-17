@@ -14,12 +14,16 @@ Zorglub::Config.root = File.dirname( File.absolute_path(__FILE__) )
 #
 class Node1 < Zorglub::Node
     #
+    include Zorglub::Helpers::Css
+    css 'class_level.css'
+    #
     def index a1, *a2
-        @title='Node2'
-        #"<title>Node1:index</title><p>a1 : #{a1.inspect}</p><p>a2 : #{a2.inspect}</p>#{html}"
+        @title='Index'
+        css 'instance_level.css'
     end
     #
     def alt *args
+        @title='Alt'
         "<title>Node1:alt</title>#{html}"
     end
     #
@@ -31,6 +35,8 @@ end
 #
 class Node2 < Zorglub::Node
     #
+    include Zorglub::Helpers::Css
+    #
     map APP, '/url2'
     engine 'my-engine'  # not available
     layout 'my-layout'  # not available
@@ -40,9 +46,10 @@ class Node2 < Zorglub::Node
     end
     #
     def alt *args
-        engine 'temp-engine'
-        layout 'temp-layout-name'
-        view 'path-to-temp-view'
+        @title = "Alt 2"
+        engine 'temp-engine'                    # haml renamed
+        layout 'other'                          # use layout/other.haml template
+        view File.join( 'url1','alt')           # use view/url1/alt.haml template
         "<title>Node2:alt</title>#{html}"
     end
     #
