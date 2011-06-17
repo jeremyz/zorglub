@@ -7,6 +7,7 @@ module Zorglub
     #
     autoload :App,      './lib/zorglub/app.rb'
     autoload :Config,   './lib/zorglub/config.rb'
+    autoload :Helpers,  './lib/zorglub/helpers.rb'
     autoload :Node,     './lib/zorglub/node.rb'
     #
 end
