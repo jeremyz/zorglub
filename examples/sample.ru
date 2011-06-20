@@ -10,6 +10,7 @@ Zorglub::Config.register_engine 'haml', 'haml', HAML_PROC
 Zorglub::Config.register_engine 'temp-engine', 'haml', HAML_PROC
 #
 Zorglub::Config.engine = 'haml'
+Zorglub::Config.session_on = true
 Zorglub::Config.root = File.dirname( File.absolute_path(__FILE__) )
 #
 class Node1 < Zorglub::Node
@@ -50,7 +51,20 @@ class Node2 < Zorglub::Node
         engine 'temp-engine'                    # haml renamed
         layout 'other'                          # use layout/other.haml template
         view File.join( 'url1','alt')           # use view/url1/alt.haml template
-        "<title>Node2:alt</title>#{html}"
+        if not session.exists?
+            @data = "NO SESSION"
+        else
+            t = Time.now
+            if session[:now].nil?
+                session[:now] = t
+                @data = "#{t.strftime('%H:%M:%S')} FIRST"
+            elsif t-session[:now]>5
+                session[:now] = t
+                @data = "#{t.strftime('%H:%M:%S')} UPDATE"
+            else
+                @data = "#{session[:now].strftime('%H:%M:%S')} CURRENT"
+            end
+        end
     end
     #
 end
@@ -58,7 +72,13 @@ end
 puts APP.to_hash.inspect
 #
 map '/' do
+    use Rack::Lint
     use Rack::ShowExceptions
+    use Rack::Session::Cookie,  :key=>Zorglub::Session.session_key,
+                                :secret=>'my-secret-secret',
+                                :path=>'/',
+                                :http_only=>true,
+                                :expire_after=>30
     run APP
 end
 #
