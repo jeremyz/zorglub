@@ -4,13 +4,29 @@ require 'securerandom'
 #
 module Zorglub
     #
-    Config.session_id_length ||= 64
-    Config.session_ttl ||= (60 * 60 * 24 * 5)
-    #
     class Session
         #
-        def gen_session_id
-            SecureRandom.hex Config.session_id_length
+        @session_key =  'zorglub.sid'
+        @session_data = {}
+        class << self
+            attr_reader :session_key, :session_data
+        end
+        #
+        def initialize cookies
+            @sid = cookies[self.class.session_key]
+            @data = self.class.session_data[@sid]||={}
+        end
+        #
+        def exists?
+            not @sid.nil?
+        end
+        #
+        def [] idx
+            @data[idx]
+        end
+        #
+        def []= idx, v
+            @data[idx] = v
         end
         #
     end

@@ -33,8 +33,6 @@ module Zorglub
                 action = {:engine=>engine,:layout=>layout,:view=>File.join(r,meth),:method=>meth,:args=>args}
                 node = self.new Rack::Request.new(env), Rack::Response.new, action
                 return error_404 node if not node.respond_to? meth
-                # TODO
-                #  - session
                 node.realize
             end
             #
@@ -58,9 +56,8 @@ module Zorglub
         #
         def realize
             @content = self.send @action[:method], *@action[:args]
-            e = Config.engine_proc @action[:engine]
-            v = view
-            l = layout
+            e, v, l = Config.engine_proc(@action[:engine]), view, layout
+            # TODO compile and cache
             @content = e.call v, self if e and File.exists? v
             @content = e.call l, self if e and File.exists? l
             response.write @content
@@ -88,6 +85,10 @@ module Zorglub
         #
         def map
             self.class.r
+        end
+        #
+        def session
+            @session ||= Session.new( Config.session_on ?  @request.cookies : {} )
         end
         #
         def r

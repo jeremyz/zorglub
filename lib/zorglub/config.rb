@@ -8,7 +8,8 @@ module Zorglub
             :engine => nil,
             :view_dir => 'view',
             :layout_dir => 'layout',
-            :default_layout => 'default'
+            :default_layout => 'default',
+            :session_on => false
         }
         @engines = { }
         class << self
