@@ -88,7 +88,7 @@ module Zorglub
         end
         #
         def session
-            @session ||= Session.new( Config.session_on ?  @request.cookies : {} )
+            @session ||= Session.new @request
         end
         #
         def r
