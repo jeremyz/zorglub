@@ -91,8 +91,8 @@ module Zorglub
             @session ||= Session.new @request
         end
         #
-        def r
-            File.join map, @action[:method]
+        def r *args
+            File.join map, (args.empty? ? @action[:method] : args.map { |x| x.to_s } )
         end
         #
         def html
