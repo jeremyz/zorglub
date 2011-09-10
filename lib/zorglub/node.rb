@@ -30,8 +30,7 @@ module Zorglub
             def call env
                 meth, *args =  env['PATH_INFO'][1..-1].split '/'
                 meth||= 'index'
-                action = {:engine=>engine,:layout=>layout,:view=>r(meth),:method=>meth,:args=>args}
-                node = self.new Rack::Request.new(env), Rack::Response.new, action
+                node = self.new env, {:engine=>engine,:layout=>layout,:view=>r(meth),:method=>meth,:args=>args}
                 return error_404 node if not node.respond_to? meth
                 node.realize
             end
@@ -46,12 +45,13 @@ module Zorglub
             #
         end
         #
-        attr_reader :request, :response, :action
+        attr_reader :action, :request, :response
         #
-        def initialize req, res, act
-            @action = act
-            @request = req
-            @response = res
+        def initialize env, action
+            @env = env
+            @action = action
+            @request = Rack::Request.new env
+            @response = Rack::Response.new
         end
         #
         def realize
