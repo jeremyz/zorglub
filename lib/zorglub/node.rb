@@ -55,13 +55,27 @@ module Zorglub
         end
         #
         def realize
-            @content = self.send @action[:method], *@action[:args]
-            e, v, l = Config.engine_proc(@action[:engine]), view, layout
-            # TODO compile and cache
-            @content = e.call v, self if e and File.exists? v
-            @content = e.call l, self if e and File.exists? l
-            response.write @content
-            response.finish
+            catch(:stop_realize) {
+                @content = self.send @action[:method], *@action[:args]
+                e, v, l = Config.engine_proc(@action[:engine]), view, layout
+                # TODO compile and cache
+                @content = e.call v, self if e and File.exists? v
+                @content = e.call l, self if e and File.exists? l
+                response.write @content
+                response.finish
+                response
+            }
+        end
+        #
+        def redirect target, options={}, &block
+            status = options[:status] || 302
+            body   = options[:body] || redirect_body(target)
+            header = response.header.merge('Location' => target.to_s)
+            throw :stop_realize, Rack::Response.new(body, status, header, &block)
+        end
+        #
+        def redirect_body target
+            "You are being redirected, please follow this link to: <a href='#{target}'>#{target}</a>!"
         end
         #
         def engine engine=nil

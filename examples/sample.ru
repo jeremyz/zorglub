@@ -42,6 +42,10 @@ class Node1 < Zorglub::Node
         "<b>should never be seeen</b>"
     end
     #
+    def jump *args
+        redirect r(:index,1,2,3)
+    end
+    #
 end
 #
 APP = Zorglub::App.new do
@@ -106,7 +110,7 @@ class Node0 < Zorglub::Node
     #
     def index
         html = "<html><body><ul>"
-        html << "<li><a href=\"#{Node1.r('index','a',2,'c')}\">Node1</a> engine, layout, view tests</li>"
+        html << "<li><a href=\"#{Node1.r('index','a',2,'c')}\">Node1</a> engine, layout, view, redirect tests</li>"
         html << "<li><a href=\"#{Node2.r}\">Node2</a> css helper tests</li>"
         html << "<li><a href=\"#{Node3.r}\">Node3</a> session test</li>"
         html << "</ul></body></html>"
@@ -119,6 +123,7 @@ Node1::LINKS= [
             [Node1.r('index','arg1','arg2','arg3'),'index'],
             [Node1.r('meth0'),'meth0'],
             [Node1.r('meth1','one','two'),'meth1 with args'],
+            [Node1.r('jump','one','two'),'test redirect'],
             [Node0.r,'back'],
 ]
 #
