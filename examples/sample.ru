@@ -7,7 +7,7 @@ require 'zorglub'
 require 'haml'
 HAML_PROC = Proc.new { |path,obj| Haml::Engine.new( File.open(path,'r').read ).render(obj) }
 Zorglub::Config.register_engine 'haml', 'haml', HAML_PROC
-Zorglub::Config.register_engine 'temp-engine', 'haml', HAML_PROC
+Zorglub::Config.register_engine 'tmp-engine', 'haml', HAML_PROC
 #
 Zorglub::Config.engine = 'haml'
 Zorglub::Config.session_on = true
@@ -15,17 +15,31 @@ Zorglub::Config.root = File.dirname( File.absolute_path(__FILE__) )
 #
 class Node1 < Zorglub::Node
     #
-    include Zorglub::Helpers::Css
-    css 'class_level.css'
-    #
     def index a1, *a2
         @title='Index'
-        css 'instance_level.css'
+        @links = LINKS
+        # there's a view so the below will be lost !
+        "<b>should never be seeen</b>"
     end
     #
-    def alt *args
-        @title='Alt'
-        "<title>Node1:alt</title>#{html}"
+    def meth0 *args
+        @title='meth0'
+        @links = LINKS
+        # method level engine
+        engine 'tmp-engine'
+        # there's a view so the below will be lost !
+        "<b>should never be seeen</b>"
+    end
+    #
+    def meth1 *args
+        @title='meth1'
+        @links = LINKS
+        # method level engine (layout/other.haml)
+        layout 'other'
+        # specific method view (view/url1/meth0.haml)
+        view File.join( 'url1','meth0')
+        # there's a view so the below will be lost !
+        "<b>should never be seeen</b>"
     end
     #
 end
@@ -39,18 +53,31 @@ class Node2 < Zorglub::Node
     include Zorglub::Helpers::Css
     #
     map APP, '/url2'
-    engine 'my-engine'  # not available
-    layout 'my-layout'  # not available
+    layout 'css'
+    # class level engine
+    engine 'tmp-engine'
+    # class level css
+    css 'class_level.css'
     #
     def index *args
-        "<title>Node2:alt</title>#{html}"
+        "<title>Node2:index</title><b>START</b>#{html}<a href=#{Node2.r(:meth0)}>next</a><br/><b>END</b>"
     end
     #
-    def alt *args
-        @title = "Alt 2"
-        engine 'temp-engine'                    # haml renamed
-        layout 'other'                          # use layout/other.haml template
-        view File.join( 'url1','alt')           # use view/url1/alt.haml template
+    def meth0 *args
+        # instance level css
+        css 'instance_level.css'
+        "<title>Node2:meth0</title><b>START</b>#{html}<a href=#{Node0.r}>back</a><br/><b>END</b>"
+    end
+    #
+end
+#
+class Node3 < Zorglub::Node
+    #
+    map APP, '/url3'
+    layout ''
+    #
+    def index *args
+        @title = "Session tests"
         if not session.exists?
             @data = "NO SESSION"
         else
@@ -68,6 +95,32 @@ class Node2 < Zorglub::Node
     end
     #
 end
+#    #
+#    def redir
+#        redirect Node0.r
+#    end
+#
+class Node0 < Zorglub::Node
+    #
+    map APP, '/'
+    #
+    def index
+        html = "<html><body><ul>"
+        html << "<li><a href=\"#{Node1.r('index','a',2,'c')}\">Node1</a> engine, layout, view tests</li>"
+        html << "<li><a href=\"#{Node2.r}\">Node2</a> css helper tests</li>"
+        html << "<li><a href=\"#{Node3.r}\">Node3</a> session test</li>"
+        html << "</ul></body></html>"
+        html
+    end
+    #
+end
+#
+Node1::LINKS= [
+            [Node1.r('index','arg1','arg2','arg3'),'index'],
+            [Node1.r('meth0'),'meth0'],
+            [Node1.r('meth1','one','two'),'meth1 with args'],
+            [Node0.r,'back'],
+]
 #
 puts APP.to_hash.inspect
 #
