@@ -70,9 +70,13 @@ class Node2 < Zorglub::Node
     def meth0 *args
         # instance level css
         css 'instance_level.css'
-        "<title>Node2:meth0</title><b>START</b>#{html}<a href=#{Node0.r}>back</a><br/><b>END</b>"
+        "<title>Node2:meth0</title><b>START</b>#{html}<a href=#{Node2.r(:meth1,1,2)}>next</a><br/><b>END</b>"
     end
     #
+    def meth1 *args
+        more = Node2.partial :meth0, *args
+        "<title>Node2:meth1</title><b>partial</b><br/>#{more}<br/><b>done</b><br/><a href=#{Node0.r}>back</a>"
+    end
 end
 #
 class Node3 < Zorglub::Node

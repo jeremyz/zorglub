@@ -32,7 +32,14 @@ module Zorglub
                 meth||= 'index'
                 node = self.new env, {:engine=>engine,:layout=>layout,:view=>r(meth),:method=>meth,:args=>args}
                 return error_404 node if not node.respond_to? meth
-                node.realize
+                node.realize!
+            end
+            #
+            def partial meth, *args
+                node = self.new nil, {:engine=>engine,:layout=>'',:view=>r(meth),:method=>meth.to_s,:args=>args}
+                return error_404 node if not node.respond_to? meth
+                node.feed!
+                node.content
             end
             #
             def error_404 node
@@ -45,7 +52,7 @@ module Zorglub
             #
         end
         #
-        attr_reader :action, :request, :response
+        attr_reader :action, :request, :response, :content
         #
         def initialize env, action
             @env = env
@@ -54,17 +61,22 @@ module Zorglub
             @response = Rack::Response.new
         end
         #
-        def realize
+        def realize!
             catch(:stop_realize) {
-                @content = self.send @action[:method], *@action[:args]
-                e, v, l = Config.engine_proc(@action[:engine]), view, layout
-                # TODO compile and cache
-                @content = e.call v, self if e and File.exists? v
-                @content = e.call l, self if e and File.exists? l
+                feed!
                 response.write @content
                 response.finish
                 response
             }
+        end
+        #
+        def feed!
+            @content = self.send @action[:method], *@action[:args]
+            e, v, l = Config.engine_proc(@action[:engine]), view, layout
+            # TODO compile and cache
+            @content = e.call v, self if e and File.exists? v
+            @content = e.call l, self if e and File.exists? l
+            @content
         end
         #
         def redirect target, options={}, &block
