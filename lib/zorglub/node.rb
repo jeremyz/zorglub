@@ -4,7 +4,14 @@ module Zorglub
     #
     class Node
         #
+        @hooks = {
+            :before_all => [],
+            :after_all => [],
+        }
+        #
         class << self
+            #
+            attr_reader :hooks
             #
             def engine engine=nil
                 @engine = engine unless engine.nil?
@@ -42,6 +49,24 @@ module Zorglub
                 node.content
             end
             #
+            def before_hooks obj
+                Node.hooks[:before_all].each do |blk| blk.call obj end
+            end
+            #
+            def before_all &blk
+                Node.hooks[:before_all]<< blk
+                Node.hooks[:before_all].uniq!
+            end
+            #
+            def after_hooks obj
+                Node.hooks[:after_all].each do |blk| blk.call obj end
+            end
+            #
+            def after_all &blk
+                Node.hooks[:after_all]<< blk
+                Node.hooks[:after_all].uniq!
+            end
+            #
             def error_404 node
                 resp = node.response
                 resp.status = 404
@@ -71,11 +96,13 @@ module Zorglub
         end
         #
         def feed!
+            Node.before_hooks self
             @content = self.send @action[:method], *@action[:args]
             e, v, l = Config.engine_proc(@action[:engine]), view, layout
             # TODO compile and cache
             @content = e.call v, self if e and File.exists? v
             @content = e.call l, self if e and File.exists? l
+            Node.after_hooks self
             @content
         end
         #

@@ -13,6 +13,16 @@ Zorglub::Config.engine = 'haml'
 Zorglub::Config.session_on = true
 Zorglub::Config.root = File.dirname( File.absolute_path(__FILE__) )
 #
+class Zorglub::Node
+    @count=0
+    class << self
+        attr_accessor :count
+    end
+    before_all do |node|
+        Zorglub::Node.count +=1
+    end
+end
+#
 class Node1 < Zorglub::Node
     #
     def index a1, *a2
