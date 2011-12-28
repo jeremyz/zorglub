@@ -49,7 +49,7 @@ module Zorglub
                 node.content
             end
             #
-            def before_hooks obj
+            def call_before_hooks obj
                 Node.hooks[:before_all].each do |blk| blk.call obj end
             end
             #
@@ -58,7 +58,7 @@ module Zorglub
                 Node.hooks[:before_all].uniq!
             end
             #
-            def after_hooks obj
+            def call_after_hooks obj
                 Node.hooks[:after_all].each do |blk| blk.call obj end
             end
             #
@@ -96,13 +96,13 @@ module Zorglub
         end
         #
         def feed!
-            Node.before_hooks self
+            Node.call_before_hooks self
             @content = self.send @action[:method], *@action[:args]
             e, v, l = Config.engine_proc(@action[:engine]), view, layout
             # TODO compile and cache
             @content = e.call v, self if e and File.exists? v
             @content = e.call l, self if e and File.exists? l
-            Node.after_hooks self
+            Node.call_after_hooks self
             @content
         end
         #
