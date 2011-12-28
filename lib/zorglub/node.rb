@@ -20,7 +20,7 @@ module Zorglub
             #
             def layout name=nil
                 @layout = name unless name.nil?
-                @layout ||= Config.default_layout
+                @layout ||= Config.layout
             end
             #
             attr_writer :app

@@ -6,9 +6,9 @@ module Zorglub
         @options = {
             :root => '.',
             :engine => nil,
+            :layout => 'default',
             :view_dir => 'view',
             :layout_dir => 'layout',
-            :default_layout => 'default',
             :session_on => false
         }
         @engines = { }
