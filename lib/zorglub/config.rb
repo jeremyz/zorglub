@@ -45,7 +45,7 @@ module Zorglub
             #
             def engine_ext engine
                 e = @engines[engine]
-                ( e.nil? ? '' : e[0] )
+                ( e.nil? ? '' : '.'+e[0] )
             end
             #
             def engine_proc engine

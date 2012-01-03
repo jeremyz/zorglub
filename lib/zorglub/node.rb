@@ -129,12 +129,12 @@ module Zorglub
         #
         def layout layout=nil
             @action[:layout] = layout unless layout.nil?
-            File.join(Config.layout_base_path, @action[:layout])+'.'+ Config.engine_ext(@action[:engine])
+            File.join(Config.layout_base_path, @action[:layout])+ Config.engine_ext(@action[:engine])
         end
         #
         def view path=nil
             @action[:view] = path unless path.nil?
-            File.join(Config.view_base_path, @action[:view])+'.'+Config.engine_ext(@action[:engine])
+            File.join(Config.view_base_path, @action[:view])+Config.engine_ext(@action[:engine])
         end
         #
         def args
