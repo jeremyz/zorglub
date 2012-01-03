@@ -40,7 +40,7 @@ module Zorglub
             end
             #
             def call env
-                meth, *args =  env['PATH_INFO'][1..-1].split '/'
+                meth, *args =  env['PATH_INFO'].sub(/^\//,'').split '/'
                 meth||= 'index'
                 node = self.new env, {:engine=>engine,:layout=>layout,:view=>r(meth),:method=>meth,:args=>args}
                 return error_404 node if not node.respond_to? meth
