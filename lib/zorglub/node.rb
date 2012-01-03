@@ -137,7 +137,7 @@ module Zorglub
         end
         #
         def view view=nil
-            @action[:view] = view unless view.nil? or view.empty?
+            @action[:view] = r(view) unless view.nil? or view.empty?
             return '' if @action[:view].nil?
             File.join(Config.view_base_path, @action[:view])+Config.engine_ext(@action[:engine])
         end
