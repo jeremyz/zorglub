@@ -34,7 +34,7 @@ describe Zorglub do
         end
         #
         it "r should build a well formed path" do
-            Node1.r(1,'arg2',"some").should == "/spec1/1/arg2/some"
+            Node1.r(1,'arg2',"some").should == "/node1/1/arg2/some"
         end
         #
         it "should return err404 response when no method found" do

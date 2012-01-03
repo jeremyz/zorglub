@@ -69,11 +69,11 @@ class Node3 < Zorglub::Node
 end
 #
 APP = Zorglub::App.new do
-    map '/spec0', Node0
-    map '/spec1', Node1
-    map '/spec3', Node3
+    map '/node0', Node0
+    map '/node1', Node1
+    map '/node3', Node3
 end
 class Node2
-    map APP, '/spec2'
+    map APP, '/node2'
 end
 #

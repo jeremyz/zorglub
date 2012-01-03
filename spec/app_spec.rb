@@ -19,7 +19,7 @@ describe Zorglub do
         end
         #
         it "at should return mapped node" do
-            APP.at("/spec1").should be Node1
+            APP.at("/node1").should be Node1
         end
         #
         it "at should return nil if no Node mapped" do
@@ -27,7 +27,7 @@ describe Zorglub do
         end
         #
         it "to should return path to node" do
-            APP.to(Node1).should == "/spec1"
+            APP.to(Node1).should == "/node1"
         end
         #
         it "to should return nil if not an existing Node" do
@@ -35,7 +35,7 @@ describe Zorglub do
         end
         #
         it "to_hash should return a correct hash" do
-            APP.to_hash["/spec1"].should be Node1
+            APP.to_hash["/node1"].should be Node1
         end
         #
     end
