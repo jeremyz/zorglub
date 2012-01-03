@@ -16,17 +16,28 @@ class SpecNode < Zorglub::Node
     before_all do |node|
         Zorglub::Node.count +=1
     end
+    layout 'spec-layout-1'
+    engine 'spec-engine-1'
 end
 #
-class Temp < SpecNode
+class Temp < Zorglub::Node
+end
+#
+class Node0 < Zorglub::Node
+    # default
 end
 #
 class Node1 < SpecNode
+    # overridded
 end
 #
-class Node2 < SpecNode
+class Node2 < Zorglub::Node
     layout 'spec-layout-2'
     engine 'spec-engine-2'
+end
+#
+class Node3 < Node2
+    # inherited from Node2
 end
 #
 APP = Zorglub::App.new do
