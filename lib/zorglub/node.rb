@@ -105,7 +105,9 @@ module Zorglub
             @content = self.send @action[:method], *@action[:args]
             e, v, l = Config.engine_proc(@action[:engine]), view, layout
             # TODO compile and cache
+            @action[:mode]=:view
             @content = e.call v, self if e and File.exists? v
+            @action[:mode]=:layout
             @content = e.call l, self if e and File.exists? l
             Node.call_after_hooks self
             @content
