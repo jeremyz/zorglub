@@ -48,6 +48,10 @@ end
 class Node2 < Zorglub::Node
     layout 'spec-layout-2'
     engine 'spec-engine-2'
+    def index
+        layout 'main'
+        engine 'spec-engine-1'
+    end
 end
 #
 class Node3 < Node2
