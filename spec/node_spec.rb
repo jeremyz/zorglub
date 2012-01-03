@@ -14,19 +14,13 @@ describe Zorglub do
             Node0.layout.should == Zorglub::Config.layout
         end
         #
-        it "engine should return parent Node's engine" do
-            Node1.engine.should == "spec-engine-1"
-        end
-        #
-        it "layout should return parent Node's layout" do
-            Node1.layout.should == "spec-layout-1"
-        end
-        #
         it "engine should return class defined Node's engine" do
+            Node1.engine.should == "spec-engine-1"
             Node2.engine.should == "spec-engine-2"
         end
         #
         it "layout should return class defined Node's layout" do
+            Node1.layout.should == "spec-layout-1"
             Node2.layout.should == "spec-layout-2"
         end
         #

@@ -16,18 +16,6 @@ Zorglub::Config.register_engine 'spec-engine-2', 'spec', ENGINE_PROC
 #
 Zorglub::Config.engine = 'haml'
 #
-class SpecNode < Zorglub::Node
-    @count=0
-    class << self
-        attr_accessor :count
-    end
-    before_all do |node|
-        SpecNode.count +=1
-    end
-    layout 'spec-layout-1'
-    engine 'spec-engine-1'
-end
-#
 class Temp < Zorglub::Node
 end
 #
@@ -38,8 +26,16 @@ class Node0 < Zorglub::Node
     end
 end
 #
-class Node1 < SpecNode
-    # overridded
+class Node1 < Zorglub::Node
+    @count=0
+    class << self
+        attr_accessor :count
+    end
+    before_all do |node|
+        Node1.count +=1
+    end
+    layout 'spec-layout-1'
+    engine 'spec-engine-1'
 end
 #
 class Node2 < Zorglub::Node
