@@ -19,12 +19,12 @@ module Zorglub
             end
             #
             def engine engine=nil
-                @engine = engine unless engine.nil?
+                @engine = engine unless engine.nil? or engine.empty?
                 @engine ||= Config.engine
             end
             #
             def layout layout=nil
-                @layout = layout unless layout.nil?
+                @layout = layout unless layout.nil? or layout.empty?
                 @layout ||= Config.layout
             end
             #
@@ -125,17 +125,19 @@ module Zorglub
         end
         #
         def engine engine=nil
-            @action[:engine] = engine unless engine.nil?
+            @action[:engine] = engine unless engine.nil? or engine.empty?
             @action[:engine]
         end
         #
         def layout layout=nil
-            @action[:layout] = layout unless layout.nil?
+            @action[:layout] = layout unless layout.nil? or layout.empty?
+            return '' if @action[:layout].nil?
             File.join(Config.layout_base_path, @action[:layout])+ Config.engine_ext(@action[:engine])
         end
         #
-        def view path=nil
-            @action[:view] = path unless path.nil?
+        def view view=nil
+            @action[:view] = view unless view.nil? or view.empty?
+            return '' if @action[:view].nil?
             File.join(Config.view_base_path, @action[:view])+Config.engine_ext(@action[:engine])
         end
         #
