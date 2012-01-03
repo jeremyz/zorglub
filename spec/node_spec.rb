@@ -112,6 +112,10 @@ describe Zorglub do
             r.body[0].should == "layout_start view_content layout_end"
         end
         #
+        it "partial should render correctly" do
+            Node0.partial(:do_partial, 1, 2).should == "view_content"
+        end
+        #
     end
     #
 end

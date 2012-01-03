@@ -49,6 +49,9 @@ class Node0 < Zorglub::Node
     def do_render
         engine 'real'
     end
+    def do_partial a1, a2
+        engine 'real'
+    end
 end
 #
 class Node1 < Zorglub::Node
