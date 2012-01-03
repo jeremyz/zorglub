@@ -26,6 +26,7 @@ end
 class Node0 < Zorglub::Node
     # default
     def index
+        html
     end
     def hello
         layout 'none'

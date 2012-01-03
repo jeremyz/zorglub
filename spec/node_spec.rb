@@ -71,7 +71,6 @@ describe Zorglub do
             h[:view].should == vu
         end
         #
-        #
         it "layout proc, method level layout and engine definitions should work" do
             r = Node2.call( {'PATH_INFO'=>'/index'} )
             r.status.should == 200
