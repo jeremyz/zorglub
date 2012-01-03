@@ -8,6 +8,7 @@ describe Zorglub do
         #
         it "engine should return default Node's engine" do
             Node0.engine.should == Zorglub::Config.engine
+            Node0.engine.should == Zorglub::Config[:engine]
         end
         #
         it "layout should return default Node's layout" do

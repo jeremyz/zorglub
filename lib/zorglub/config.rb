@@ -15,11 +15,11 @@ module Zorglub
         class << self
             #
             def [] k
-                options[k]
+                @options[k]
             end
             #
             def []= k, v
-                option[k]=v
+                @options[k]=v
             end
             #
             def view_base_path

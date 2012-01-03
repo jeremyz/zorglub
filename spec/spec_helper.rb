@@ -17,7 +17,7 @@ Zorglub::Config.register_engine 'default', nil, ENGINE_PROC
 Zorglub::Config.register_engine 'spec-engine-1', 'spec', ENGINE_PROC
 Zorglub::Config.register_engine 'spec-engine-2', 'spec', ENGINE_PROC
 #
-Zorglub::Config.engine = 'default'
+Zorglub::Config[:engine] = 'default'
 Zorglub::Config.root = File.join Dir.pwd, 'spec', 'data'
 #
 class Temp < Zorglub::Node
