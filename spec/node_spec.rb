@@ -116,6 +116,10 @@ describe Zorglub do
             Node0.partial(:do_partial, 1, 2).should == "view_content"
         end
         #
+        it "method level view should work" do
+            Node0.partial(:other_view).should == "view_content"
+        end
+        #
     end
     #
 end

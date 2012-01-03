@@ -52,6 +52,10 @@ class Node0 < Zorglub::Node
     def do_partial a1, a2
         engine 'real'
     end
+    def other_view
+        engine 'real'
+        view 'do_partial'
+    end
 end
 #
 class Node1 < Zorglub::Node
