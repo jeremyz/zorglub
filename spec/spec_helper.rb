@@ -22,7 +22,7 @@ class SpecNode < Zorglub::Node
         attr_accessor :count
     end
     before_all do |node|
-        Zorglub::Node.count +=1
+        SpecNode.count +=1
     end
     layout 'spec-layout-1'
     engine 'spec-engine-1'
