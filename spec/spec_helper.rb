@@ -1,5 +1,13 @@
 #! /usr/bin/env ruby
 #
+begin
+    require 'simplecov'
+    SimpleCov.start do
+        add_filter 'spec'
+    end
+rescue LoadError
+end
+#
 require 'zorglub'
 #
 ENGINE_PROC = Proc.new { |path,obj| "path=>#{path} : obj=>#{obj}" }
