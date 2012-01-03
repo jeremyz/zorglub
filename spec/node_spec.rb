@@ -42,6 +42,18 @@ describe Zorglub do
             Node1.r(1,'arg2',"some").should == "/spec1/1/arg2/some"
         end
         #
+        it "should return err404 response when no method found" do
+            Node0.respond_to?('noresponse').should be_false
+            r = Node2.call( {'PATH_INFO'=>'/noresponse'} )
+            r.status.should == 404
+        end
+        #
+        it "simple method should respond" do
+            r = Node0.call( {'PATH_INFO'=>'/hello'} )
+            r.status.should == 200
+            r.body[0].should == 'world'
+        end
+        #
     end
     #
 end

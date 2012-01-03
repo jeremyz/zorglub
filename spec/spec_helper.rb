@@ -33,6 +33,9 @@ end
 #
 class Node0 < Zorglub::Node
     # default
+    def hello
+        'world'
+    end
 end
 #
 class Node1 < SpecNode
