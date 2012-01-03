@@ -8,20 +8,27 @@ begin
 rescue LoadError
 end
 #
+require 'yaml'
+#
 require 'zorglub'
 #
-ENGINE_PROC = Proc.new { |path,obj| "path=>#{path} : obj=>#{obj}" }
+ENGINE_PROC = Proc.new { |path,obj| {'path'=>path,'layout'=>obj.layout,'view'=>obj.view}.to_yaml }
+Zorglub::Config.register_engine 'default', nil, ENGINE_PROC
 Zorglub::Config.register_engine 'spec-engine-1', 'spec', ENGINE_PROC
 Zorglub::Config.register_engine 'spec-engine-2', 'spec', ENGINE_PROC
 #
-Zorglub::Config.engine = 'haml'
+Zorglub::Config.engine = 'default'
+Zorglub::Config.root = File.join Dir.pwd, 'spec', 'data'
 #
 class Temp < Zorglub::Node
 end
 #
 class Node0 < Zorglub::Node
     # default
+    def index
+    end
     def hello
+        layout 'none'
         'world'
     end
 end
