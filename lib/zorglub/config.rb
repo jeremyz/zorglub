@@ -23,19 +23,13 @@ module Zorglub
             end
             #
             def view_base_path
-                if @options.has_key? :view_path
-                    @options[:view_path]
-                else
-                    File.join @options[:root], @options[:view_dir]
-                end
+                p = @options[:view_path]
+                ( p.nil? ? File.join(@options[:root], @options[:view_dir]) : p )
             end
             #
             def layout_base_path
-                if @options.has_key? :layout_path
-                    @options[:layout_path]
-                else
-                    File.join @options[:root], @options[:layout_dir]
-                end
+                p = @options[:layout_path]
+                ( p.nil? ? File.join(@options[:root], @options[:layout_dir]) : p )
             end
             #
             def register_engine name, ext, proc
