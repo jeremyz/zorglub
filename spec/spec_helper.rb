@@ -55,7 +55,9 @@ class Node3 < Node2
 end
 #
 APP = Zorglub::App.new do
+    map '/spec0', Node0
     map '/spec1', Node1
+    map '/spec3', Node3
 end
 class Node2
     map APP, '/spec2'

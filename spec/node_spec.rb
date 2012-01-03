@@ -59,6 +59,18 @@ describe Zorglub do
             h['view'].should == vu
         end
         #
+        #
+        it "layout proc, method level layout and engine definitions should work" do
+            r = Node2.call( {'PATH_INFO'=>'/index'} )
+            r.status.should == 200
+            h = YAML.load r.body[0]
+            ly = File.join Zorglub::Config.root, Zorglub::Config.layout_dir, 'main.spec'
+            vu = File.join Zorglub::Config.root, Zorglub::Config.view_dir, Node2.r, 'index.spec'
+            h['path'].should == ly
+            h['layout'].should == ly
+            h['view'].should == vu
+        end
+        #
     end
     #
 end
