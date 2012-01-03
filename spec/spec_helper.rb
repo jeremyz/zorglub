@@ -37,15 +37,22 @@ class Node0 < Zorglub::Node
 end
 #
 class Node1 < Zorglub::Node
-    @count=0
+    @before=0
+    @after=0
     class << self
-        attr_accessor :count
+        attr_accessor :before, :after
     end
     before_all do |node|
-        Node1.count +=1
+        Node1.before +=1
+    end
+    after_all do |node|
+        Node1.after +=1
     end
     layout 'spec-layout-1'
     engine 'spec-engine-1'
+    def index
+        (self.class.before-self.class.after).should == 1
+    end
 end
 #
 class Node2 < Zorglub::Node

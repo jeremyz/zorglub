@@ -82,6 +82,29 @@ describe Zorglub do
             h[:view].should == vu
         end
         #
+        it "before_all hook should work" do
+            Node1.before = 0
+            Node1.after = 0
+            Node1.before.should == 0
+            Node1.call( {'PATH_INFO'=>'/index'} )
+            Node1.before.should == 1
+            Node1.call( {'PATH_INFO'=>'/index'} )
+            Node1.before.should == 2
+            Node1.call( {'PATH_INFO'=>'/index'} )
+            Node1.before.should == 3
+        end
+        #
+        it "after_all hook should work" do
+            Node1.before = 0
+            Node1.after = 0
+            Node1.after.should == 0
+            Node1.call( {'PATH_INFO'=>'/index'} )
+            Node1.after.should == 1
+            Node1.call( {'PATH_INFO'=>'/index'} )
+            Node1.after.should == 2
+            Node1.call( {'PATH_INFO'=>'/index'} )
+            Node1.after.should == 3
+        end
     end
     #
 end
