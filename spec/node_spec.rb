@@ -105,6 +105,13 @@ describe Zorglub do
             Node3.call( {'PATH_INFO'=>'/index'} )
             Node3.after.should == 3
         end
+        #
+        it "should find view and layout and render them" do
+            r = Node0.call( {'PATH_INFO'=>'/do_render'} )
+            r.status.should == 200
+            r.body[0].should == "layout_start view_content layout_end"
+        end
+        #
     end
     #
 end

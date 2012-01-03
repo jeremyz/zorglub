@@ -13,9 +13,21 @@ require 'yaml'
 require 'zorglub'
 #
 HASH_PROC = Proc.new { |path,obj| {:path=>path,:layout=>obj.layout,:view=>obj.view,:args=>obj.args}.to_yaml }
+RENDER_PROC = Proc.new { |path,obj|
+    m = obj.action[:mode]
+    case m
+    when :layout
+        "layout_start #{obj.content} layout_end"
+    when :view
+        "view_content"
+    else
+        raise Exception.new
+    end
+}
 Zorglub::Config.register_engine 'default', nil, HASH_PROC
 Zorglub::Config.register_engine 'engine-1', 'spec', HASH_PROC
 Zorglub::Config.register_engine 'engine-2', 'spec', HASH_PROC
+Zorglub::Config.register_engine 'real', nil, RENDER_PROC
 #
 Zorglub::Config[:engine] = 'default'
 Zorglub::Config.root = File.join Dir.pwd, 'spec', 'data'
@@ -33,6 +45,9 @@ class Node0 < Zorglub::Node
         'world'
     end
     def with_2args a1, a2
+    end
+    def do_render
+        engine 'real'
     end
 end
 #
