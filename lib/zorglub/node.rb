@@ -13,13 +13,18 @@ module Zorglub
             #
             attr_reader :hooks
             #
+            def inherited sub
+                sub.layout layout
+                sub.engine engine
+            end
+            #
             def engine engine=nil
                 @engine = engine unless engine.nil?
                 @engine ||= Config.engine
             end
             #
-            def layout name=nil
-                @layout = name unless name.nil?
+            def layout layout=nil
+                @layout = layout unless layout.nil?
                 @layout ||= Config.layout
             end
             #
@@ -122,8 +127,8 @@ module Zorglub
             @action[:engine]
         end
         #
-        def layout name=nil
-            @action[:layout] = name unless name.nil?
+        def layout layout=nil
+            @action[:layout] = layout unless layout.nil?
             File.join(Config.layout_base_path, @action[:layout])+'.'+ Config.engine_ext(@action[:engine])
         end
         #
