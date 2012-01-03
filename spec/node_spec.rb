@@ -16,21 +16,21 @@ describe Zorglub do
         end
         #
         it "engine should return class defined Node's engine" do
-            Node1.engine.should == "spec-engine-1"
-            Node2.engine.should == "spec-engine-2"
+            Node1.engine.should == "engine-1"
+            Node3.engine.should == "engine-2"
         end
         #
         it "layout should return class defined Node's layout" do
-            Node1.layout.should == "spec-layout-1"
-            Node2.layout.should == "spec-layout-2"
+            Node1.layout.should == "layout-1"
+            Node3.layout.should == "layout-2"
         end
         #
         it "engine should return engine inherited from Node2" do
-            Node3.engine.should == "spec-engine-2"
+            Node2.engine.should == "engine-1"
         end
         #
         it "layout should return layout inherited from Node2" do
-            Node3.layout.should == "spec-layout-2"
+            Node2.layout.should == "layout-1"
         end
         #
         it "r should build a well formed path" do
@@ -39,7 +39,7 @@ describe Zorglub do
         #
         it "should return err404 response when no method found" do
             Node0.respond_to?('noresponse').should be_false
-            r = Node2.call( {'PATH_INFO'=>'/noresponse'} )
+            r = Node0.call( {'PATH_INFO'=>'/noresponse'} )
             r.status.should == 404
         end
         #
@@ -72,38 +72,38 @@ describe Zorglub do
         end
         #
         it "layout proc, method level layout and engine definitions should work" do
-            r = Node2.call( {'PATH_INFO'=>'/index'} )
+            r = Node1.call( {'PATH_INFO'=>'/index'} )
             r.status.should == 200
             h = YAML.load r.body[0]
             ly = File.join Zorglub::Config.root, Zorglub::Config.layout_dir, 'main.spec'
-            vu = File.join Zorglub::Config.root, Zorglub::Config.view_dir, Node2.r, 'index.spec'
+            vu = File.join Zorglub::Config.root, Zorglub::Config.view_dir, Node1.r, 'index.spec'
             h[:path].should == ly
             h[:layout].should == ly
             h[:view].should == vu
         end
         #
         it "before_all hook should work" do
-            Node1.before = 0
-            Node1.after = 0
-            Node1.before.should == 0
-            Node1.call( {'PATH_INFO'=>'/index'} )
-            Node1.before.should == 1
-            Node1.call( {'PATH_INFO'=>'/index'} )
-            Node1.before.should == 2
-            Node1.call( {'PATH_INFO'=>'/index'} )
-            Node1.before.should == 3
+            Node3.before = 0
+            Node3.after = 0
+            Node3.before.should == 0
+            Node3.call( {'PATH_INFO'=>'/index'} )
+            Node3.before.should == 1
+            Node3.call( {'PATH_INFO'=>'/index'} )
+            Node3.before.should == 2
+            Node3.call( {'PATH_INFO'=>'/index'} )
+            Node3.before.should == 3
         end
         #
         it "after_all hook should work" do
-            Node1.before = 0
-            Node1.after = 0
-            Node1.after.should == 0
-            Node1.call( {'PATH_INFO'=>'/index'} )
-            Node1.after.should == 1
-            Node1.call( {'PATH_INFO'=>'/index'} )
-            Node1.after.should == 2
-            Node1.call( {'PATH_INFO'=>'/index'} )
-            Node1.after.should == 3
+            Node3.before = 0
+            Node3.after = 0
+            Node3.after.should == 0
+            Node3.call( {'PATH_INFO'=>'/index'} )
+            Node3.after.should == 1
+            Node3.call( {'PATH_INFO'=>'/index'} )
+            Node3.after.should == 2
+            Node3.call( {'PATH_INFO'=>'/index'} )
+            Node3.after.should == 3
         end
     end
     #
