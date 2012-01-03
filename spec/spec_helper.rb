@@ -12,7 +12,7 @@ require 'yaml'
 #
 require 'zorglub'
 #
-ENGINE_PROC = Proc.new { |path,obj| {:path=>path,:layout=>obj.layout,:view=>obj.view}.to_yaml }
+ENGINE_PROC = Proc.new { |path,obj| {:path=>path,:layout=>obj.layout,:view=>obj.view,:args=>obj.args}.to_yaml }
 Zorglub::Config.register_engine 'default', nil, ENGINE_PROC
 Zorglub::Config.register_engine 'spec-engine-1', 'spec', ENGINE_PROC
 Zorglub::Config.register_engine 'spec-engine-2', 'spec', ENGINE_PROC
@@ -30,6 +30,8 @@ class Node0 < Zorglub::Node
     def hello
         layout 'none'
         'world'
+    end
+    def with_2args a1, a2
     end
 end
 #

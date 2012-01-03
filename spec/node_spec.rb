@@ -49,6 +49,17 @@ describe Zorglub do
             r.body[0].should == 'world'
         end
         #
+        it "arguments should work" do
+            r = Node0.call( {'PATH_INFO'=>'/with_2args/1/2'} )
+            h = YAML.load r.body[0]
+            h[:args][0].should == '1'
+            h[:args][1].should == '2'
+        end
+        #
+        it "should raise error when too much arguments" do
+            lambda{ r = Node0.call( {'PATH_INFO'=>'/with_2args/1/2/3'} ) }.should raise_error ArgumentError
+        end
+        #
         it "layout proc, method level layout and engine definitions should work" do
             r = Node0.call( {'PATH_INFO'=>'/index'} )
             r.status.should == 200
