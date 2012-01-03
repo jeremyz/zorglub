@@ -56,6 +56,9 @@ class Node0 < Zorglub::Node
         engine 'real'
         view r('do_partial')
     end
+    def do_redirect
+        redirect r(:do_partial,1,2,3)
+    end
 end
 #
 class Node1 < Zorglub::Node

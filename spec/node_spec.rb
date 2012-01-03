@@ -120,6 +120,12 @@ describe Zorglub do
             Node0.partial(:other_view).should == "view_content"
         end
         #
+        it "redirect should work" do
+            r = Node0.call( {'PATH_INFO'=>'/do_redirect'} )
+            r.status.should == 302
+            r.header['location'].should == Node0.r(:do_partial,1,2,3)
+        end
+        #
     end
     #
 end
