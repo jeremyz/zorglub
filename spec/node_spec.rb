@@ -55,9 +55,9 @@ describe Zorglub do
             h = YAML.load r.body[0]
             ly = File.join Zorglub::Config.root, Zorglub::Config.layout_dir, Node0.layout
             vu = File.join Zorglub::Config.root, Zorglub::Config.view_dir, Node0.r, 'index'
-            h['path'].should == ly
-            h['layout'].should == ly
-            h['view'].should == vu
+            h[:path].should == ly
+            h[:layout].should == ly
+            h[:view].should == vu
         end
         #
         #
@@ -67,9 +67,9 @@ describe Zorglub do
             h = YAML.load r.body[0]
             ly = File.join Zorglub::Config.root, Zorglub::Config.layout_dir, 'main.spec'
             vu = File.join Zorglub::Config.root, Zorglub::Config.view_dir, Node2.r, 'index.spec'
-            h['path'].should == ly
-            h['layout'].should == ly
-            h['view'].should == vu
+            h[:path].should == ly
+            h[:layout].should == ly
+            h[:view].should == vu
         end
         #
     end
