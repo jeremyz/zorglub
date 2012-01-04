@@ -49,7 +49,7 @@ module Zorglub
             #
             def r *args
                 @r ||= @app.to self
-                File.join @r, args.map { |x| x.to_s }
+                (args.empty? ? @r : File.join( @r, args.map { |x| x.to_s } ) )
             end
             #
             def call env
