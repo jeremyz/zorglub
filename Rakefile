@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 #
+require './lib/zorglub.rb'
 load './tasks/setup.rb'
 #
 # Project general information
@@ -7,7 +8,7 @@ PROJ.name = 'zorglub'
 PROJ.authors = 'Jérémy Zurcher'
 PROJ.email = 'jeremy@asynk.ch'
 PROJ.url = 'http://cgit.asynk.ch/cgi-bin/cgit/zorglub'
-PROJ.version = '0.0.0'
+PROJ.version = Zorglub::VERSION
 PROJ.rubyforge.name = 'FIXME'
 PROJ.readme_file = 'README.rdoc'
 #
