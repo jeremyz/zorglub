@@ -95,20 +95,21 @@ class Node3 < Zorglub::Node
     #
     def index *args
         @title = "Session tests"
-        if not session.exists?
-            @data = "NO SESSION"
+        t = Time.now
+        @sid = session.sid
+        if session[:now].nil?
+            session[:now] = t
+            @data = "#{t.strftime('%H:%M:%S')} FIRST"
+        elsif t-session[:now]>10
+            session[:now] = t
+            @data = "#{t.strftime('%H:%M:%S')} UPDATE"
         else
-            t = Time.now
-            if session[:now].nil?
-                session[:now] = t
-                @data = "#{t.strftime('%H:%M:%S')} FIRST"
-            elsif t-session[:now]>5
-                session[:now] = t
-                @data = "#{t.strftime('%H:%M:%S')} UPDATE"
-            else
-                @data = "#{session[:now].strftime('%H:%M:%S')} CURRENT"
-            end
+            @data = "#{session[:now].strftime('%H:%M:%S')} CURRENT"
         end
+    end
+    def reset
+        session.destroy!
+        redirect :index
     end
     #
 end
@@ -145,11 +146,11 @@ puts APP.to_hash.inspect
 map '/' do
     use Rack::Lint
     use Rack::ShowExceptions
-    use Rack::Session::Cookie,  :key=>Zorglub::Session.session_key,
-                                :secret=>'my-secret-secret',
-                                :path=>'/',
-                                :http_only=>true,
-                                :expire_after=>30
+#    use Rack::Session::Cookie,  :key=>Zorglub::Session.key,
+#                                :secret=>'my-secret-secret',
+#                                :path=>'/',
+#                                :http_only=>true,
+#                                :expire_after=>30
     run APP
 end
 #
