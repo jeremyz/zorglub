@@ -118,9 +118,9 @@ module Zorglub
             Node.call_before_hooks self
             state :meth
             @content = self.send @action[:method], *@action[:args]
-            e, v, l = Config.engine_proc(@action[:engine]), view, layout
+            v, l, e = view, layout, Config.engine_proc(@action[:engine])
             # TODO compile and cache
-            state :view
+            state (@action[:layout].nil? ? :partial : :view)
             @content = e.call v, self if e and File.exists? v
             state :layout
             @content = e.call l, self if e and File.exists? l
