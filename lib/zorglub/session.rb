@@ -4,6 +4,13 @@ require 'securerandom'
 #
 module Zorglub
     #
+    class Node
+        #
+        def session
+            @session ||= Session.new @request
+        end
+    end
+    #
     class SessionHash
         #
         @data = {}

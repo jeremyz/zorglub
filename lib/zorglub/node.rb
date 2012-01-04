@@ -176,10 +176,6 @@ module Zorglub
             self.class.r
         end
         #
-        def session
-            @session ||= Session.new @request
-        end
-        #
         def r *args
             File.join map, (args.empty? ? @action[:method] : args.map { |x| x.to_s } )
         end
