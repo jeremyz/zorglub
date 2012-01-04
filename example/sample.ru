@@ -3,6 +3,7 @@
 $LOAD_PATH << File.join(File.dirname( File.absolute_path(__FILE__)), '..', 'lib')
 #
 require 'zorglub'
+require 'zorglub/session'
 #
 require 'haml'
 HAML_PROC = Proc.new { |path,obj| Haml::Engine.new( File.open(path,'r').read ).render(obj) }
