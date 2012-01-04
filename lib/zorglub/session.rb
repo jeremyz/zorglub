@@ -7,7 +7,7 @@ module Zorglub
     class Node
         #
         def session
-            @session ||= Session.new @request
+            @session ||= Session.new @request, @response
         end
     end
     #
@@ -45,8 +45,9 @@ module Zorglub
             attr_accessor :session_key, :session_kls
         end
         #
-        def initialize req
+        def initialize req, resp
             @request = req
+            @response = resp
             @instance = nil
         end
         #
