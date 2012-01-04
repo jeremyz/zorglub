@@ -1,21 +1,28 @@
 zorglub
-    by Jéérmy Zurcher
+    by Jérémy Zurcher
     http://cgit.asynk.ch/cgi-bin/cgit/zorglub
 
 == DESCRIPTION:
 
-a very very light and tiny web application framework based on rack[http://rack.rubyforge.org/]
+a nano web application framework based on rack[http://rack.rubyforge.org/]
 
-== FEATURES/PROBLEMS:
+== FEATURES:
 
-* FIXME
+* class#method mapping scheme (/class_mapping/method_name/*args)
+* class level layout and engine specification
+* method level layout, engine and view specification
+* before_all and after_all methods callbacks
+* redirection
+* partial
+* class level inherited variables
+* session
 
 == SYNOPSIS:
 
-* FIXME
+For a simple test application run:
+* rackup ./example/sample.ru
 
-For less minimalistic and more sane examples you may look at:
-
+Don't forget to look at
 * the spec/ folder
 
 == REQUIREMENTS:
@@ -24,13 +31,30 @@ For less minimalistic and more sane examples you may look at:
 
 == DOWNLOAD/INSTALL:
 
-* FIXME
+From rubygems:
+
+  [sudo] gem install zorglub
+
+or from the git repository on github:
+
+  git clone git://github.com/jeremyz/zorglub.git
+  cd zorglub
+  rake gem:install
+
+== RESOURCES:
+
+You can find this project in a few places:
+
+Online repositories:
+
+* https://github.com/jeremyz/zorglub
+* http://cgit.asynk.ch/cgi-bin/cgit/zorglub/
 
 == CREDITS:
 
 Special thanks to:
 
-* FIXME
+* Manveru [https://github.com/manveru/innate]
 
 == LICENSE:
 
