@@ -64,14 +64,12 @@ end
 #
 class Node2 < Zorglub::Node
     #
-    include Zorglub::Helpers::Css
-    #
     map APP, '/url2'
     layout 'css'
     # class level engine
     engine 'tmp-engine'
     # class level css
-    css 'class_level.css'
+    inherited_var :css, 'class_level.css'
     #
     def index *args
         "<title>Node2:index</title><b>START</b>#{html}<a href=#{Node2.r(:meth0)}>next</a><br/><b>END</b>"
@@ -79,7 +77,7 @@ class Node2 < Zorglub::Node
     #
     def meth0 *args
         # instance level css
-        css 'instance_level.css'
+        inherited_var :css, 'instance_level.css'
         "<title>Node2:meth0</title><b>START</b>#{html}<a href=#{Node2.r(:meth1,1,2)}>next</a><br/><b>END</b>"
     end
     #
