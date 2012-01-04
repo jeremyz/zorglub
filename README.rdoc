@@ -50,12 +50,6 @@ Online repositories:
 * https://github.com/jeremyz/zorglub
 * http://cgit.asynk.ch/cgi-bin/cgit/zorglub/
 
-== CREDITS:
-
-Special thanks to:
-
-* Manveru [https://github.com/manveru/innate]
-
 == LICENSE:
 
 See MIT-LICENSE file.
