@@ -116,12 +116,13 @@ module Zorglub
         #
         def feed!
             Node.call_before_hooks self
+            state :meth
             @content = self.send @action[:method], *@action[:args]
             e, v, l = Config.engine_proc(@action[:engine]), view, layout
             # TODO compile and cache
-            @action[:mode]=:view
+            state :view
             @content = e.call v, self if e and File.exists? v
-            @action[:mode]=:layout
+            state :layout
             @content = e.call l, self if e and File.exists? l
             Node.call_after_hooks self
             @content
@@ -136,6 +137,11 @@ module Zorglub
         #
         def redirect_body target
             "You are being redirected, please follow this link to: <a href='#{target}'>#{target}</a>!"
+        end
+        #
+        def state state=nil
+            @action[:state] = state unless state.nil?
+            @action[:state]
         end
         #
         def engine engine=nil
