@@ -113,10 +113,6 @@ class Node3 < Zorglub::Node
     end
     #
 end
-#    #
-#    def redir
-#        redirect Node0.r
-#    end
 #
 class Node0 < Zorglub::Node
     #
