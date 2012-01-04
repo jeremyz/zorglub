@@ -32,6 +32,12 @@ Zorglub::Config.register_engine 'real', nil, RENDER_PROC
 Zorglub::Config[:engine] = 'default'
 Zorglub::Config.root = File.join Dir.pwd, 'spec', 'data'
 #
+class Zorglub::Node
+    def self.my_call uri
+        call( {'PATH_INFO'=>uri} )
+    end
+end
+#
 class Temp < Zorglub::Node
 end
 #

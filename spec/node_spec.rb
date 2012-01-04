@@ -39,29 +39,29 @@ describe Zorglub do
         #
         it "should return err404 response when no method found" do
             Node0.respond_to?('noresponse').should be_false
-            r = Node0.call( {'PATH_INFO'=>'/noresponse'} )
+            r = Node0.my_call '/noresponse'
             r.status.should == 404
         end
         #
         it "simple method should respond" do
-            r = Node0.call( {'PATH_INFO'=>'/hello'} )
+            r = Node0.my_call '/hello'
             r.status.should == 200
             r.body[0].should == 'world'
         end
         #
         it "arguments should work" do
-            r = Node0.call( {'PATH_INFO'=>'/with_2args/1/2'} )
+            r = Node0.my_call '/with_2args/1/2'
             h = YAML.load r.body[0]
             h[:args][0].should == '1'
             h[:args][1].should == '2'
         end
         #
         it "should raise error when too much arguments" do
-            lambda{ r = Node0.call( {'PATH_INFO'=>'/with_2args/1/2/3'} ) }.should raise_error ArgumentError
+            lambda{ r = Node0.my_call '/with_2args/1/2/3' }.should raise_error ArgumentError
         end
         #
         it "layout proc, method level layout and engine definitions should work" do
-            r = Node0.call( {'PATH_INFO'=>'/index'} )
+            r = Node0.my_call '/index'
             r.status.should == 200
             h = YAML.load r.body[0]
             ly = File.join Zorglub::Config.root, Zorglub::Config.layout_dir, Node0.layout
@@ -72,7 +72,7 @@ describe Zorglub do
         end
         #
         it "layout proc, method level layout and engine definitions should work" do
-            r = Node1.call( {'PATH_INFO'=>'/index'} )
+            r = Node1.my_call '/index'
             r.status.should == 200
             h = YAML.load r.body[0]
             ly = File.join Zorglub::Config.root, Zorglub::Config.layout_dir, 'main.spec'
@@ -86,11 +86,11 @@ describe Zorglub do
             Node3.before = 0
             Node3.after = 0
             Node3.before.should == 0
-            Node3.call( {'PATH_INFO'=>'/index'} )
+            Node3.my_call '/index'
             Node3.before.should == 1
-            Node3.call( {'PATH_INFO'=>'/index'} )
+            Node3.my_call '/index'
             Node3.before.should == 2
-            Node3.call( {'PATH_INFO'=>'/index'} )
+            Node3.my_call '/index'
             Node3.before.should == 3
         end
         #
@@ -98,16 +98,16 @@ describe Zorglub do
             Node3.before = 0
             Node3.after = 0
             Node3.after.should == 0
-            Node3.call( {'PATH_INFO'=>'/index'} )
+            Node3.my_call '/index'
             Node3.after.should == 1
-            Node3.call( {'PATH_INFO'=>'/index'} )
+            Node3.my_call '/index'
             Node3.after.should == 2
-            Node3.call( {'PATH_INFO'=>'/index'} )
+            Node3.my_call '/index'
             Node3.after.should == 3
         end
         #
         it "should find view and layout and render them" do
-            r = Node0.call( {'PATH_INFO'=>'/do_render'} )
+            r = Node0.my_call '/do_render'
             r.status.should == 200
             r.body[0].should == "layout_start view_content layout_end"
         end
@@ -121,7 +121,7 @@ describe Zorglub do
         end
         #
         it "redirect should work" do
-            r = Node0.call( {'PATH_INFO'=>'/do_redirect'} )
+            r = Node0.my_call '/do_redirect'
             r.status.should == 302
             r.header['location'].should == Node0.r(:do_partial,1,2,3)
         end
