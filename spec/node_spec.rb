@@ -37,6 +37,12 @@ describe Zorglub do
             Node1.r(1,'arg2',"some").should == "/node1/1/arg2/some"
         end
         #
+        it "instance level map should work" do
+            r = Node0.my_call '/with_2args/1/2'
+            h = YAML.load r.body[0]
+            h[:map].should == '/node0'
+        end
+        #
         it "should return err404 response when no method found" do
             Node0.respond_to?('noresponse').should be_false
             r = Node0.my_call '/noresponse'
@@ -49,7 +55,7 @@ describe Zorglub do
             r.body[0].should == 'world'
         end
         #
-        it "arguments should work" do
+        it "instance level args should work" do
             r = Node0.my_call '/with_2args/1/2'
             h = YAML.load r.body[0]
             h[:args][0].should == '1'

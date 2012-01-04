@@ -12,7 +12,7 @@ require 'yaml'
 #
 require 'zorglub'
 #
-HASH_PROC = Proc.new { |path,obj| {:path=>path,:layout=>obj.layout,:view=>obj.view,:args=>obj.args}.to_yaml }
+HASH_PROC = Proc.new { |path,obj| {:path=>path,:layout=>obj.layout,:view=>obj.view,:args=>obj.args,:map=>obj.map}.to_yaml }
 RENDER_PROC = Proc.new { |path,obj|
     case obj.state
     when :layout
