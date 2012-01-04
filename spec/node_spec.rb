@@ -119,11 +119,11 @@ describe Zorglub do
         end
         #
         it "partial should render correctly" do
-            Node0.partial(:do_partial, 1, 2).should == "view_content"
+            Node0.partial(:do_partial, 1, 2).should == 'partial_content'
         end
         #
         it "method level view should work" do
-            Node0.partial(:other_view).should == "view_content"
+            Node0.partial(:other_view).should == 'partial_content'
         end
         #
         it "redirect should work" do
