@@ -1,2 +1,11 @@
-FIME-date Jérémy Zurcher <jeremy@asynk.ch>
+2011-05-26 Jérémy Zurcher <jeremy@asynk.ch>
 	* Project creation
+
+2011-09-13 Jérémy Zurcher <jeremy@asynk.ch>
+	* usable WIP
+
+2012-01-04 Jérémy Zurcher <jeremy@asynk.ch>
+	* lots of code cleanup
+	* replace Helpers Module with Node#inherited_var Node@inherited_vars
+	* rewrite session so it is compatible with Rack SessionHash
+	* update test application and write specs
