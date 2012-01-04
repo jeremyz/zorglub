@@ -6,97 +6,116 @@ module Zorglub
     #
     class Node
         #
+        @sessions = {}
+        #
+        class << self
+            attr_reader :sessions
+        end
+        #
         def session
-            @session ||= Session.new @request, @response
+            @session ||= SessionHash.new @request, @response, Node.sessions
         end
     end
     #
-    class SessionHash
+    class SessionHash < Hash
         #
-        @data = {}
-        class << self
-            attr_reader :data
-            def sid_exists? sid
-                not @data[sid].nil?
-            end
-        end
-        #
-        attr_reader :sid
-        #
-        def initialize sid
-            @sid = sid
-            @session_data = SessionHash.data[sid]||={}
-        end
-        #
-        def destroy!
-            SessionHash.data.delete @sid
-            @session_data = nil
-            @sid = nil
-        end
-        #
-        def [] idx
-            @session_data[idx]
-        end
-        #
-        def []= idx, v
-            @session_data[idx] = v
-        end
-    end
-    #
-    class Session
-        #
-        @key =  'zorglub.sid'
-        @kls = Zorglub::SessionHash
-        @sid_length = 64
-        #
-        class << self
-            attr_accessor :key, :kls, :sid_length
-        end
-        #
-        def initialize req, resp
+        def initialize req, resp, sessions
             @request = req
             @response = resp
-            @instance = nil
+            @sessions = sessions
+            @sid = nil
+            super()
         end
         #
-        def setup!
-            if Config.session_on
-                cookie = @request.cookies[Session.key]
-                if cookie.nil?
-                    cookie = generate_sid
-                    @response.set_cookie Session.key, cookie
-                end
-                @instance = Session.kls.new cookie
+        def [] key
+            load_data!
+            super key
+        end
+        #
+        def has_key? key
+            load_data!
+            super key
+        end
+        alias :key? :has_key?
+        alias :include? :has_key?
+        #
+        def []= key, value
+            load_data!
+            super key, value
+        end
+        #
+        def clear
+            load_data!
+#            @response.delete_cookie Zorglub::Config.session_key
+#            @sessions.delete @sid
+#            @sid = nil
+            super
+        end
+        #
+        def to_hash
+            load_data!
+            h = {}.replace(self)
+            h.delete_if { |k,v| v.nil? }
+            h
+        end
+        #
+        def update hash
+            load_data!
+            super stringify_keys(hash)
+        end
+        #
+        def delete key
+            load_data!
+            super key
+        end
+        #
+        def inspect
+            if loaded?
+                super
+            else
+                "#<#{self.class}:0x#{self.object_id.to_s(16)} not yet loaded>"
             end
         end
-        private :setup!
         #
-        def destroy!
-            @response.delete_cookie Session.key
-            @instance.destroy! if @instance
-            @instance = nil
+        def exists?
+            ( loaded? ? @sessions.has_key?(@sid) : false )
         end
         #
-        def sid
-            setup! if @instance.nil?
-            return nil if @instance.nil?
-            @instance.sid
+        def loaded?
+            not @sid.nil?
         end
         #
-        def [] idx
-            setup! if @instance.nil?
-            return nil if @instance.nil?
-            @instance[idx]
+        def empty?
+            load_data!
+            super
         end
         #
-        def []= idx, v
-            setup! if @instance.nil?
-            return nil if @instance.nil?
-            @instance[idx] = v
+        private
+        #
+        def load_data!
+            return if loaded?
+            if Config.session_on
+                sid = @request.cookies[Zorglub::Config.session_key]
+                if sid.nil?
+                    sid = generate_sid!
+                    @response.set_cookie Zorglub::Config.session_key, sid
+                end
+                replace @sessions[sid] ||={}
+                @sessions[sid] = self
+                @sid = sid
+            end
         end
         #
-        def generate_sid
-            begin sid = sid_algorithm end while Session.kls.sid_exists? sid
+        def stringify_keys other
+            hash = {}
+            other.each do |key, value|
+                hash[key] = value
+            end
+            hash
+        end
+        #
+        def generate_sid!
+            begin sid = sid_algorithm end while @sessions.has_key? sid
             sid
         end
         #
@@ -106,7 +125,7 @@ module Zorglub
             # SecureRandom is available since Ruby 1.8.7.
             # For Ruby versions earlier than that, you can require the uuidtools gem,
             # which has a drop-in replacement for SecureRandom.
-            def sid_algorithm; SecureRandom.hex(Session.sid_length); end
+            def sid_algorithm; SecureRandom.hex(Zorglub::Config.session_sid_len); end
         rescue LoadError
             require 'openssl'
             # Using OpenSSL::Random for generation, this is comparable in performance
@@ -114,7 +133,7 @@ module Zorglub
             # have the same behaviour as the SecureRandom::hex method of the
             # uuidtools gem.
             def sid_algorithm
-                OpenSSL::Random.random_bytes(Session.sid_length / 2).unpack('H*')[0]
+                OpenSSL::Random.random_bytes(Zorglub::Config.session_sid_len / 2).unpack('H*')[0]
             end
         rescue LoadError
             # Digest::SHA2::hexdigest produces a string of length 64, although
