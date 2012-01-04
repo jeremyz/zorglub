@@ -136,6 +136,10 @@ module Zorglub
             File.join(Config.layout_base_path, @action[:layout])+ Config.engine_ext(@action[:engine])
         end
         #
+        def no_layout
+            @action[:layout] = nil
+        end
+        #
         def view view=nil
             @action[:view] = view unless view.nil? or view.empty?
             return '' if @action[:view].nil?

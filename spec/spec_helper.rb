@@ -47,7 +47,7 @@ class Node0 < Zorglub::Node
         html
     end
     def hello
-        layout 'none'
+        no_layout
         'world'
     end
     def with_2args a1, a2
