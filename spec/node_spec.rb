@@ -126,6 +126,32 @@ describe Zorglub do
             r.header['location'].should == Node0.r(:do_partial,1,2,3)
         end
         #
+        it "defs should be inherited" do
+            r = Node5.my_call '/index'
+            ar = YAML.load r.body[0]
+            ar[0].should == 'js0'
+            ar[1].should == 'js1'
+            ar[2].should == 'js3'
+            ar[3].should == 'jsx'
+            ar[4].should be_nil
+        end
+        #
+        it "defs should be method scope modified" do
+            r = Node4.my_call '/more'
+            ar = YAML.load r.body[0]
+            ar[0].should == 'js0'
+            ar[1].should == 'js1'
+            ar[2].should == 'js2'
+            ar[3].should be_nil
+        end
+        #
+        it "defs should not have been modified by other method" do
+            r = Node4.my_call '/index'
+            ar = YAML.load r.body[0]
+            ar[0].should == 'js0'
+            ar[1].should == 'js1'
+            ar[2].should be_nil
+        end
     end
     #
 end

@@ -11,6 +11,7 @@ end
 require 'yaml'
 #
 require 'zorglub'
+require 'zorglub/defs'
 #
 HASH_PROC = Proc.new { |path,obj| {:path=>path,:layout=>obj.layout,:view=>obj.view,:args=>obj.args}.to_yaml }
 RENDER_PROC = Proc.new { |path,obj|
@@ -99,10 +100,32 @@ class Node3 < Zorglub::Node
     end
 end
 #
+class Node4 < Zorglub::Node
+    defs :js,'js0','js1'
+    def index
+        no_layout
+        defs(:js).to_yaml
+    end
+    def more
+        no_layout
+        defs(:js,'js2').to_yaml
+    end
+end
+#
+class Node5 < Node4
+    defs :js, 'js3'
+    def index
+        no_layout
+        defs(:js,'jsx').to_yaml
+    end
+end
+#
 APP = Zorglub::App.new do
     map '/node0', Node0
     map '/node1', Node1
     map '/node3', Node3
+    map '/node4', Node4
+    map '/node5', Node5
 end
 class Node2
     map APP, '/node2'
