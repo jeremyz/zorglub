@@ -28,6 +28,11 @@ module Zorglub
             @session_data = SessionHash.data[sid]||={}
         end
         #
+        def destroy!
+            SessionHash.data.delete @sid
+            @session_data = nil
+            @sid = nil
+        end
         #
         def [] idx
             @session_data[idx]
@@ -65,6 +70,12 @@ module Zorglub
             end
         end
         private :setup!
+        #
+        def destroy!
+            @response.delete_cookie Session.key
+            @instance.destroy! if @instance
+            @instance = nil
+        end
         #
         def sid
             setup! if @instance.nil?
