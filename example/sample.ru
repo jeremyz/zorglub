@@ -2,8 +2,14 @@
 #
 $LOAD_PATH << File.join(File.dirname( File.absolute_path(__FILE__)), '..', 'lib')
 #
+USE_RACK_SESSION=false
+#
 require 'zorglub'
-require 'zorglub/session'
+if USE_RACK_SESSION
+    require 'zorglub/rack_session'
+else
+    require 'zorglub/session'
+end
 #
 require 'haml'
 HAML_PROC = Proc.new { |path,obj| Haml::Engine.new( File.open(path,'r').read ).render(obj) }
@@ -96,7 +102,6 @@ class Node3 < Zorglub::Node
     def index *args
         @title = "Session tests"
         t = Time.now
-        @sid = session.sid
         if session[:now].nil?
             session[:now] = t
             @data = "#{t.strftime('%H:%M:%S')} FIRST"
@@ -108,7 +113,7 @@ class Node3 < Zorglub::Node
         end
     end
     def reset
-        session.destroy!
+        session.clear
         redirect :index
     end
     #
@@ -138,15 +143,15 @@ Node1::LINKS= [
 ]
 #
 puts APP.to_hash.inspect
+puts "  **** "+( USE_RACK_SESSION ? 'USE Rack Session' : 'USE builtin Session' )
 #
 map '/' do
     use Rack::Lint
     use Rack::ShowExceptions
-#    use Rack::Session::Cookie,  :key=>Zorglub::Session.key,
-#                                :secret=>'my-secret-secret',
-#                                :path=>'/',
-#                                :http_only=>true,
-#                                :expire_after=>30
+    if USE_RACK_SESSION
+        use Rack::Session::Cookie,  :key=>Zorglub::Config.session_key, :secret=>Zorglub::Config.session_secret,
+            :path=>'/', :http_only=>true, :expire_after=>30
+    end
     run APP
 end
 #
