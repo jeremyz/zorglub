@@ -61,7 +61,6 @@ module Zorglub
             end
             #
             def partial meth, *args
-                # TODO maybe use :mode=>:partial ???
                 node = self.new nil, {:engine=>engine,:layout=>nil,:view=>r(meth),:method=>meth.to_s,:args=>args}
                 return error_404 node if not node.respond_to? meth
                 node.feed!
