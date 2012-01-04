@@ -16,17 +16,18 @@ module Zorglub
         @data = {}
         class << self
             attr_reader :data
+            def sid_exists? sid
+                not @data[sid].nil?
+            end
         end
+        #
+        attr_reader :sid
         #
         def initialize sid
             @sid = sid
-            # TODO if sid is nil, one should be created
             @session_data = SessionHash.data[sid]||={}
         end
         #
-        def exists?
-            not @sid.nil?
-        end
         #
         def [] idx
             @session_data[idx]
@@ -65,18 +66,21 @@ module Zorglub
         end
         private :setup!
         #
-        def exists?
+        def sid
             setup! if @instance.nil?
-            @instance.exists?
+            return nil if @instance.nil?
+            @instance.sid
         end
         #
         def [] idx
             setup! if @instance.nil?
+            return nil if @instance.nil?
             @instance[idx]
         end
         #
         def []= idx, v
             setup! if @instance.nil?
+            return nil if @instance.nil?
             @instance[idx] = v
         end
         #
