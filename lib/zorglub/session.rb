@@ -39,10 +39,12 @@ module Zorglub
     #
     class Session
         #
-        @session_key =  'zorglub.sid'
-        @session_kls = Zorglub::SessionHash
+        @key =  'zorglub.sid'
+        @kls = Zorglub::SessionHash
+        @sid_length = 64
+        #
         class << self
-            attr_accessor :session_key, :session_kls
+            attr_accessor :key, :kls, :sid_length
         end
         #
         def initialize req, resp
@@ -53,9 +55,12 @@ module Zorglub
         #
         def setup!
             if Config.session_on
-                @instance = Session.session_kls.new @request.cookies[Session.session_key]
-            else
-                @instance = {}
+                cookie = @request.cookies[Session.key]
+                if cookie.nil?
+                    cookie = generate_sid
+                    @response.set_cookie Session.key, cookie
+                end
+                @instance = Session.kls.new cookie
             end
         end
         private :setup!
