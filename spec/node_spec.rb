@@ -126,31 +126,25 @@ describe Zorglub do
             r.header['location'].should == Node0.r(:do_partial,1,2,3)
         end
         #
-        it "defs should be inherited" do
+        it "inherited_vars should be inherited and extended" do
             r = Node5.my_call '/index'
-            ar = YAML.load r.body[0]
-            ar[0].should == 'js0'
-            ar[1].should == 'js1'
-            ar[2].should == 'js3'
-            ar[3].should == 'jsx'
-            ar[4].should be_nil
+            vars = YAML.load r.body[0]
+            vars.should == ['js0','js1','js3','jsx','css0','css1','css2']
+            vars[7].should be_nil
         end
         #
-        it "defs should be method scope modified" do
+        it "inherited_vars should be extended at method level" do
             r = Node4.my_call '/more'
-            ar = YAML.load r.body[0]
-            ar[0].should == 'js0'
-            ar[1].should == 'js1'
-            ar[2].should == 'js2'
-            ar[3].should be_nil
+            vars = YAML.load r.body[0]
+            vars.should == ['js0','js1','js2']
+            vars[3].should be_nil
         end
         #
-        it "defs should not have been modified by other method" do
+        it "inherited_vars should be untouched" do
             r = Node4.my_call '/index'
-            ar = YAML.load r.body[0]
-            ar[0].should == 'js0'
-            ar[1].should == 'js1'
-            ar[2].should be_nil
+            vars = YAML.load r.body[0]
+            vars.should == ['js0','js1']
+            vars[2].should be_nil
         end
     end
     #

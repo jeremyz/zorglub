@@ -9,13 +9,17 @@ module Zorglub
             :after_all => [],
         }
         #
+        @inherited_vars = { }
+        #
         class << self
             #
-            attr_reader :hooks
+            attr_reader :hooks, :inherited_vars
             #
             def inherited sub
                 sub.layout layout
                 sub.engine engine
+                sub.instance_variable_set :@inherited_vars, {}
+                @inherited_vars.each do |s,v| sub.inherited_var s, *v end
             end
             #
             def engine engine=nil
@@ -26,6 +30,15 @@ module Zorglub
             def layout layout=nil
                 @layout = layout unless layout.nil? or layout.empty?
                 @layout ||= Config.layout
+            end
+            #
+            def inherited_var sym, *args
+                var = @inherited_vars[sym] ||=[]
+                unless args.empty?
+                    var.concat args
+                    var.uniq!
+                end
+                var
             end
             #
             attr_writer :app
@@ -144,6 +157,15 @@ module Zorglub
             @action[:view] = view unless view.nil? or view.empty?
             return '' if @action[:view].nil?
             File.join(Config.view_base_path, @action[:view])+Config.engine_ext(@action[:engine])
+        end
+        #
+        def inherited_var sym, *args
+            d = self.class.inherited_vars[sym].clone || []
+            unless args.empty?
+                d.concat args
+                d.uniq!
+            end
+            d
         end
         #
         def args

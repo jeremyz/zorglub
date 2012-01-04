@@ -11,7 +11,6 @@ end
 require 'yaml'
 #
 require 'zorglub'
-require 'zorglub/defs'
 #
 HASH_PROC = Proc.new { |path,obj| {:path=>path,:layout=>obj.layout,:view=>obj.view,:args=>obj.args}.to_yaml }
 RENDER_PROC = Proc.new { |path,obj|
@@ -101,22 +100,25 @@ class Node3 < Zorglub::Node
 end
 #
 class Node4 < Zorglub::Node
-    defs :js,'js0','js1'
+    inherited_var :js,'js0','js1'
     def index
         no_layout
-        defs(:js).to_yaml
+        inherited_var(:js).to_yaml
     end
     def more
         no_layout
-        defs(:js,'js2').to_yaml
+        inherited_var(:js,'js2').to_yaml
     end
 end
 #
 class Node5 < Node4
-    defs :js, 'js3'
+    inherited_var :js, 'js3'
+    inherited_var :css, 'css0', 'css1'
     def index
         no_layout
-        defs(:js,'jsx').to_yaml
+        js = inherited_var(:js,'jsx')
+        css = inherited_var(:css, 'css0', 'css1','css2')
+        js.concat(css).to_yaml
     end
 end
 #
