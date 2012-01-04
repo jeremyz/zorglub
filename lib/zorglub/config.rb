@@ -9,7 +9,11 @@ module Zorglub
             :layout => 'default',
             :view_dir => 'view',
             :layout_dir => 'layout',
-            :session_on => false
+            :session_on => false,
+            :session_key => 'zorglub.sid',
+            :session_secret => 'session-secret-secret',
+            :session_sid_len => 64
+        #
         }
         @engines = { }
         class << self
