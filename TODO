@@ -1,5 +1,5 @@
-- engines
 - compiled templates cache
 - static pages
 - development and production modes
 - minimized html/js/css
+- encoding mime-type

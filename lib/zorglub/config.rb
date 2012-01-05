@@ -12,7 +12,12 @@ module Zorglub
             :session_on => false,
             :session_key => 'zorglub.sid',
             :session_secret => 'session-secret-secret',
-            :session_sid_len => 64
+            :session_sid_len => 64,
+            :haml_options => {
+                :format => :html5,
+                :ugly => false,
+                :encoding => 'utf-8'
+            }
         #
         }
         @engines = { }
