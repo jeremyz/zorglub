@@ -9,9 +9,9 @@ module Zorglub
             def self.proc path,obj
                 if Zorglub::Config.engines_cache_enabled
                     key = path.sub Zorglub::Config.root,''
-                    haml = obj.app.engines_cache[key] ||= ::Haml::Engine.new( File.open(path,'r').read, Zorglub::Config.haml_options )
+                    haml = obj.app.engines_cache[key] ||= ::Haml::Engine.new( File.open(path,'r'){|f| f.read }, Zorglub::Config.haml_options )
                 else
-                    haml = ::Haml::Engine.new( File.open(path,'r').read, Zorglub::Config.haml_options )
+                    haml = ::Haml::Engine.new( File.open(path,'r'){|f| f.read }, Zorglub::Config.haml_options )
                 end
                 html = haml.render(obj)
                 return html, 'text/html'
