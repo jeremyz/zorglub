@@ -95,11 +95,11 @@ module Zorglub
             #
         end
         #
-        attr_reader :action, :request, :response, :content
+        attr_reader :options, :request, :response, :content
         #
-        def initialize env, action
+        def initialize env, options
             @env = env
-            @action = action
+            @options = options
             @request = Rack::Request.new env
             @response = Rack::Response.new
         end
@@ -114,16 +114,18 @@ module Zorglub
         end
         #
         def feed!
+            state :pre_cb
             Node.call_before_hooks self
             state :meth
-            @content = self.send @action[:method], *@action[:args]
-            v, l, e = view, layout, Config.engine_proc(@action[:engine])
-            # TODO compile and cache
-            state (@action[:layout].nil? ? :partial : :view)
-            @content = e.call v, self if e and File.exists? v
+            @content = self.send @options[:method], *@options[:args]
+            v, l, e = view, layout, Config.engine_proc(@options[:engine])
+            state (@options[:layout].nil? ? :partial : :view)
+            @content, = e.call v, self if e and File.exists? v
             state :layout
-            @content = e.call l, self if e and File.exists? l
+            @content, = e.call l, self if e and File.exists? l
+            state :post_cb
             Node.call_after_hooks self
+            state :finished
             @content
         end
         #
@@ -139,29 +141,29 @@ module Zorglub
         end
         #
         def state state=nil
-            @action[:state] = state unless state.nil?
-            @action[:state]
+            @options[:state] = state unless state.nil?
+            @options[:state]
         end
         #
         def engine engine=nil
-            @action[:engine] = engine unless engine.nil? or engine.empty?
-            @action[:engine]
+            @options[:engine] = engine unless engine.nil? or engine.empty?
+            @options[:engine]
         end
         #
         def layout layout=nil
-            @action[:layout] = layout unless layout.nil? or layout.empty?
-            return '' if @action[:layout].nil?
-            File.join(Config.layout_base_path, @action[:layout])+ Config.engine_ext(@action[:engine])
+            @options[:layout] = layout unless layout.nil? or layout.empty?
+            return '' if @options[:layout].nil?
+            File.join(Config.layout_base_path, @options[:layout])+ Config.engine_ext(@options[:engine])
         end
         #
         def no_layout
-            @action[:layout] = nil
+            @options[:layout] = nil
         end
         #
         def view view=nil
-            @action[:view] = view unless view.nil? or view.empty?
-            return '' if @action[:view].nil?
-            File.join(Config.view_base_path, @action[:view])+Config.engine_ext(@action[:engine])
+            @options[:view] = view unless view.nil? or view.empty?
+            return '' if @options[:view].nil?
+            File.join(Config.view_base_path, @options[:view])+Config.engine_ext(@options[:engine])
         end
         #
         def inherited_var sym, *args
@@ -174,7 +176,7 @@ module Zorglub
         end
         #
         def args
-            @action[:args]
+            @options[:args]
         end
         #
         def map
@@ -182,7 +184,7 @@ module Zorglub
         end
         #
         def r *args
-            File.join map, (args.empty? ? @action[:method] : args.map { |x| x.to_s } )
+            File.join map, (args.empty? ? @options[:method] : args.map { |x| x.to_s } )
         end
         #
         def html
