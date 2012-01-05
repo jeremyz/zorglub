@@ -121,9 +121,11 @@ module Zorglub
             @content = self.send @options[:method], *@options[:args]
             v, l, e = view, layout, Config.engine_proc(@options[:engine])
             state (@options[:layout].nil? ? :partial : :view)
-            @content, @mime = e.call v, self if e and File.exists? v
+            @content, mime = e.call v, self if e and File.exists? v
+            @mime = mime unless mime.nil?
             state :layout
-            @content, @mime = e.call l, self if e and File.exists? l
+            @content, mime = e.call l, self if e and File.exists? l
+            @mime = mime unless mime.nil?
             state :post_cb
             Node.call_after_hooks self
             state :finished

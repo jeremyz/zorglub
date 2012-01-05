@@ -118,6 +118,16 @@ describe Zorglub do
             r.body[0].should == "layout_start view_content layout_end"
         end
         #
+        it "default mime-type should be text/html" do
+            r = Node0.my_call '/index'
+            r.header['Content-type'].should == 'text/html'
+        end
+        #
+        it "should be able to override mime-type" do
+            r = Node0.my_call '/do_render'
+            r.header['Content-type'].should == 'text/view'
+        end
+        #
         it "partial should render correctly" do
             Node0.partial(:do_partial, 1, 2).should == 'partial_content'
         end

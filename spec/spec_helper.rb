@@ -18,9 +18,9 @@ RENDER_PROC = Proc.new { |path,obj|
     when :layout
         "layout_start #{obj.content} layout_end"
     when :view
-        "view_content"
+        ["view_content", 'text/view']
     when :partial
-        'partial_content'
+        ['partial_content','text/partial']
     else
         raise Exception.new
     end
