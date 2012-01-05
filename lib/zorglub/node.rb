@@ -141,10 +141,10 @@ module Zorglub
                 compile!
                 Dir.mkdir Config.static_base_path
                 Dir.mkdir File.dirname path
-                File.open(path, 'w') {|f| f.write(@content); f.write("\n@mime:"+@mime) }
+                File.open(path, 'w') {|f| f.write("@mime:"+@mime+"\n"); f.write(@content); }
             else
                 content = File.open(path, 'r') {|f| f.read }
-                @content = content.sub /\n@mime:(.*)$/,''
+                @content = content.sub /^@mime:(.*)\n/,''
                 @mime = $1
             end
         end
