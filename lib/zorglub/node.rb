@@ -95,7 +95,7 @@ module Zorglub
             #
         end
         #
-        attr_reader :options, :request, :response, :content
+        attr_reader :options, :request, :response, :content, :mime
         #
         def initialize env, options
             @env = env
@@ -108,6 +108,7 @@ module Zorglub
             catch(:stop_realize) {
                 feed!
                 response.write @content
+                response.header['Content-Type'] = @mime||'text/html'
                 response.finish
                 response
             }
@@ -120,13 +121,13 @@ module Zorglub
             @content = self.send @options[:method], *@options[:args]
             v, l, e = view, layout, Config.engine_proc(@options[:engine])
             state (@options[:layout].nil? ? :partial : :view)
-            @content, = e.call v, self if e and File.exists? v
+            @content, @mime = e.call v, self if e and File.exists? v
             state :layout
-            @content, = e.call l, self if e and File.exists? l
+            @content, @mime = e.call l, self if e and File.exists? l
             state :post_cb
             Node.call_after_hooks self
             state :finished
-            @content
+            return @content, @mime
         end
         #
         def redirect target, options={}, &block
