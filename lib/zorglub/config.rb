@@ -9,6 +9,7 @@ module Zorglub
             :layout => 'default',
             :view_dir => 'view',
             :layout_dir => 'layout',
+            :static_dir => 'static',
             :session_on => false,
             :session_key => 'zorglub.sid',
             :session_secret => 'session-secret-secret',
@@ -40,6 +41,11 @@ module Zorglub
             def layout_base_path
                 p = @options[:layout_path]
                 ( p.nil? ? File.join(@options[:root], @options[:layout_dir]) : p )
+            end
+            #
+            def static_base_path
+                p = @options[:static_path]
+                ( p.nil? ? File.join(@options[:root], @options[:static_dir]) : p )
             end
             #
             def register_engine name, ext, proc

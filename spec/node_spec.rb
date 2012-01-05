@@ -2,9 +2,24 @@
 #
 require 'spec_helper'
 #
+def clean_static_path
+    static_base_path = Zorglub::Config.static_base_path
+    Dir.glob( File.join(static_base_path,'**','*') ).each do |f| File.unlink f if File.file? f end
+    Dir.glob( File.join(static_base_path,'*') ).each do |d| Dir.rmdir d end
+    Dir.rmdir static_base_path if File.directory? static_base_path
+end
+#
 describe Zorglub do
     #
     describe Zorglub::Node do
+        #
+        before(:all) do
+            clean_static_path
+        end
+        #
+        after(:all) do
+            clean_static_path
+        end
         #
         it "engine should return default Node's engine" do
             Node0.engine.should == Zorglub::Config.engine

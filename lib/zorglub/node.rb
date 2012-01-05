@@ -32,6 +32,11 @@ module Zorglub
                 @layout ||= Config.layout
             end
             #
+            def static val=nil
+                @static = val if (val==true or val==false)
+                @static ||=false
+            end
+            #
             def inherited_var sym, *args
                 var = @inherited_vars[sym] ||=[]
                 unless args.empty?
@@ -55,13 +60,13 @@ module Zorglub
             def call env
                 meth, *args =  env['PATH_INFO'].sub(/^\//,'').split '/'
                 meth||= 'index'
-                node = self.new env, {:engine=>engine,:layout=>layout,:view=>r(meth),:method=>meth,:args=>args}
+                node = self.new env, {:engine=>engine,:layout=>layout,:view=>r(meth),:method=>meth,:args=>args,:static=>static}
                 return error_404 node if not node.respond_to? meth
                 node.realize!
             end
             #
             def partial meth, *args
-                node = self.new nil, {:engine=>engine,:layout=>nil,:view=>r(meth),:method=>meth.to_s,:args=>args}
+                node = self.new nil, {:engine=>engine,:layout=>nil,:view=>r(meth),:method=>meth.to_s,:args=>args,:static=>static}
                 return error_404 node if not node.respond_to? meth
                 node.feed!
                 node.content
@@ -119,6 +124,32 @@ module Zorglub
             Node.call_before_hooks self
             state :meth
             @content = self.send @options[:method], *@options[:args]
+            static_path = static
+            if static_path.nil?
+                compile!
+            else
+                static! static_path
+            end
+            state :post_cb
+            Node.call_after_hooks self
+            state :finished
+            return @content, @mime
+        end
+        #
+        def static! path
+            if not File.exists? path
+                compile!
+                Dir.mkdir Config.static_base_path
+                Dir.mkdir File.dirname path
+                File.open(path, 'w') {|f| f.write(@content); f.write("\n@mime:"+@mime) }
+            else
+                content = File.open(path, 'r') {|f| f.read }
+                @content = content.sub /\n@mime:(.*)$/,''
+                @mime = $1
+            end
+        end
+        #
+        def compile!
             v, l, e = view, layout, Config.engine_proc(@options[:engine])
             state (@options[:layout].nil? ? :partial : :view)
             @content, mime = e.call v, self if e and File.exists? v
@@ -126,10 +157,6 @@ module Zorglub
             state :layout
             @content, mime = e.call l, self if e and File.exists? l
             @mime = mime unless mime.nil?
-            state :post_cb
-            Node.call_after_hooks self
-            state :finished
-            return @content, @mime
         end
         #
         def redirect target, options={}, &block
@@ -161,6 +188,12 @@ module Zorglub
         #
         def no_layout
             @options[:layout] = nil
+        end
+        #
+        def static val=nil
+            @options[:static] = val if (val==true or val==false)
+            return nil if not @options[:static] or @options[:view].nil?
+            File.join(Config.static_base_path, @options[:view])+Config.engine_ext(@options[:engine])
         end
         #
         def view view=nil
