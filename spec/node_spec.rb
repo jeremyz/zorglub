@@ -192,6 +192,13 @@ describe Zorglub do
             vars.should == ['js0','js1']
             vars[2].should be_nil
         end
+        #
+        it "ext definition and file engine should work" do
+            r = Node0.my_call '/xml_file'
+            r.body[0]='<xml>file</xml>'
+            r = Node0.my_call '/plain_file'
+            r.body[0]='plain text'
+        end
     end
     #
 end

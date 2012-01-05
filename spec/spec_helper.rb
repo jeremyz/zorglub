@@ -11,6 +11,7 @@ end
 require 'yaml'
 #
 require 'zorglub'
+require 'zorglub/engines/file'
 #
 HASH_PROC = Proc.new { |path,obj| {:path=>path,:layout=>obj.layout,:view=>obj.view,:args=>obj.args,:map=>obj.map}.to_yaml }
 STATIC_PROC = Proc.new { |path,obj| ["VAL #{obj.value}",'text/static'] }
@@ -67,6 +68,16 @@ class Node0 < Zorglub::Node
     end
     def do_redirect
         redirect r(:do_partial,1,2,3)
+    end
+    def xml_file
+        no_layout
+        engine :file
+        ext 'xml'
+    end
+    def plain_file
+        no_layout
+        engine :file
+        ext 'txt'
     end
 end
 #
