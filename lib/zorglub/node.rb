@@ -150,7 +150,8 @@ module Zorglub
         end
         #
         def compile!
-            v, l, e = view, layout, Config.engine_proc(@options[:engine])
+            e, @options[:ext] = Config.engine_proc_ext @options[:engine], @options[:ext]
+            v, l = view, layout
             state (@options[:layout].nil? ? :partial : :view)
             @content, mime = e.call v, self if e and File.exists? v
             @mime = mime unless mime.nil?
@@ -183,7 +184,7 @@ module Zorglub
         def layout layout=nil
             @options[:layout] = layout unless layout.nil? or layout.empty?
             return '' if @options[:layout].nil?
-            File.join(Config.layout_base_path, @options[:layout])+ Config.engine_ext(@options[:engine])
+            File.join(Config.layout_base_path, @options[:layout])+ext
         end
         #
         def no_layout
@@ -193,13 +194,21 @@ module Zorglub
         def static val=nil
             @options[:static] = val if (val==true or val==false)
             return nil if not @options[:static] or @options[:view].nil?
-            File.join(Config.static_base_path, @options[:view])+Config.engine_ext(@options[:engine])
+            File.join(Config.static_base_path, @options[:view])+ext
         end
         #
         def view view=nil
             @options[:view] = view unless view.nil? or view.empty?
             return '' if @options[:view].nil?
-            File.join(Config.view_base_path, @options[:view])+Config.engine_ext(@options[:engine])
+            File.join(Config.view_base_path, @options[:view])+ext
+        end
+        #
+        def ext ext=nil
+            if ext.nil? or ext.empty?
+                @options[:ext]||''
+            else
+                @options[:ext] = (ext[0]=='.' ? (ext.length==1 ? nil : ext) : '.'+ext)
+            end
         end
         #
         def inherited_var sym, *args

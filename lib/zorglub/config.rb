@@ -50,19 +50,18 @@ module Zorglub
             #
             def register_engine name, ext, proc
                 return unless name
-                @engines[name]=[ ext, proc ]
+                if ext.nil? or ext.empty?
+                    x = nil
+                else
+                    x = (ext[0]=='.' ? (ext.length==1 ? nil : ext) : '.'+ext)
+                end
+                @engines[name]=[ proc, x ]
             end
             #
-            def engine_ext engine
-                e = @engines[engine]
-                return '' if e.nil?
-                x=e[0]
-                ( x.nil? ? '' : '.'+x )
-            end
-            #
-            def engine_proc engine
-                e = @engines[engine]
-                ( e.nil? ? nil : e[1] )
+            def engine_proc_ext engine, ext
+                p,x = @engines[engine]
+                return [nil, ''] if p.nil?
+                [ p, (x.nil? ? ext : x ) ]
             end
             #
         end
