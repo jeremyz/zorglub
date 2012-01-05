@@ -5,18 +5,17 @@ $LOAD_PATH << File.join(File.dirname( File.absolute_path(__FILE__)), '..', 'lib'
 USE_RACK_SESSION=false
 #
 require 'zorglub'
+require 'zorglub/engines/haml'
 if USE_RACK_SESSION
     require 'zorglub/rack_session'
 else
     require 'zorglub/session'
 end
 #
-require 'haml'
 HAML_PROC = Proc.new { |path,obj| Haml::Engine.new( File.open(path,'r').read ).render(obj) }
-Zorglub::Config.register_engine 'haml', 'haml', HAML_PROC
 Zorglub::Config.register_engine 'tmp-engine', 'haml', HAML_PROC
 #
-Zorglub::Config.engine = 'haml'
+Zorglub::Config.engine = :haml
 Zorglub::Config.session_on = true
 Zorglub::Config.root = File.dirname( File.absolute_path(__FILE__) )
 #
