@@ -152,16 +152,16 @@ describe Zorglub do
         end
         #
         it "static pages should be generated" do
-            r = Node0.my_call '/do_static'
+            r = Node6.my_call '/do_static'
             r.body[0].should == 'VAL 1'
             r.header['Content-type'].should == 'text/static'
-            r = Node0.my_call '/do_static'
+            r = Node6.my_call '/do_static'
             r.body[0].should == 'VAL 1'
             r.header['Content-type'].should == 'text/static'
-            r = Node0.my_call '/do_static'
+            r = Node6.my_call '/do_static'
             r.body[0].should == 'VAL 1'
             r.header['Content-type'].should == 'text/static'
-            r = Node0.my_call '/no_static'
+            r = Node6.my_call '/no_static'
             r.body[0].should == 'VAL 4'
             r.header['Content-type'].should == 'text/static'
         end

@@ -45,10 +45,6 @@ class Temp < Zorglub::Node
 end
 #
 class Node0 < Zorglub::Node
-    @static_cpt=0
-    class << self
-        attr_accessor :static_cpt
-    end
     # default
     def index
         html
@@ -71,21 +67,6 @@ class Node0 < Zorglub::Node
     end
     def do_redirect
         redirect r(:do_partial,1,2,3)
-    end
-    attr_reader :value
-    def no_static
-        static false
-        engine 'static'
-        view r('do_render')
-        Node0.static_cpt+=1
-        @value = Node0.static_cpt
-    end
-    def do_static
-        static true
-        engine 'static'
-        view r('do_render')
-        Node0.static_cpt+=1
-        @value = Node0.static_cpt
     end
 end
 #
@@ -144,12 +125,35 @@ class Node5 < Node4
     end
 end
 #
+class Node6 < Zorglub::Node
+    @static_cpt=0
+    class << self
+        attr_accessor :static_cpt
+    end
+    attr_reader :value
+    static true
+    def no_static
+        static false
+        engine 'static'
+        view Node0.r('do_render')
+        Node6.static_cpt+=1
+        @value = Node6.static_cpt
+    end
+    def do_static
+        engine 'static'
+        view Node0.r('do_render')
+        Node6.static_cpt+=1
+        @value = Node6.static_cpt
+    end
+end
+#
 APP = Zorglub::App.new do
     map '/node0', Node0
     map '/node1', Node1
     map '/node3', Node3
     map '/node4', Node4
     map '/node5', Node5
+    map '/node6', Node6
 end
 class Node2
     map APP, '/node2'
