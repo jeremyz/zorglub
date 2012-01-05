@@ -11,7 +11,8 @@
 	* update test application and write specs
 
 2012-01-05 Jérémy Zurcher <jeremy@asynk.ch>
-	* haml engine
+	* haml, file engines
+	* view/layout extention overriding at methode level
 	* optional engine cache
 	* optional engine proc mime-type definition
 	* optional static page generation/cache

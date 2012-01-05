@@ -4,4 +4,4 @@ TODO
 - encoding
 
 MAYBE
-- app.config instead of Zorglub::Config
+- config belongs to application
