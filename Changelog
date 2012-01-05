@@ -9,3 +9,10 @@
 	* replace Helpers Module with Node#inherited_var Node@inherited_vars
 	* rewrite session so it is compatible with Rack SessionHash
 	* update test application and write specs
+
+2012-01-05 Jérémy Zurcher <jeremy@asynk.ch>
+	* haml engine
+	* optional engine cache
+	* optional engine proc mime-type definition
+	* optional static page generation/cache
+	*
