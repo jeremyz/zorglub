@@ -11,7 +11,9 @@ module Zorglub
             @map = map
             instance_eval &block if block_given?
             remap @map
+            @engines_cache = { }
         end
+        attr_reader :engines_cache
         #
         def map location, object
             return unless location and object

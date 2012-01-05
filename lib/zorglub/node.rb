@@ -41,7 +41,7 @@ module Zorglub
                 var
             end
             #
-            attr_writer :app
+            attr_accessor :app
             def map app, location
                 @app = app
                 @app.map location, self
@@ -174,6 +174,10 @@ module Zorglub
                 d.uniq!
             end
             d
+        end
+        #
+        def app
+            self.class.app
         end
         #
         def args

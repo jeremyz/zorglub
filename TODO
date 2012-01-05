@@ -1,5 +1,8 @@
-- compiled templates cache
+TODO
 - static pages
 - development and production modes
 - minimized html/js/css
 - encoding mime-type
+
+MAYBE
+- app.config instead of Zorglub::Config
