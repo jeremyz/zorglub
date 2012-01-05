@@ -136,6 +136,21 @@ describe Zorglub do
             Node0.partial(:other_view).should == 'partial_content'
         end
         #
+        it "static pages should be generated" do
+            r = Node0.my_call '/do_static'
+            r.body[0].should == 'VAL 1'
+            r.header['Content-type'].should == 'text/static'
+            r = Node0.my_call '/do_static'
+            r.body[0].should == 'VAL 1'
+            r.header['Content-type'].should == 'text/static'
+            r = Node0.my_call '/do_static'
+            r.body[0].should == 'VAL 1'
+            r.header['Content-type'].should == 'text/static'
+            r = Node0.my_call '/no_static'
+            r.body[0].should == 'VAL 4'
+            r.header['Content-type'].should == 'text/static'
+        end
+        #
         it "redirect should work" do
             r = Node0.my_call '/do_redirect'
             r.status.should == 302

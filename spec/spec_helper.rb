@@ -13,6 +13,7 @@ require 'yaml'
 require 'zorglub'
 #
 HASH_PROC = Proc.new { |path,obj| {:path=>path,:layout=>obj.layout,:view=>obj.view,:args=>obj.args,:map=>obj.map}.to_yaml }
+STATIC_PROC = Proc.new { |path,obj| ["VAL #{obj.value}",'text/static'] }
 RENDER_PROC = Proc.new { |path,obj|
     case obj.state
     when :layout
@@ -29,6 +30,7 @@ Zorglub::Config.register_engine 'default', nil, HASH_PROC
 Zorglub::Config.register_engine 'engine-1', 'spec', HASH_PROC
 Zorglub::Config.register_engine 'engine-2', 'spec', HASH_PROC
 Zorglub::Config.register_engine 'real', nil, RENDER_PROC
+Zorglub::Config.register_engine 'static', nil, STATIC_PROC
 #
 Zorglub::Config[:engine] = 'default'
 Zorglub::Config.root = File.join Dir.pwd, 'spec', 'data'
@@ -43,6 +45,10 @@ class Temp < Zorglub::Node
 end
 #
 class Node0 < Zorglub::Node
+    @static_cpt=0
+    class << self
+        attr_accessor :static_cpt
+    end
     # default
     def index
         html
@@ -65,6 +71,21 @@ class Node0 < Zorglub::Node
     end
     def do_redirect
         redirect r(:do_partial,1,2,3)
+    end
+    attr_reader :value
+    def no_static
+        static false
+        engine 'static'
+        view r('do_render')
+        Node0.static_cpt+=1
+        @value = Node0.static_cpt
+    end
+    def do_static
+        static true
+        engine 'static'
+        view r('do_render')
+        Node0.static_cpt+=1
+        @value = Node0.static_cpt
     end
 end
 #
