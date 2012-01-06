@@ -61,7 +61,7 @@ module Zorglub
             def engine_proc_ext engine, ext
                 p,x = @engines[engine]
                 return [nil, ''] if p.nil?
-                [ p, (x.nil? ? ext : x ) ]
+                [ p, ((ext.nil? or ext.empty?) ? x : ext ) ]
             end
             #
         end

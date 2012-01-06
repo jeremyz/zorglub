@@ -195,9 +195,9 @@ describe Zorglub do
         #
         it "ext definition and file engine should work" do
             r = Node0.my_call '/xml_file'
-            r.body[0]='<xml>file</xml>'
+            r.body[0].should  == "<xml>file<\/xml>\n"
             r = Node0.my_call '/plain_file'
-            r.body[0]='plain text'
+            r.body[0].should == "plain file\n"
         end
     end
     #
