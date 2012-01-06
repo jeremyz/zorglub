@@ -12,6 +12,7 @@ require 'yaml'
 #
 require 'zorglub'
 require 'zorglub/engines/file'
+require 'zorglub/engines/haml'
 #
 HASH_PROC = Proc.new { |path,obj| {:path=>path,:layout=>obj.layout,:view=>obj.view,:args=>obj.args,:map=>obj.map}.to_yaml }
 STATIC_PROC = Proc.new { |path,obj| ["VAL #{obj.value}",'text/static'] }
@@ -78,6 +79,13 @@ class Node0 < Zorglub::Node
         no_layout
         engine :file
         ext 'txt'
+    end
+    def engines name
+        no_layout
+        case name
+        when 'haml'
+            engine :haml
+        end
     end
 end
 #

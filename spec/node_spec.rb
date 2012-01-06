@@ -199,6 +199,12 @@ describe Zorglub do
             r = Node0.my_call '/plain_file'
             r.body[0].should == "plain file\n"
         end
+        #
+        it "haml engine should work" do
+            r = Node0.my_call '/engines/haml'
+            r.body[0].should == "<h1>Hello world</h1>\n"
+        end
+        #
     end
     #
 end
