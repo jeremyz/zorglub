@@ -244,7 +244,7 @@ module Zorglub
         #
         def ext! ext
             if ext.nil? or ext.empty?
-                @options[:ext]||''
+                @options[:ext]=''
             else
                 @options[:ext] = (ext[0]=='.' ? (ext.length==1 ? nil : ext) : '.'+ext)
             end
