@@ -165,6 +165,15 @@ class Node6 < Zorglub::Node
     end
 end
 #
+class Node7 < Zorglub::Node
+    Zorglub::Config.debug=true
+    view_base_path! File.join Zorglub::Config.root, 'alt'
+    def view_path
+        view! 'do_render'
+    end
+end
+
+#
 APP = Zorglub::App.new do
     map '/node0', Node0
     map '/node1', Node1
@@ -172,6 +181,7 @@ APP = Zorglub::App.new do
     map '/node4', Node4
     map '/node5', Node5
     map '/node6', Node6
+    map '/node7', Node7
 end
 class Node2
     map APP, '/node2'

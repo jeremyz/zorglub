@@ -209,6 +209,12 @@ describe Zorglub do
             r.body[0].should == "<h1>Hello world</h1>\n"
         end
         #
+        it "view_base_path! should work" do
+            r = Node7.my_call '/view_path'
+            h = YAML.load r.body[0]
+            h[:view].should == File.join(Zorglub::Config.root, 'alt/do_render')
+        end
+        #
     end
     #
 end
