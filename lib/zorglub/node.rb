@@ -170,7 +170,7 @@ module Zorglub
             d
         end
         #
-        # TODO check and rewrite maybe
+        # TODO use inherited_vars ??
         #
         @hooks = {
             :before_all => [],
@@ -179,7 +179,6 @@ module Zorglub
         class << self
             #
             attr_reader :hooks
-            #
             #
             def call_before_hooks obj
                 Node.hooks[:before_all].each do |blk| blk.call obj end
@@ -200,6 +199,8 @@ module Zorglub
             end
             #
         end
+        #
+        # rack entry point, page computation methods
         #
         class << self
             #
