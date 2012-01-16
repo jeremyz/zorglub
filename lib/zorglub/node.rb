@@ -16,8 +16,8 @@ module Zorglub
             attr_reader :hooks, :inherited_vars, :layout, :engine, :static
             #
             def inherited sub
-                sub.layout! layout||(self==Zorglub::Node ? Config.layout : nil )
                 sub.engine! engine||(self==Zorglub::Node ? Config.engine : nil )
+                sub.layout! layout||(self==Zorglub::Node ? Config.layout : nil )
                 sub.instance_variable_set :@inherited_vars, {}
                 @inherited_vars.each do |s,v| sub.inherited_var s, *v end
             end
