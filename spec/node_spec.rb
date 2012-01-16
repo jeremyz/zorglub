@@ -212,7 +212,13 @@ describe Zorglub do
         it "view_base_path! should work" do
             r = Node7.my_call '/view_path'
             h = YAML.load r.body[0]
-            h[:view].should == File.join(Zorglub::Config.root, 'alt/do_render')
+            h[:view].should == File.join(Zorglub::Config.root, 'alt','do_render')
+        end
+        #
+        it "layout_base_path! should work" do
+            r = Node7.my_call '/view_path'
+            h = YAML.load r.body[0]
+            h[:layout].should == File.join(Zorglub::Config.root, 'alt','layout','default')
         end
         #
     end

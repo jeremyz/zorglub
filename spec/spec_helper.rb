@@ -166,7 +166,7 @@ class Node6 < Zorglub::Node
 end
 #
 class Node7 < Zorglub::Node
-    Zorglub::Config.debug=true
+    layout_base_path! File.join Zorglub::Config.root, 'alt','layout'
     view_base_path! File.join Zorglub::Config.root, 'alt'
     def view_path
         view! 'do_render'
