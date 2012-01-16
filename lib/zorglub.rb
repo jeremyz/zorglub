@@ -1,9 +1,9 @@
 #! /usr/bin/env ruby
 # -*- coding: UTF-8 -*-
 #
-require './lib/zorglub/config'
-require './lib/zorglub/node'
-require './lib/zorglub/app'
+require 'zorglub/config'
+require 'zorglub/node'
+require 'zorglub/app'
 #
 module Zorglub
     #
