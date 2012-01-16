@@ -94,7 +94,7 @@ module Zorglub
         #
         def load_data!
             return if loaded?
-            if Config.session_on
+            if Zorglub::Config.session_on
                 sid = @request.cookies[Zorglub::Config.session_key]
                 if sid.nil?
                     sid = generate_sid!
