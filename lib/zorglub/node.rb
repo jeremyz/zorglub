@@ -42,6 +42,14 @@ module Zorglub
                 @layout = layout
             end
             #
+            def view_base_path! path
+                @view_base_path = path
+            end
+            #
+            def view_base_path
+                @view_base_path ||= Config.view_base_path
+            end
+            #
             def static! val
                 @static = val if (val==true or val==false)
                 @static ||= false
@@ -231,7 +239,7 @@ module Zorglub
         #
         def view
             return '' if @options[:view].nil?
-            File.join(Config.view_base_path, @options[:view])+ext
+            File.join(self.class.view_base_path, @options[:view])+ext
         end
         #
         def ext! ext
