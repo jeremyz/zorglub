@@ -4,34 +4,14 @@ module Zorglub
     #
     class Node
         #
-        @hooks = {
-            :before_all => [],
-            :after_all => [],
-        }
-        #
-        @inherited_vars = { }
+        # class level engine, layout, static, layout_base_path, view_base_path configuration
         #
         class << self
             #
-            attr_reader :hooks, :inherited_vars, :layout, :engine, :static
-            #
-            def inherited sub
-                sub.engine! engine||(self==Zorglub::Node ? Config.engine : nil )
-                sub.layout! layout||(self==Zorglub::Node ? Config.layout : nil )
-                sub.instance_variable_set :@inherited_vars, {}
-                @inherited_vars.each do |s,v| sub.inherited_var s, *v end
-            end
+            attr_reader :engine, :layout, :static
             #
             def engine! engine
                 @engine = engine
-            end
-            #
-            def layout_base_path! path
-                @layout_base_path = path
-            end
-            #
-            def layout_base_path
-                @layout_base_path ||= Config.layout_base_path
             end
             #
             def no_layout!
@@ -42,6 +22,18 @@ module Zorglub
                 @layout = layout
             end
             #
+            def static! val
+                @static = ( (val==true or val==false) ? val : false )
+            end
+            #
+            def layout_base_path! path
+                @layout_base_path = path
+            end
+            #
+            def layout_base_path
+                @layout_base_path ||= Config.layout_base_path
+            end
+            #
             def view_base_path! path
                 @view_base_path = path
             end
@@ -49,20 +41,66 @@ module Zorglub
             def view_base_path
                 @view_base_path ||= Config.view_base_path
             end
-            #
-            def static! val
-                @static = val if (val==true or val==false)
-                @static ||= false
+        end
+        #
+        # instance level engine, layout, view, static configuration
+        #
+        def engine! engine
+            @options[:engine] = engine
+        end
+        #
+        def engine
+            @options[:engine]
+        end
+        #
+        def no_layout!
+            layout! nil
+        end
+        #
+        def layout! layout
+            @options[:layout] = layout
+        end
+        #
+        def layout
+            return '' if @options[:layout].nil?
+            File.join(self.class.layout_base_path, @options[:layout])+ext
+        end
+        #
+        def view! view
+            @options[:view] = view
+        end
+        #
+        def view
+            return '' if @options[:view].nil?
+            File.join(self.class.view_base_path, @options[:view])+ext
+        end
+        #
+        def static! val
+            @options[:static] = ((val==true or val==false) ? val : false )
+        end
+        #
+        def static
+            return nil if not @options[:static] or @options[:view].nil?
+            File.join(Config.static_base_path, @options[:view])+ext
+        end
+        #
+        # TODO rewrite
+        #
+        def ext! ext
+            if ext.nil? or ext.empty?
+                @options[:ext]=''
+            else
+                @options[:ext] = (ext[0]=='.' ? (ext.length==1 ? nil : ext) : '.'+ext)
             end
-            #
-            def inherited_var sym, *args
-                var = @inherited_vars[sym] ||=[]
-                unless args.empty?
-                    var.concat args
-                    var.uniq!
-                end
-                var
-            end
+        end
+        #
+        def ext
+            @options[:ext]||''
+        end
+        #
+        # class level basic node functions
+        #
+        class << self
             #
             attr_accessor :app
             def map app, location
@@ -75,21 +113,79 @@ module Zorglub
                 (args.empty? ? @r : File.join( @r, args.map { |x| x.to_s } ) )
             end
             #
-            def call env
-                meth, *args =  env['PATH_INFO'].sub(/^\//,'').split '/'
-                meth||= 'index'
-                puts "=> #{meth}(#{args.join ','})" if Config.debug
-                node = self.new env, {:engine=>engine,:layout=>layout,:view=>r(meth),:method=>meth,:args=>args,:static=>static}
-                return error_404 node if not node.respond_to? meth
-                node.realize!
+        end
+        #
+        # instance level basic node functions
+        #
+        def app
+            self.class.app
+        end
+        #
+        def args
+            @options[:args]
+        end
+        #
+        def map
+            self.class.r
+        end
+        #
+        def r *args
+            File.join map, (args.empty? ? @options[:method] : args.map { |x| x.to_s } )
+        end
+        #
+        def html
+            [ :map, :r, :args, :engine, :layout, :view ].inject('') { |s,sym| s+="<p>#{sym} => #{self.send sym}</p>"; s }
+        end
+        #
+        def redirect target, options={}, &block
+            status = options[:status] || 302
+            body   = options[:body] || redirect_body(target)
+            header = response.header.merge('Location' => target.to_s)
+            throw :stop_realize, Rack::Response.new(body, status, header, &block)
+        end
+        #
+        def redirect_body target
+            "You are being redirected, please follow this link to: <a href='#{target}'>#{target}</a>!"
+        end
+        #
+        # inherited vars, they can be modified at class level only
+        #
+        @inherited_vars = { }
+        #
+        class << self
+            #
+            attr_reader :inherited_vars
+            #
+            def inherited_var sym, *args
+                var = @inherited_vars[sym] ||=[]
+                unless args.empty?
+                    var.concat args
+                    var.uniq!
+                end
+                var
             end
             #
-            def partial meth, *args
-                node = self.new nil, {:engine=>engine,:layout=>nil,:view=>r(meth),:method=>meth.to_s,:args=>args,:static=>static}
-                return error_404 node if not node.respond_to? meth
-                node.feed!
-                node.content
+        end
+        #
+        def inherited_var sym, *args
+            d = self.class.inherited_vars[sym].clone || []
+            unless args.empty?
+                d.concat args
+                d.uniq!
             end
+            d
+        end
+        #
+        # TODO check and rewrite maybe
+        #
+        @hooks = {
+            :before_all => [],
+            :after_all => [],
+        }
+        class << self
+            #
+            attr_reader :hooks
+            #
             #
             def call_before_hooks obj
                 Node.hooks[:before_all].each do |blk| blk.call obj end
@@ -107,6 +203,33 @@ module Zorglub
             def after_all &blk
                 Node.hooks[:after_all]<< blk
                 Node.hooks[:after_all].uniq!
+            end
+            #
+        end
+        #
+        class << self
+            #
+            def inherited sub
+                sub.engine! engine||(self==Zorglub::Node ? Config.engine : nil )
+                sub.layout! layout||(self==Zorglub::Node ? Config.layout : nil )
+                sub.instance_variable_set :@inherited_vars, {}
+                @inherited_vars.each do |s,v| sub.inherited_var s, *v end
+            end
+            #
+            def call env
+                meth, *args =  env['PATH_INFO'].sub(/^\//,'').split '/'
+                meth||= 'index'
+                puts "=> #{meth}(#{args.join ','})" if Config.debug
+                node = self.new env, {:engine=>engine,:layout=>layout,:view=>r(meth),:method=>meth,:args=>args,:static=>static}
+                return error_404 node if not node.respond_to? meth
+                node.realize!
+            end
+            #
+            def partial meth, *args
+                node = self.new nil, {:engine=>engine,:layout=>nil,:view=>r(meth),:method=>meth.to_s,:args=>args,:static=>static}
+                return error_404 node if not node.respond_to? meth
+                node.feed!
+                node.content
             end
             #
             def error_404 node
@@ -127,6 +250,11 @@ module Zorglub
             @options = options
             @request = Rack::Request.new env
             @response = Rack::Response.new
+        end
+        #
+        def state state=nil
+            @options[:state] = state unless state.nil?
+            @options[:state]
         end
         #
         def realize!
@@ -184,103 +312,6 @@ module Zorglub
             state :layout
             @content, mime = e.call l, self if e and File.exists? l
             @mime = mime unless mime.nil?
-        end
-        #
-        def redirect target, options={}, &block
-            status = options[:status] || 302
-            body   = options[:body] || redirect_body(target)
-            header = response.header.merge('Location' => target.to_s)
-            throw :stop_realize, Rack::Response.new(body, status, header, &block)
-        end
-        #
-        def redirect_body target
-            "You are being redirected, please follow this link to: <a href='#{target}'>#{target}</a>!"
-        end
-        #
-        def state state=nil
-            @options[:state] = state unless state.nil?
-            @options[:state]
-        end
-        #
-        def engine! engine
-            @options[:engine] = engine
-        end
-        #
-        def engine
-            @options[:engine]
-        end
-        #
-        def no_layout!
-            @options[:layout] = nil
-        end
-        #
-        def layout! layout
-            @options[:layout] = layout
-        end
-        #
-        def layout
-            return '' if @options[:layout].nil?
-            File.join(self.class.layout_base_path, @options[:layout])+ext
-        end
-        #
-        def static! val
-            @options[:static] = val if (val==true or val==false)
-            @options[:static] ||= false
-        end
-        #
-        def static
-            return nil if not @options[:static] or @options[:view].nil?
-            File.join(Config.static_base_path, @options[:view])+ext
-        end
-        #
-        def view! view
-            @options[:view] = view
-        end
-        #
-        def view
-            return '' if @options[:view].nil?
-            File.join(self.class.view_base_path, @options[:view])+ext
-        end
-        #
-        def ext! ext
-            if ext.nil? or ext.empty?
-                @options[:ext]=''
-            else
-                @options[:ext] = (ext[0]=='.' ? (ext.length==1 ? nil : ext) : '.'+ext)
-            end
-        end
-        #
-        def ext
-            @options[:ext]||''
-        end
-        #
-        def inherited_var sym, *args
-            d = self.class.inherited_vars[sym].clone || []
-            unless args.empty?
-                d.concat args
-                d.uniq!
-            end
-            d
-        end
-        #
-        def app
-            self.class.app
-        end
-        #
-        def args
-            @options[:args]
-        end
-        #
-        def map
-            self.class.r
-        end
-        #
-        def r *args
-            File.join map, (args.empty? ? @options[:method] : args.map { |x| x.to_s } )
-        end
-        #
-        def html
-            [ :map, :r, :args, :engine, :layout, :view ].inject('') { |s,sym| s+="<p>#{sym} => #{self.send sym}</p>"; s }
         end
         #
     end
