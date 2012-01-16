@@ -13,10 +13,10 @@ module Zorglub
         #
         class << self
             #
-            attr_reader :hooks, :inherited_vars
+            attr_reader :hooks, :inherited_vars, :layout
             #
             def inherited sub
-                sub.layout layout
+                sub.layout! layout||(self==Zorglub::Node ? Config.layout : nil )
                 sub.engine engine
                 sub.instance_variable_set :@inherited_vars, {}
                 @inherited_vars.each do |s,v| sub.inherited_var s, *v end
@@ -27,9 +27,12 @@ module Zorglub
                 @engine ||= Config.engine
             end
             #
-            def layout layout=nil
-                @layout = layout unless layout.nil? or layout.empty?
-                @layout ||= Config.layout
+            def no_layout!
+                @layout = nil
+            end
+            #
+            def layout! layout
+                @layout = layout
             end
             #
             def static val=nil
@@ -189,14 +192,17 @@ module Zorglub
             @options[:engine]
         end
         #
-        def layout layout=nil
-            @options[:layout] = layout unless layout.nil? or layout.empty?
-            return '' if @options[:layout].nil?
-            File.join(Config.layout_base_path, @options[:layout])+ext
+        def no_layout!
+            @options[:layout] = nil
         end
         #
-        def no_layout
-            @options[:layout] = nil
+        def layout! layout
+            @options[:layout] = layout
+        end
+        #
+        def layout
+            return '' if @options[:layout].nil?
+            File.join(Config.layout_base_path, @options[:layout])+ext
         end
         #
         def static val=nil

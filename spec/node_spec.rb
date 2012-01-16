@@ -172,6 +172,10 @@ describe Zorglub do
             r.header['location'].should == Node0.r(:do_partial,1,2,3)
         end
         #
+        it "no_layout! should be inherited" do
+            Node5.layout.should be_nil
+        end
+        #
         it "inherited_vars should be inherited and extended" do
             r = Node5.my_call '/index'
             vars = YAML.load r.body[0]

@@ -52,7 +52,7 @@ class Node0 < Zorglub::Node
         html
     end
     def hello
-        no_layout
+        no_layout!
         'world'
     end
     def with_2args a1, a2
@@ -71,17 +71,17 @@ class Node0 < Zorglub::Node
         redirect r(:do_partial,1,2,3)
     end
     def xml_file
-        no_layout
+        no_layout!
         engine :file
         ext 'xml'
     end
     def plain_file
-        no_layout
+        no_layout!
         engine :file
         ext 'txt'
     end
     def engines name
-        no_layout
+        no_layout!
         case name
         when 'haml'
             engine :haml
@@ -90,10 +90,10 @@ class Node0 < Zorglub::Node
 end
 #
 class Node1 < Zorglub::Node
-    layout 'layout-1'
+    layout! 'layout-1'
     engine 'engine-1'
     def index
-        layout 'main'
+        layout! 'main'
         engine 'engine-2'
     end
 end
@@ -114,7 +114,7 @@ class Node3 < Zorglub::Node
     after_all do |node|
         Node3.after +=1
     end
-    layout 'layout-2'
+    layout! 'layout-2'
     engine 'engine-2'
     def index
         (self.class.before-self.class.after).should == 1
@@ -122,13 +122,12 @@ class Node3 < Zorglub::Node
 end
 #
 class Node4 < Zorglub::Node
+    no_layout!
     inherited_var :js,'js0','js1'
     def index
-        no_layout
         inherited_var(:js).to_yaml
     end
     def more
-        no_layout
         inherited_var(:js,'js2').to_yaml
     end
 end
@@ -136,8 +135,8 @@ end
 class Node5 < Node4
     inherited_var :js, 'js3'
     inherited_var :css, 'css0', 'css1'
+    # no_layout! inherited from Node4
     def index
-        no_layout
         js = inherited_var(:js,'jsx')
         css = inherited_var(:css, 'css0', 'css1','css2')
         js.concat(css).to_yaml
