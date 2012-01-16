@@ -42,7 +42,7 @@ class Node1 < Zorglub::Node
         @title='meth0'
         @links = LINKS
         # method level engine
-        engine 'tmp-engine'
+        engine! 'tmp-engine'
         # there's a view so the below will be lost !
         "<b>should never be seeen</b>"
     end
@@ -51,9 +51,9 @@ class Node1 < Zorglub::Node
         @title='meth1'
         @links = LINKS
         # method level engine (layout/other.haml)
-        layout 'other'
+        layout! 'other'
         # specific method view (view/url1/meth0.haml)
-        view File.join( 'url1','meth0')
+        view! File.join( 'url1','meth0')
         # there's a view so the below will be lost !
         "<b>should never be seeen</b>"
     end
@@ -71,9 +71,9 @@ end
 class Node2 < Zorglub::Node
     #
     map APP, '/url2'
-    layout 'css'
+    layout! 'css'
     # class level engine
-    engine 'tmp-engine'
+    engine! 'tmp-engine'
     # class level css
     inherited_var :css, 'class_level.css'
     #
@@ -96,7 +96,7 @@ end
 class Node3 < Zorglub::Node
     #
     map APP, '/url3'
-    layout ''
+    no_layout!
     #
     def index *args
         @title = "Session tests"
