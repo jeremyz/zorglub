@@ -213,8 +213,11 @@ module Zorglub
             File.join(Config.static_base_path, @options[:view])+ext
         end
         #
-        def view view=nil
-            @options[:view] = view unless view.nil? or view.empty?
+        def view! view
+            @options[:view] = view
+        end
+        #
+        def view
             return '' if @options[:view].nil?
             File.join(Config.view_base_path, @options[:view])+ext
         end

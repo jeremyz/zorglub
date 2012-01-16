@@ -65,7 +65,7 @@ class Node0 < Zorglub::Node
     end
     def other_view
         engine! 'real'
-        view r('do_partial')
+        view! r('do_partial')
     end
     def do_redirect
         redirect r(:do_partial,1,2,3)
@@ -153,13 +153,13 @@ class Node6 < Zorglub::Node
     def no_static
         static false
         engine! 'static'
-        view Node0.r('do_render')
+        view! Node0.r('do_render')
         Node6.static_cpt+=1
         @value = Node6.static_cpt
     end
     def do_static
         engine! 'static'
-        view Node0.r('do_render')
+        view! Node0.r('do_render')
         Node6.static_cpt+=1
         @value = Node6.static_cpt
     end
