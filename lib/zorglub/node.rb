@@ -13,18 +13,17 @@ module Zorglub
         #
         class << self
             #
-            attr_reader :hooks, :inherited_vars, :layout
+            attr_reader :hooks, :inherited_vars, :layout, :engine
             #
             def inherited sub
                 sub.layout! layout||(self==Zorglub::Node ? Config.layout : nil )
-                sub.engine engine
+                sub.engine! engine||(self==Zorglub::Node ? Config.engine : nil )
                 sub.instance_variable_set :@inherited_vars, {}
                 @inherited_vars.each do |s,v| sub.inherited_var s, *v end
             end
             #
-            def engine engine=nil
-                @engine = engine unless engine.nil? or engine.empty?
-                @engine ||= Config.engine
+            def engine! engine
+                @engine = engine
             end
             #
             def no_layout!
@@ -187,8 +186,11 @@ module Zorglub
             @options[:state]
         end
         #
-        def engine engine=nil
-            @options[:engine] = engine unless engine.nil? or engine.empty?
+        def engine! engine
+            @options[:engine] = engine
+        end
+        #
+        def engine
             @options[:engine]
         end
         #

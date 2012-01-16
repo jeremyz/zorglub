@@ -58,13 +58,13 @@ class Node0 < Zorglub::Node
     def with_2args a1, a2
     end
     def do_render
-        engine 'real'
+        engine! 'real'
     end
     def do_partial a1, a2
-        engine 'real'
+        engine! 'real'
     end
     def other_view
-        engine 'real'
+        engine! 'real'
         view r('do_partial')
     end
     def do_redirect
@@ -72,29 +72,29 @@ class Node0 < Zorglub::Node
     end
     def xml_file
         no_layout!
-        engine :file
+        engine! :file
         ext 'xml'
     end
     def plain_file
         no_layout!
-        engine :file
+        engine! :file
         ext 'txt'
     end
     def engines name
         no_layout!
         case name
         when 'haml'
-            engine :haml
+            engine! :haml
         end
     end
 end
 #
 class Node1 < Zorglub::Node
     layout! 'layout-1'
-    engine 'engine-1'
+    engine! 'engine-1'
     def index
         layout! 'main'
-        engine 'engine-2'
+        engine! 'engine-2'
     end
 end
 #
@@ -115,7 +115,7 @@ class Node3 < Zorglub::Node
         Node3.after +=1
     end
     layout! 'layout-2'
-    engine 'engine-2'
+    engine! 'engine-2'
     def index
         (self.class.before-self.class.after).should == 1
     end
@@ -152,13 +152,13 @@ class Node6 < Zorglub::Node
     static true
     def no_static
         static false
-        engine 'static'
+        engine! 'static'
         view Node0.r('do_render')
         Node6.static_cpt+=1
         @value = Node6.static_cpt
     end
     def do_static
-        engine 'static'
+        engine! 'static'
         view Node0.r('do_render')
         Node6.static_cpt+=1
         @value = Node6.static_cpt
