@@ -1,6 +1,8 @@
 # -*- coding: UTF-8 -*-
 #
-require './lib/zorglub.rb'
+$LOAD_PATH << 'lib'
+#
+require 'zorglub'
 load './tasks/setup.rb'
 #
 # Project general information
