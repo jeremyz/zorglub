@@ -149,9 +149,9 @@ class Node6 < Zorglub::Node
         attr_accessor :static_cpt
     end
     attr_reader :value
-    static true
+    static! true
     def no_static
-        static false
+        static! false
         engine! 'static'
         view! Node0.r('do_render')
         Node6.static_cpt+=1

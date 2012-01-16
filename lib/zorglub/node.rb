@@ -13,7 +13,7 @@ module Zorglub
         #
         class << self
             #
-            attr_reader :hooks, :inherited_vars, :layout, :engine
+            attr_reader :hooks, :inherited_vars, :layout, :engine, :static
             #
             def inherited sub
                 sub.layout! layout||(self==Zorglub::Node ? Config.layout : nil )
@@ -34,9 +34,9 @@ module Zorglub
                 @layout = layout
             end
             #
-            def static val=nil
+            def static! val
                 @static = val if (val==true or val==false)
-                @static ||=false
+                @static ||= false
             end
             #
             def inherited_var sym, *args
@@ -207,8 +207,12 @@ module Zorglub
             File.join(Config.layout_base_path, @options[:layout])+ext
         end
         #
-        def static val=nil
+        def static! val
             @options[:static] = val if (val==true or val==false)
+            @options[:static] ||= false
+        end
+        #
+        def static
             return nil if not @options[:static] or @options[:view].nil?
             File.join(Config.static_base_path, @options[:view])+ext
         end
