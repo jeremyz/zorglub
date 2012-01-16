@@ -60,6 +60,7 @@ module Zorglub
             def call env
                 meth, *args =  env['PATH_INFO'].sub(/^\//,'').split '/'
                 meth||= 'index'
+                puts "=> #{meth}(#{args.join ','})" if Config.debug
                 node = self.new env, {:engine=>engine,:layout=>layout,:view=>r(meth),:method=>meth,:args=>args,:static=>static}
                 return error_404 node if not node.respond_to? meth
                 node.realize!
@@ -91,6 +92,7 @@ module Zorglub
             end
             #
             def error_404 node
+                puts " !! method not found" if Config.debug
                 resp = node.response
                 resp.status = 404
                 resp['Content-Type'] = 'text/plain'
@@ -142,7 +144,9 @@ module Zorglub
                 Dir.mkdir Config.static_base_path
                 Dir.mkdir File.dirname path
                 File.open(path, 'w') {|f| f.write("@mime:"+@mime+"\n"); f.write(@content); }
+                puts " * cache file created : #{path}" if Config.debug
             else
+                puts " * use cache file : #{path}" if Config.debug
                 content = File.open(path, 'r') {|f| f.read }
                 @content = content.sub /^@mime:(.*)\n/,''
                 @mime = $1
@@ -152,6 +156,10 @@ module Zorglub
         def compile!
             e, @options[:ext] = Config.engine_proc_ext @options[:engine], @options[:ext]
             v, l = view, layout
+            if Config.debug
+                puts " * "+(File.exists?(l) ? 'use layout' : 'not found layout')+" : "+l
+                puts " * "+(File.exists?(v) ? 'use view  ' : 'not found view  ')+" : "+v
+            end
             state (@options[:layout].nil? ? :partial : :view)
             @content, mime = e.call v, self if e and File.exists? v
             @mime = mime unless mime.nil?

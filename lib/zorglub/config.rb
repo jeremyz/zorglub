@@ -4,6 +4,7 @@ module Zorglub
     #
     class Config
         @options = {
+            :debug => false,
             :root => '.',
             :engine => nil,
             :layout => 'default',
