@@ -84,14 +84,8 @@ module Zorglub
             File.join(Config.static_base_path, @options[:view])+ext
         end
         #
-        # TODO rewrite
-        #
         def ext! ext
-            if ext.nil? or ext.empty?
-                @options[:ext]=''
-            else
-                @options[:ext] = (ext[0]=='.' ? (ext.length==1 ? nil : ext) : '.'+ext)
-            end
+            @options[:ext]= ( (ext.nil? or ext.empty?) ? nil : (ext[0]=='.' ? (ext.length==1 ? nil : ext) : '.'+ext) )
         end
         #
         def ext
