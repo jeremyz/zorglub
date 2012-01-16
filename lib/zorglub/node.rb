@@ -26,6 +26,14 @@ module Zorglub
                 @engine = engine
             end
             #
+            def layout_base_path! path
+                @layout_base_path = path
+            end
+            #
+            def layout_base_path
+                @layout_base_path ||= Config.layout_base_path
+            end
+            #
             def no_layout!
                 @layout = nil
             end
@@ -204,7 +212,7 @@ module Zorglub
         #
         def layout
             return '' if @options[:layout].nil?
-            File.join(Config.layout_base_path, @options[:layout])+ext
+            File.join(self.class.layout_base_path, @options[:layout])+ext
         end
         #
         def static! val
