@@ -130,9 +130,9 @@ module Zorglub
             @content = self.send @options[:method], *@options[:args]
             static_path = static
             if static_path.nil?
-                compile!
+                compile_page!
             else
-                static! static_path
+                static_page! static_path
             end
             state :post_cb
             Node.call_after_hooks self
@@ -140,9 +140,9 @@ module Zorglub
             return @content, @mime
         end
         #
-        def static! path
+        def static_page! path
             if not File.exists? path
-                compile!
+                compile_page!
                 Dir.mkdir Config.static_base_path
                 Dir.mkdir File.dirname path
                 File.open(path, 'w') {|f| f.write("@mime:"+@mime+"\n"); f.write(@content); }
@@ -155,7 +155,7 @@ module Zorglub
             end
         end
         #
-        def compile!
+        def compile_page!
             e, @options[:ext] = Config.engine_proc_ext @options[:engine], @options[:ext]
             v, l = view, layout
             if Config.debug
