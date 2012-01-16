@@ -226,12 +226,16 @@ module Zorglub
             File.join(Config.view_base_path, @options[:view])+ext
         end
         #
-        def ext ext=nil
+        def ext! ext
             if ext.nil? or ext.empty?
                 @options[:ext]||''
             else
                 @options[:ext] = (ext[0]=='.' ? (ext.length==1 ? nil : ext) : '.'+ext)
             end
+        end
+        #
+        def ext
+            @options[:ext]||''
         end
         #
         def inherited_var sym, *args

@@ -73,12 +73,12 @@ class Node0 < Zorglub::Node
     def xml_file
         no_layout!
         engine! :file
-        ext 'xml'
+        ext! 'xml'
     end
     def plain_file
         no_layout!
         engine! :file
-        ext 'txt'
+        ext! 'txt'
     end
     def engines name
         no_layout!
