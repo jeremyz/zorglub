@@ -28,14 +28,7 @@ RENDER_PROC = Proc.new { |path,obj|
         raise Exception.new
     end
 }
-Zorglub::Config.register_engine 'default', nil, HASH_PROC
-Zorglub::Config.register_engine 'engine-1', 'spec', HASH_PROC
-Zorglub::Config.register_engine 'engine-2', 'spec', HASH_PROC
-Zorglub::Config.register_engine 'real', nil, RENDER_PROC
-Zorglub::Config.register_engine 'static', nil, STATIC_PROC
-#
-Zorglub::Config[:engine] = 'default'
-Zorglub::Config.root = File.join Dir.pwd, 'spec', 'data'
+APP_ROOT = File.join Dir.pwd, 'spec', 'data'
 #
 class Zorglub::Node
     def self.my_call uri
@@ -169,15 +162,23 @@ class Node6 < Zorglub::Node
 end
 #
 class Node7 < Zorglub::Node
-    layout_base_path! File.join Zorglub::Config.root, 'alt','layout'
-    view_base_path! File.join Zorglub::Config.root, 'alt'
+    layout_base_path! File.join APP_ROOT, 'alt','layout'
+    view_base_path! File.join APP_ROOT, 'alt'
     def view_path
         view! 'do_render'
     end
 end
-
 #
 APP = Zorglub::App.new do
+    register_engine! :file, nil, Zorglub::Engines::File.method(:proc)
+    register_engine! :haml, 'haml', Zorglub::Engines::Haml.method(:proc)
+    register_engine! 'default', nil, HASH_PROC
+    register_engine! 'engine-1', 'spec', HASH_PROC
+    register_engine! 'engine-2', 'spec', HASH_PROC
+    register_engine! 'real', nil, RENDER_PROC
+    register_engine! 'static', nil, STATIC_PROC
+    opt! :root, APP_ROOT
+    opt! :engine, 'default'
     map '/node0', Node0
     map '/node1', Node1
     map '/node3', Node3
@@ -187,6 +188,7 @@ APP = Zorglub::App.new do
     map '/node7', Node7
     map '/node8', Node8
 end
+#
 class Node2
     map APP, '/node2'
 end

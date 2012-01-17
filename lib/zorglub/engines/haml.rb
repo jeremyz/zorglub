@@ -7,11 +7,11 @@ module Zorglub
     module Engines
         module Haml
             def self.proc path,obj
-                if Zorglub::Config.engines_cache_enabled
-                    key = path.sub Zorglub::Config.root,''
-                    haml = obj.app.engines_cache[key] ||= ::Haml::Engine.new( ::File.open(path,'r'){|f| f.read }, Zorglub::Config.haml_options )
+                if obj.app.opt(:engines_cache_enabled)
+                    key = path.sub obj.app.opt(:root),''
+                    haml = obj.app.engines_cache[key] ||= ::Haml::Engine.new( ::File.open(path,'r'){|f| f.read }, obj.app.opt(:haml_options) )
                 else
-                    haml = ::Haml::Engine.new( ::File.open(path,'r'){|f| f.read }, Zorglub::Config.haml_options )
+                    haml = ::Haml::Engine.new( ::File.open(path,'r'){|f| f.read }, obj.app.opt(:haml_options) )
                 end
                 html = haml.render(obj)
                 return html, 'text/html'
@@ -19,7 +19,5 @@ module Zorglub
         end
     end
 end
-#
-Zorglub::Config.register_engine :haml, 'haml', Zorglub::Engines::Haml.method(:proc)
 #
 # EOF

@@ -9,10 +9,33 @@ module Zorglub
         def initialize map={}, &block
             super
             @map = map
+            @engines_cache = { }
+            @options = {
+                :debug => false,
+                :root => '.',
+                :layout => 'default',
+                :view_dir => 'view',
+                :layout_dir => 'layout',
+                :static_dir => 'static',
+                :engine => nil,
+                :engines_cache_enabled => true,
+                :engines => { },
+                :haml_options => {
+                    :format => :html5,
+                    :ugly => false,
+                    :encoding => 'utf-8'
+                },
+                :session_options => {
+                    :session_on => false,
+                    :session_key => 'zorglub.sid',
+                    :session_secret => 'session-secret-secret',
+                    :session_sid_len => 64,
+                }
+            }
             instance_eval &block if block_given?
             remap @map
-            @engines_cache = { }
         end
+        #
         attr_reader :engines_cache
         #
         def map location, object
@@ -38,6 +61,47 @@ module Zorglub
         #
         def to_hash
             @map.dup
+        end
+        #
+        # OPTIONS @options
+        #
+        def opt sym
+            @options[sym]
+        end
+        #
+        def opt! sym, val
+            @options[sym] = val
+        end
+        #
+        def register_engine! name, ext, proc
+            return unless name
+            if ext.nil? or ext.empty?
+                x = nil
+            else
+                x = (ext[0]=='.' ? (ext.length==1 ? nil : ext) : '.'+ext)
+            end
+            @options[:engines][name]=[ proc, x ]
+        end
+        #
+        def engine_proc_ext engine, ext
+            p,x = @options[:engines][engine]
+            return [nil, ''] if p.nil?
+            [ p, ((ext.nil? or ext.empty?) ? x : ext ) ]
+        end
+        #
+        def view_base_path
+            p = @options[:view_path]
+            ( p.nil? ? File.join(@options[:root], @options[:view_dir]) : p )
+        end
+        #
+        def layout_base_path
+            p = @options[:layout_path]
+            ( p.nil? ? File.join(@options[:root], @options[:layout_dir]) : p )
+        end
+        #
+        def static_base_path
+            p = @options[:static_path]
+            ( p.nil? ? File.join(@options[:root], @options[:static_dir]) : p )
         end
         #
     end

@@ -3,7 +3,7 @@
 require 'spec_helper'
 #
 def clean_static_path
-    static_base_path = Zorglub::Config.static_base_path
+    static_base_path = Node0.app.static_base_path
     Dir.glob( File.join(static_base_path,'**','*') ).each do |f| File.unlink f if File.file? f end
     Dir.glob( File.join(static_base_path,'*') ).each do |d| Dir.rmdir d end
     Dir.rmdir static_base_path if File.directory? static_base_path
@@ -22,12 +22,11 @@ describe Zorglub do
         end
         #
         it "engine should return default Node's engine" do
-            Node0.engine.should == Zorglub::Config.engine
-            Node0.engine.should == Zorglub::Config[:engine]
+            Node0.engine.should == Node0.app.opt(:engine)
         end
         #
         it "layout should return default Node's layout" do
-            Node0.layout.should == Zorglub::Config.layout
+            Node0.layout.should == Node0.app.opt(:layout)
         end
         #
         it "engine should return class defined Node's engine" do
@@ -85,8 +84,8 @@ describe Zorglub do
             r = Node0.my_call '/index'
             r.status.should == 200
             h = YAML.load r.body[0]
-            ly = File.join Zorglub::Config.root, Zorglub::Config.layout_dir, Node0.layout
-            vu = File.join Zorglub::Config.root, Zorglub::Config.view_dir, Node0.r, 'index'
+            ly = File.join Node0.app.layout_base_path, Node0.layout
+            vu = File.join Node0.app.view_base_path, Node0.r, 'index'
             h[:path].should == ly
             h[:layout].should == ly
             h[:view].should == vu
@@ -96,8 +95,8 @@ describe Zorglub do
             r = Node1.my_call '/index'
             r.status.should == 200
             h = YAML.load r.body[0]
-            ly = File.join Zorglub::Config.root, Zorglub::Config.layout_dir, 'main.spec'
-            vu = File.join Zorglub::Config.root, Zorglub::Config.view_dir, Node1.r, 'index.spec'
+            ly = File.join Node1.app.layout_base_path, 'main.spec'
+            vu = File.join Node1.app.view_base_path, Node1.r, 'index.spec'
             h[:path].should == ly
             h[:layout].should == ly
             h[:view].should == vu
@@ -236,13 +235,13 @@ describe Zorglub do
         it "view_base_path! should work" do
             r = Node7.my_call '/view_path'
             h = YAML.load r.body[0]
-            h[:view].should == File.join(Zorglub::Config.root, 'alt','do_render')
+            h[:view].should == File.join(Node7.app.opt(:root), 'alt','do_render')
         end
         #
         it "layout_base_path! should work" do
             r = Node7.my_call '/view_path'
             h = YAML.load r.body[0]
-            h[:layout].should == File.join(Zorglub::Config.root, 'alt','layout','default')
+            h[:layout].should == File.join(Node7.app.opt(:root), 'alt','layout','default')
         end
         #
     end

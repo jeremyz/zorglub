@@ -1,7 +1,6 @@
 #! /usr/bin/env ruby
 # -*- coding: UTF-8 -*-
 #
-require 'zorglub/config'
 require 'zorglub/node'
 require 'zorglub/app'
 #

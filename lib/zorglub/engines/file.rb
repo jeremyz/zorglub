@@ -15,6 +15,4 @@ module Zorglub
     end
 end
 #
-Zorglub::Config.register_engine :file, nil, Zorglub::Engines::File.method(:proc)
-#
 # EOF

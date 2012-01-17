@@ -4,22 +4,34 @@ module Zorglub
     #
     class Node
         #
+        UNDEFINED=-1
+        #
         # class level engine, layout, static, layout_base_path, view_base_path configuration
         #
         class << self
             #
-            attr_reader :engine, :layout, :static
+            attr_reader :static
             #
             def engine! engine
                 @engine = engine
             end
             #
+            def engine
+                @engine = @app.opt(:engine) if @engine==UNDEFINED and @app
+                @engine
+            end
+            #
             def no_layout!
-                @layout = nil
+                layout! nil
             end
             #
             def layout! layout
                 @layout = layout
+            end
+            #
+            def layout
+                @layout = @app.opt(:layout) if @layout==UNDEFINED and @app
+                @layout
             end
             #
             def static! val
@@ -31,7 +43,7 @@ module Zorglub
             end
             #
             def layout_base_path
-                @layout_base_path ||= Config.layout_base_path
+                @layout_base_path ||= @app.layout_base_path
             end
             #
             def view_base_path! path
@@ -39,7 +51,7 @@ module Zorglub
             end
             #
             def view_base_path
-                @view_base_path ||= Config.view_base_path
+                @view_base_path ||= @app.view_base_path
             end
         end
         #
@@ -81,7 +93,7 @@ module Zorglub
         #
         def static
             return nil if not @options[:static] or @options[:view].nil?
-            File.join(Config.static_base_path, @options[:view])+ext
+            File.join(app.static_base_path, @options[:view])+ext
         end
         #
         def ext! ext
@@ -203,8 +215,8 @@ module Zorglub
         class << self
             #
             def inherited sub
-                sub.engine! engine||(self==Zorglub::Node ? Config.engine : nil )
-                sub.layout! layout||(self==Zorglub::Node ? Config.layout : nil )
+                sub.engine! engine||(self==Zorglub::Node ? UNDEFINED : nil )
+                sub.layout! layout||(self==Zorglub::Node ? UNDEFINED : nil )
                 sub.instance_variable_set :@inherited_vars, {}
                 @inherited_vars.each do |s,v| sub.inherited_var s, *v end
             end
@@ -212,7 +224,7 @@ module Zorglub
             def call env
                 meth, *args =  env['PATH_INFO'].sub(/^\//,'').split '/'
                 meth||= 'index'
-                puts "=> #{meth}(#{args.join ','})" if Config.debug
+                puts "=> #{meth}(#{args.join ','})" if app.opt :debug
                 node = self.new env, {:engine=>engine,:layout=>layout,:view=>r(meth),:method=>meth,:args=>args,:static=>static}
                 return error_404 node if not node.respond_to? meth
                 node.realize!
@@ -226,7 +238,7 @@ module Zorglub
             end
             #
             def error_404 node
-                puts " !! method not found" if Config.debug
+                puts " !! method not found" if app.opt :debug
                 resp = node.response
                 resp.status = 404
                 resp['Content-Type'] = 'text/plain'
@@ -280,12 +292,12 @@ module Zorglub
         def static_page! path
             if not File.exists? path
                 compile_page!
-                Dir.mkdir Config.static_base_path
+                Dir.mkdir app.static_base_path
                 Dir.mkdir File.dirname path
                 File.open(path, 'w') {|f| f.write("@mime:"+@mime+"\n"); f.write(@content); }
-                puts " * cache file created : #{path}" if Config.debug
+                puts " * cache file created : #{path}" if app.opt :debug
             else
-                puts " * use cache file : #{path}" if Config.debug
+                puts " * use cache file : #{path}" if app.opt :debug
                 content = File.open(path, 'r') {|f| f.read }
                 @content = content.sub /^@mime:(.*)\n/,''
                 @mime = $1
@@ -293,12 +305,10 @@ module Zorglub
         end
         #
         def compile_page!
-            e, @options[:ext] = Config.engine_proc_ext @options[:engine], @options[:ext]
-            v, l = view, layout
-            if Config.debug
-                puts " * "+(File.exists?(l) ? 'use layout' : 'not found layout')+" : "+l
-                puts " * "+(File.exists?(v) ? 'use view  ' : 'not found view  ')+" : "+v
-            end
+            e, @options[:ext] = app.engine_proc_ext @options[:engine], @options[:ext]
+            v, l, debug = view, layout, app.opt(:debug)
+            puts " * "+(File.exists?(l) ? 'use layout' : 'not found layout')+" : "+l if debug
+            puts " * "+(File.exists?(v) ? 'use view  ' : 'not found view  ')+" : "+v if debug
             state (@options[:layout].nil? ? :partial : :view)
             @content, mime = e.call v, self if e and File.exists? v
             @mime = mime unless mime.nil?
