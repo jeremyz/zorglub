@@ -170,32 +170,30 @@ module Zorglub
             d
         end
         #
-        # TODO use inherited_vars ??
+        # before_all and after_all hooks
         #
-        @hooks = {
-            :before_all => [],
-            :after_all => [],
-        }
+        @inherited_vars[:before_all] = []
+        @inherited_vars[:after_all] = []
         class << self
             #
             attr_reader :hooks
             #
             def call_before_hooks obj
-                Node.hooks[:before_all].each do |blk| blk.call obj end
+                @inherited_vars[:before_all].each do |blk| blk.call obj end
             end
             #
             def before_all &blk
-                Node.hooks[:before_all]<< blk
-                Node.hooks[:before_all].uniq!
+                @inherited_vars[:before_all]<< blk
+                @inherited_vars[:before_all].uniq!
             end
             #
             def call_after_hooks obj
-                Node.hooks[:after_all].each do |blk| blk.call obj end
+                @inherited_vars[:after_all].each do |blk| blk.call obj end
             end
             #
             def after_all &blk
-                Node.hooks[:after_all]<< blk
-                Node.hooks[:after_all].uniq!
+                @inherited_vars[:after_all]<< blk
+                @inherited_vars[:after_all].uniq!
             end
             #
         end
@@ -264,7 +262,7 @@ module Zorglub
         #
         def feed!
             state :pre_cb
-            Node.call_before_hooks self
+            self.class.call_before_hooks self
             state :meth
             @content = self.send @options[:method], *@options[:args]
             static_path = static
@@ -274,7 +272,7 @@ module Zorglub
                 static_page! static_path
             end
             state :post_cb
-            Node.call_after_hooks self
+            self.class.call_after_hooks self
             state :finished
             return @content, @mime
         end
