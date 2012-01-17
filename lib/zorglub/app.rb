@@ -25,11 +25,16 @@ module Zorglub
                     :ugly => false,
                     :encoding => 'utf-8'
                 },
+                :sass_options => {
+                    :syntax => :scss,
+                    :cache => :false,
+                    :style => :compressed
+                },
                 :session_options => {
                     :enabled => false,
                     :key => 'zorglub.sid',
                     :secret => 'session-secret-secret',
-                    :sid_len => 64,
+                    :sid_len => 64
                 }
             }
             instance_eval &block if block_given?
