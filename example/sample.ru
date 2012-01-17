@@ -12,13 +12,6 @@ else
     require 'zorglub/session'
 end
 #
-HAML_PROC = Proc.new { |path,obj| Haml::Engine.new( File.open(path,'r').read ).render(obj) }
-Zorglub::Config.register_engine 'tmp-engine', 'haml', HAML_PROC
-#
-Zorglub::Config.engine = :haml
-Zorglub::Config.session_on = true
-Zorglub::Config.root = File.dirname( File.absolute_path(__FILE__) )
-#
 class Zorglub::Node
     @count=0
     class << self
@@ -64,7 +57,15 @@ class Node1 < Zorglub::Node
     #
 end
 #
+HAML_PROC = Proc.new { |path,obj| Haml::Engine.new( File.open(path,'r').read ).render(obj) }
+#
 APP = Zorglub::App.new do
+    register_engine! :haml, 'haml', Zorglub::Engines::Haml.method(:proc)
+    register_engine! 'tmp-engine', 'haml', HAML_PROC
+    opt! :debug, true
+    opt! :engine, :haml
+    opt!:root, File.dirname( File.absolute_path(__FILE__) )
+    opt(:session_options)[:session_on] = true
     map '/url1', Node1
 end
 #
