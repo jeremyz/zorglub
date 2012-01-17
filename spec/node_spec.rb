@@ -232,6 +232,11 @@ describe Zorglub do
             r.body[0].should == "<h1>Hello world</h1>\n"
         end
         #
+        it "sass engine should work" do
+            r = Node0.my_call '/engines/sass'
+            r.body[0].should == "vbar{width:80%;height:23px}vbar ul{list-style-type:none}vbar li{float:left}vbar li a{font-weight:bold}\n"
+        end
+        #
         it "view_base_path! should work" do
             r = Node7.my_call '/view_path'
             h = YAML.load r.body[0]

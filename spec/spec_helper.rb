@@ -13,6 +13,7 @@ require 'yaml'
 require 'zorglub'
 require 'zorglub/engines/file'
 require 'zorglub/engines/haml'
+require 'zorglub/engines/sass'
 #
 HASH_PROC = Proc.new { |path,obj| {:path=>path,:layout=>obj.layout,:view=>obj.view,:args=>obj.args,:map=>obj.map}.to_yaml }
 STATIC_PROC = Proc.new { |path,obj| ["VAL #{obj.value}",'text/static'] }
@@ -78,6 +79,8 @@ class Node0 < Zorglub::Node
         case name
         when 'haml'
             engine! :haml
+        when 'sass'
+            engine! :sass
         end
     end
 end
@@ -172,6 +175,7 @@ end
 APP = Zorglub::App.new do
     register_engine! :file, nil, Zorglub::Engines::File.method(:proc)
     register_engine! :haml, 'haml', Zorglub::Engines::Haml.method(:proc)
+    register_engine! :sass, 'scss', Zorglub::Engines::Sass.method(:proc)
     register_engine! 'default', nil, HASH_PROC
     register_engine! 'engine-1', 'spec', HASH_PROC
     register_engine! 'engine-2', 'spec', HASH_PROC
