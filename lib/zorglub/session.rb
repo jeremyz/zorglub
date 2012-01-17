@@ -47,7 +47,7 @@ module Zorglub
         #
         def clear
             load_data!
-#            @response.delete_cookie @options[:session_key]
+#            @response.delete_cookie @options[:key]
 #            @sessions.delete @sid
 #            @sid = nil
             super
@@ -95,11 +95,11 @@ module Zorglub
         #
         def load_data!
             return if loaded?
-            if @options[:session_on]
-                sid = @request.cookies[@options[:session_key]]
+            if @options[:enabled]
+                sid = @request.cookies[@options[:key]]
                 if sid.nil?
                     sid = generate_sid!
-                    @response.set_cookie @options[:session_key], sid
+                    @response.set_cookie @options[:key], sid
                 end
                 replace @sessions[sid] ||={}
                 @sessions[sid] = self
@@ -126,7 +126,7 @@ module Zorglub
             # SecureRandom is available since Ruby 1.8.7.
             # For Ruby versions earlier than that, you can require the uuidtools gem,
             # which has a drop-in replacement for SecureRandom.
-            def sid_algorithm; SecureRandom.hex(@options[:session_sid_len]); end
+            def sid_algorithm; SecureRandom.hex(@options[:sid_len]); end
         rescue LoadError
             require 'openssl'
             # Using OpenSSL::Random for generation, this is comparable in performance
@@ -134,7 +134,7 @@ module Zorglub
             # have the same behaviour as the SecureRandom::hex method of the
             # uuidtools gem.
             def sid_algorithm
-                OpenSSL::Random.random_bytes(@options[:session_sid_len] / 2).unpack('H*')[0]
+                OpenSSL::Random.random_bytes(@options[:sid_len] / 2).unpack('H*')[0]
             end
         rescue LoadError
             # Digest::SHA2::hexdigest produces a string of length 64, although

@@ -65,7 +65,7 @@ APP = Zorglub::App.new do
     opt! :debug, true
     opt! :engine, :haml
     opt!:root, File.dirname( File.absolute_path(__FILE__) )
-    opt(:session_options)[:session_on] = true
+    opt(:session_options)[:enabled] = true
     map '/url1', Node1
 end
 #
@@ -149,7 +149,7 @@ map '/' do
     use Rack::Lint
     use Rack::ShowExceptions
     if USE_RACK_SESSION
-        use Rack::Session::Cookie,  :key=>Zorglub::Config.session_key, :secret=>Zorglub::Config.session_secret,
+        use Rack::Session::Cookie,  :key=>APP.opt(:session_options)[:key], :secret=>APP.opt(:session_options)[:secret],
             :path=>'/', :http_only=>true, :expire_after=>30
     end
     run APP

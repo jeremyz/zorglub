@@ -26,10 +26,10 @@ module Zorglub
                     :encoding => 'utf-8'
                 },
                 :session_options => {
-                    :session_on => false,
-                    :session_key => 'zorglub.sid',
-                    :session_secret => 'session-secret-secret',
-                    :session_sid_len => 64,
+                    :enabled => false,
+                    :key => 'zorglub.sid',
+                    :secret => 'session-secret-secret',
+                    :sid_len => 64,
                 }
             }
             instance_eval &block if block_given?
