@@ -127,6 +127,30 @@ describe Zorglub do
             Node3.after.should == 3
         end
         #
+        it "inherited before_all hook should work" do
+            Node3.before = 0
+            Node3.after = 0
+            Node3.before.should == 0
+            Node8.my_call '/index'
+            Node3.before.should == 1
+            Node8.my_call '/index'
+            Node3.before.should == 2
+            Node8.my_call '/index'
+            Node3.before.should == 3
+        end
+        #
+        it "inherited after_all hook should work" do
+            Node3.before = 0
+            Node3.after = 0
+            Node3.after.should == 0
+            Node8.my_call '/index'
+            Node3.after.should == 1
+            Node8.my_call '/index'
+            Node3.after.should == 2
+            Node8.my_call '/index'
+            Node3.after.should == 3
+        end
+        #
         it "should find view and layout and render them" do
             r = Node0.my_call '/do_render'
             r.status.should == 200

@@ -117,8 +117,11 @@ class Node3 < Zorglub::Node
     layout! 'layout-2'
     engine! 'engine-2'
     def index
-        (self.class.before-self.class.after).should == 1
+        (Node3.before-Node3.after).should == 1
     end
+end
+#
+class Node8 < Node3
 end
 #
 class Node4 < Zorglub::Node
@@ -182,6 +185,7 @@ APP = Zorglub::App.new do
     map '/node5', Node5
     map '/node6', Node6
     map '/node7', Node7
+    map '/node8', Node8
 end
 class Node2
     map APP, '/node2'
