@@ -228,11 +228,19 @@ describe Zorglub do
         end
         #
         it "haml engine should work" do
+            Node0.app.opt! :engines_cache_enabled, false
+            r = Node0.my_call '/engines/haml'
+            r.body[0].should == "<h1>Hello world</h1>\n"
+            Node0.app.opt! :engines_cache_enabled, true
             r = Node0.my_call '/engines/haml'
             r.body[0].should == "<h1>Hello world</h1>\n"
         end
         #
         it "sass engine should work" do
+            Node0.app.opt! :engines_cache_enabled, true
+            r = Node0.my_call '/engines/sass'
+            r.body[0].should == "vbar{width:80%;height:23px}vbar ul{list-style-type:none}vbar li{float:left}vbar li a{font-weight:bold}\n"
+            Node0.app.opt! :engines_cache_enabled, false
             r = Node0.my_call '/engines/sass'
             r.body[0].should == "vbar{width:80%;height:23px}vbar ul{list-style-type:none}vbar li{float:left}vbar li a{font-weight:bold}\n"
         end
