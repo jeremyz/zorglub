@@ -41,9 +41,9 @@ From rubygems:
 
 or from the git repository on github:
 
-  git clone git://github.com/jeremyz/zorglub.git
-  cd zorglub
-  rake gem:install
+git clone git://github.com/jeremyz/zorglub.git
+cd zorglub
+rake install
 
 ## RESOURCES:
 
