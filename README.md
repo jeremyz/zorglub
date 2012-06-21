@@ -1,12 +1,12 @@
-zorglub
+# zorglub
     by Jérémy Zurcher
     http://asynk.ch
 
-== DESCRIPTION:
+## DESCRIPTION:
 
 a nano web application framework based on [rack](http://rack.rubyforge.org/)
 
-== FEATURES:
+## FEATURES:
 
 * class#method mapping scheme (/class_mapping/method_name/*args)
 * class level layout and engine specification
@@ -17,11 +17,11 @@ a nano web application framework based on [rack](http://rack.rubyforge.org/)
 * class level inherited variables
 * session
 
-== STATUS:
+## STATUS:
 
 [![Build Status](https://secure.travis-ci.org/jeremyz/zorglub.png)](http://travis-ci.org/jeremyz/zorglub)
 
-== SYNOPSIS:
+## SYNOPSIS:
 
 For a simple test application run:
 * rackup ./example/sample.ru
@@ -29,11 +29,11 @@ For a simple test application run:
 Don't forget to look at
 * the spec/ folder
 
-== REQUIREMENTS:
+## REQUIREMENTS:
 
 * rack
 
-== DOWNLOAD/INSTALL:
+## DOWNLOAD/INSTALL:
 
 From rubygems:
 
@@ -45,7 +45,7 @@ or from the git repository on github:
   cd zorglub
   rake gem:install
 
-== RESOURCES:
+## RESOURCES:
 
 You can find this project in a few places:
 
@@ -54,7 +54,7 @@ Online repositories:
 * https://github.com/jeremyz/zorglub
 * http://cgit.asynk.ch/cgi-bin/cgit/zorglub/
 
-== LICENSE:
+## LICENSE:
 
 [MIT](http://www.opensource.org/licenses/MIT) see [MIT_LICENSE](https://github.com/jeremyz/zorglub/blob/master/MIT-LICENSE)
 
