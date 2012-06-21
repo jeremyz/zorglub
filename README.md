@@ -17,6 +17,10 @@ a nano web application framework based on [rack](http://rack.rubyforge.org/)
 * class level inherited variables
 * session
 
+== STATUS:
+
+[![Build Status](https://secure.travis-ci.org/jeremyz/zorglub.png)](http://travis-ci.org/jeremyz/zorglub)
+
 == SYNOPSIS:
 
 For a simple test application run:
