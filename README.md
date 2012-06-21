@@ -1,10 +1,10 @@
 zorglub
     by Jérémy Zurcher
-    http://cgit.asynk.ch/cgi-bin/cgit/zorglub
+    http://asynk.ch
 
 == DESCRIPTION:
 
-a nano web application framework based on rack[http://rack.rubyforge.org/]
+a nano web application framework based on [rack](http://rack.rubyforge.org/)
 
 == FEATURES:
 
@@ -52,4 +52,5 @@ Online repositories:
 
 == LICENSE:
 
-See MIT-LICENSE file.
+[MIT](http://www.opensource.org/licenses/MIT) see [MIT_LICENSE](https://github.com/jeremyz/zorglub/blob/master/MIT-LICENSE)
+
