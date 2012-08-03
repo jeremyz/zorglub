@@ -1,26 +1,36 @@
-2011-05-26 Jérémy Zurcher <jeremy@asynk.ch>
-	* Project creation
-
-2011-09-13 Jérémy Zurcher <jeremy@asynk.ch>
-	* usable WIP
-
-2012-01-04 Jérémy Zurcher <jeremy@asynk.ch>
-	* lots of code cleanup
-	* replace Helpers Module with Node#inherited_var Node@inherited_vars
-	* rewrite session so it is compatible with Rack SessionHash
-	* update test application and write specs
-
-2012-01-05 Jérémy Zurcher <jeremy@asynk.ch>
-	* haml, file engines
-	* view/layout extention overriding at methode level
-	* optional engine cache
-	* optional engine proc mime-type definition
-	* optional static page generation/cache
+2012-XX-YY Jérémy Zurcher <jeremy@asynk.ch>
+	* release 0.6
+	* add sass engine
+	* use Bundler
+	* enable travis
 
 2012-01-17 Jérémy Zurcher <jeremy@asynk.ch>
+	* release 0.5
 	* Node code cleanup
 	* class and method level directives are now view!, layout!, no_layout!, ...
 	* add view_base_path! and layout_base_path!
 	* before_all and after_all are based on inherited_vars
 	* add Zorglub::Config.debug
 	* Zorglub::App swallows Zorglub::Config
+
+2012-01-05 Jérémy Zurcher <jeremy@asynk.ch>
+	* release 0.3 and 0.4
+	* haml, file engines
+	* view/layout extention overriding at methode level
+	* optional engine cache
+	* optional engine proc mime-type definition
+	* optional static page generation/cache
+
+2012-01-04 Jérémy Zurcher <jeremy@asynk.ch>
+	* release 0.2
+	* lots of code cleanup
+	* replace Helpers Module with Node#inherited_var Node@inherited_vars
+	* rewrite session so it is compatible with Rack SessionHash
+	* update test application and write specs
+
+2011-09-13 Jérémy Zurcher <jeremy@asynk.ch>
+	* usable WIP
+
+2011-05-26 Jérémy Zurcher <jeremy@asynk.ch>
+	* Project creation
+
