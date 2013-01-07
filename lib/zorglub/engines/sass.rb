@@ -1,7 +1,6 @@
 # -*- coding: UTF-8 -*-
 #
-require 'sass/util'
-require 'sass/engine'
+require 'sass'
 #
 module Zorglub
     module Engines
