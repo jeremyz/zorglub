@@ -242,7 +242,7 @@ module Zorglub
                 resp = node.response
                 resp.status = 404
                 resp['Content-Type'] = 'text/plain'
-                resp.write "%s mapped at %p can't respond to : %p" % [ node.class.name, node.r, node.request.env['PATH_INFO'] ]
+                resp.write "%s mapped at %p can't respond to : %p" % [ node.class.name, node.map, node.request.env['PATH_INFO'] ]
                 resp
             end
             #
