@@ -122,7 +122,8 @@ end
 #
 class Node4 < Zorglub::Node
     no_layout!
-    inherited_var :js,'js0','js1'
+    inherited_var :js,'js0'
+    inherited_var :js,'js1'
     def index
         inherited_var(:js).to_yaml
     end
@@ -137,7 +138,8 @@ class Node5 < Node4
     # no_layout! inherited from Node4
     def index
         js = inherited_var(:js,'jsx')
-        css = inherited_var(:css, 'css0', 'css1','css2')
+        inherited_var(:css, 'css0', 'css1','css2')
+        css = inherited_var :css
         js.concat(css).to_yaml
     end
 end

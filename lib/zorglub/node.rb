@@ -174,12 +174,13 @@ module Zorglub
         end
         #
         def inherited_var sym, *args
-            d = self.class.inherited_vars[sym].clone || []
+            @instance_inherited_vars ||={}
+            var= @instance_inherited_vars[sym] ||= self.class.inherited_vars[sym].clone || []
             unless args.empty?
-                d.concat args
-                d.uniq!
+                var.concat args
+                var.uniq!
             end
-            d
+            var
         end
         #
         # before_all and after_all hooks
