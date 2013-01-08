@@ -103,13 +103,14 @@ class Node3 < Zorglub::Node
     @after=0
     class << self
         attr_accessor :before, :after
+        def post obj
+            @after +=1
+        end
     end
     before_all do |node|
         Node3.before +=1
     end
-    after_all do |node|
-        Node3.after +=1
-    end
+    after_all Node3.method(:post)
     layout! 'layout-2'
     engine! 'engine-2'
     def index

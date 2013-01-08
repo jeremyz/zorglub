@@ -196,8 +196,8 @@ module Zorglub
                 @cli_vals[:before_all].each do |blk| blk.call obj end
             end
             #
-            def before_all &blk
-                @cli_vals[:before_all]<< blk
+            def before_all meth=nil, &blk
+                @cli_vals[:before_all]<< ( meth.nil? ? blk : meth )
                 @cli_vals[:before_all].uniq!
             end
             #
@@ -205,8 +205,8 @@ module Zorglub
                 @cli_vals[:after_all].each do |blk| blk.call obj end
             end
             #
-            def after_all &blk
-                @cli_vals[:after_all]<< blk
+            def after_all meth=nil, &blk
+                @cli_vals[:after_all]<< ( meth.nil? ? blk : meth )
                 @cli_vals[:after_all].uniq!
             end
             #

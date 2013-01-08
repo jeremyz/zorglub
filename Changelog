@@ -1,4 +1,9 @@
 2013-01-08 Jérémy Zurcher <jeremy@asynk.ch>
+	* release 0.7
+	* zorglub.rb swallows version.rb
+	* before_all and after_all accept parameter or proc
+
+2013-01-08 Jérémy Zurcher <jeremy@asynk.ch>
 	* release 0.6
 	* add sass engine
 	* use Bundler
