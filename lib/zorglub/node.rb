@@ -127,6 +127,10 @@ module Zorglub
             self.class.app
         end
         #
+        def meth
+            @options[:method]
+        end
+        #
         def args
             @options[:args]
         end
@@ -136,7 +140,7 @@ module Zorglub
         end
         #
         def r *args
-            File.join map, (args.empty? ? @options[:method] : args.map { |x| x.to_s } )
+            File.join map, (args.empty? ? meth : args.map { |x| x.to_s } )
         end
         #
         def html
@@ -250,7 +254,7 @@ module Zorglub
             #
         end
         #
-        attr_reader :options, :request, :response, :content, :mime
+        attr_reader :request, :response, :content, :mime
         #
         def initialize env, options
             @env = env
