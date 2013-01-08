@@ -199,25 +199,29 @@ describe Zorglub do
             Node5.layout.should be_nil
         end
         #
-        it "inherited_vars should be inherited and extended" do
+        it "cli_vals should be inherited and extended" do
             r = Node5.my_call '/index'
             vars = YAML.load r.body[0]
             vars.should == ['js0','js1','js3','jsx','css0','css1','css2']
             vars[7].should be_nil
         end
         #
-        it "inherited_vars should be extended at method level" do
+        it "cli_vals should be extended at method level" do
             r = Node4.my_call '/more'
             vars = YAML.load r.body[0]
             vars.should == ['js0','js1','js2']
             vars[3].should be_nil
         end
         #
-        it "inherited_vars should be untouched" do
+        it "cli_vals should be untouched" do
             r = Node4.my_call '/index'
             vars = YAML.load r.body[0]
             vars.should == ['js0','js1']
             vars[2].should be_nil
+            r = Node5.my_call '/index'
+            vars = YAML.load r.body[0]
+            vars.should == ['js0','js1','js3','jsx','css0','css1','css2']
+            vars[7].should be_nil
         end
         #
         it "ext definition and file engine should work" do

@@ -154,59 +154,60 @@ module Zorglub
             "You are being redirected, please follow this link to: <a href='#{target}'>#{target}</a>!"
         end
         #
-        # inherited vars, they can be modified at class level only
+        # class level inherited values are key=>array, copied at inheritance
+        # so they can be extanded at class level
+        # values are copied from class into instance at object creation
+        # so that can be extanded without modifying class level values
+        # typical usage are css or js inclusions
         #
-        @inherited_vars = { }
+        @cli_vals = { }
         #
         class << self
             #
-            attr_reader :inherited_vars
+            attr_reader :cli_vals
             #
-            def inherited_var sym, *args
-                var = @inherited_vars[sym] ||=[]
+            def cli_val sym, *args
+                vals = @cli_vals[sym] ||=[]
                 unless args.empty?
-                    var.concat args
-                    var.uniq!
+                    vals.concat args
+                    vals.uniq!
                 end
-                var
+                vals
             end
             #
         end
         #
-        def inherited_var sym, *args
-            @instance_inherited_vars ||={}
-            var= @instance_inherited_vars[sym] ||= self.class.inherited_vars[sym].clone || []
+        def cli_val sym, *args
+            vals = @cli_vals[sym] ||=[]
             unless args.empty?
-                var.concat args
-                var.uniq!
+                vals.concat args
+                vals.uniq!
             end
-            var
+            vals
         end
         #
         # before_all and after_all hooks
         #
-        @inherited_vars[:before_all] = []
-        @inherited_vars[:after_all] = []
+        @cli_vals[:before_all] = []
+        @cli_vals[:after_all] = []
         class << self
             #
-            attr_reader :hooks
-            #
             def call_before_hooks obj
-                @inherited_vars[:before_all].each do |blk| blk.call obj end
+                @cli_vals[:before_all].each do |blk| blk.call obj end
             end
             #
             def before_all &blk
-                @inherited_vars[:before_all]<< blk
-                @inherited_vars[:before_all].uniq!
+                @cli_vals[:before_all]<< blk
+                @cli_vals[:before_all].uniq!
             end
             #
             def call_after_hooks obj
-                @inherited_vars[:after_all].each do |blk| blk.call obj end
+                @cli_vals[:after_all].each do |blk| blk.call obj end
             end
             #
             def after_all &blk
-                @inherited_vars[:after_all]<< blk
-                @inherited_vars[:after_all].uniq!
+                @cli_vals[:after_all]<< blk
+                @cli_vals[:after_all].uniq!
             end
             #
         end
@@ -218,8 +219,8 @@ module Zorglub
             def inherited sub
                 sub.engine! engine||(self==Zorglub::Node ? UNDEFINED : nil )
                 sub.layout! layout||(self==Zorglub::Node ? UNDEFINED : nil )
-                sub.instance_variable_set :@inherited_vars, {}
-                @inherited_vars.each do |s,v| sub.inherited_var s, *v end
+                sub.instance_variable_set :@cli_vals, {}
+                @cli_vals.each do |s,v| sub.cli_val s, *v end
             end
             #
             def call env
@@ -256,6 +257,8 @@ module Zorglub
             @options = options
             @request = Rack::Request.new env
             @response = Rack::Response.new
+            @cli_vals ={}
+            self.class.cli_vals.each do |s,v| cli_val s, *v end
         end
         #
         def state state=nil

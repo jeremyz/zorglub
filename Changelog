@@ -3,6 +3,7 @@
 	* add sass engine
 	* use Bundler
 	* enable travis
+	* fix and rename inherited_vars in cli_vals
 
 2012-01-17 Jérémy Zurcher <jeremy@asynk.ch>
 	* release 0.5

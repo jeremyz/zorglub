@@ -76,7 +76,7 @@ class Node2 < Zorglub::Node
     # class level engine
     engine! 'tmp-engine'
     # class level css
-    inherited_var :css, 'class_level.css'
+    cli_val :css, 'class_level.css'
     #
     def index *args
         "<title>Node2:index</title><b>START</b>#{html}<a href=#{Node2.r(:meth0)}>next</a><br/><b>END</b>"
@@ -84,7 +84,7 @@ class Node2 < Zorglub::Node
     #
     def meth0 *args
         # instance level css
-        inherited_var :css, 'instance_level.css'
+        cli_val :css, 'instance_level.css'
         "<title>Node2:meth0</title><b>START</b>#{html}<a href=#{Node2.r(:meth1,1,2)}>next</a><br/><b>END</b>"
     end
     #
