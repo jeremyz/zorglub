@@ -97,7 +97,7 @@ module Zorglub
         end
         #
         def ext
-            @options[:ext]||''
+            @options[:ext] || ''
         end
         #
         # class level basic node functions
@@ -167,7 +167,7 @@ module Zorglub
             attr_reader :cli_vals
             #
             def cli_val sym, *args
-                vals = @cli_vals[sym] ||=[]
+                vals = @cli_vals[sym] ||= []
                 unless args.empty?
                     vals.concat args
                     vals.uniq!
@@ -178,7 +178,7 @@ module Zorglub
         end
         #
         def cli_val sym, *args
-            vals = @cli_vals[sym] ||=[]
+            vals = @cli_vals[sym] ||= []
             unless args.empty?
                 vals.concat args
                 vals.uniq!
@@ -217,15 +217,15 @@ module Zorglub
         class << self
             #
             def inherited sub
-                sub.engine! engine||(self==Zorglub::Node ? UNDEFINED : nil )
-                sub.layout! layout||(self==Zorglub::Node ? UNDEFINED : nil )
+                sub.engine! ( engine || (self==Zorglub::Node ? UNDEFINED : nil ) )
+                sub.layout! ( layout || (self==Zorglub::Node ? UNDEFINED : nil ) )
                 sub.instance_variable_set :@cli_vals, {}
                 @cli_vals.each do |s,v| sub.cli_val s, *v end
             end
             #
             def call env
                 meth, *args =  env['PATH_INFO'].sub(/^\//,'').split(/\//)
-                meth||= 'index'
+                meth ||= 'index'
                 puts "=> #{meth}(#{args.join ','})" if app.opt :debug
                 node = self.new env, {:method=>meth,:args=>args}
                 return error_404 node if not node.respond_to? meth
@@ -270,7 +270,7 @@ module Zorglub
             catch(:stop_realize) {
                 feed!
                 response.write @content
-                response.header['Content-Type'] = @mime||'text/html'
+                response.header['Content-Type'] = ( @mime || 'text/html' )
                 response.finish
                 response
             }
