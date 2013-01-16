@@ -93,11 +93,11 @@ module Zorglub
         end
         #
         def ext! ext
-            @options[:ext]= ( (ext.nil? or ext.empty?) ? nil : (ext[0]=='.' ? (ext.length==1 ? nil : ext) : '.'+ext) )
+            @ext = ( (ext.nil? or ext.empty?) ? nil : (ext[0]=='.' ? (ext.length==1 ? nil : ext) : '.'+ext) )
         end
         #
         def ext
-            @options[:ext] || ''
+            @ext || ''
         end
         #
         # class level basic node functions
@@ -309,7 +309,7 @@ module Zorglub
         end
         #
         def compile_page!
-            e, @options[:ext] = app.engine_proc_ext @engine, @options[:ext]
+            e, @ext = app.engine_proc_ext @engine, @ext
             v, l = view, layout
             if @debug
                 puts " * "+(e ? 'use engine' : 'no engine ')+" : "+(e ? e.to_s : '')
