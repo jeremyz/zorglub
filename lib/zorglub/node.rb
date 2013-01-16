@@ -88,11 +88,11 @@ module Zorglub
         end
         #
         def static! val
-            @options[:static] = ((val==true or val==false) ? val : false )
+            @static = ( (val==true or val==false) ? val : false )
         end
         #
         def static
-            return nil if not @options[:static] or @options[:view].nil?
+            return nil if not @static or @options[:view].nil?
             File.join(app.static_base_path, @options[:view])+ext
         end
         #
@@ -231,13 +231,13 @@ module Zorglub
                 meth, *args =  env['PATH_INFO'].sub(/^\//,'').split(/\//)
                 meth||= 'index'
                 puts "=> #{meth}(#{args.join ','})" if app.opt :debug
-                node = self.new env, {:engine=>engine,:layout=>layout,:view=>r(meth),:method=>meth,:args=>args,:static=>static}
+                node = self.new env, {:engine=>engine,:layout=>layout,:view=>r(meth),:method=>meth,:args=>args}
                 return error_404 node if not node.respond_to? meth
                 node.realize!
             end
             #
             def partial meth, *args
-                node = self.new nil, {:engine=>engine,:layout=>nil,:view=>r(meth),:method=>meth.to_s,:args=>args,:static=>static}
+                node = self.new nil, {:engine=>engine,:layout=>nil,:view=>r(meth),:method=>meth.to_s,:args=>args}
                 return error_404 node if not node.respond_to? meth
                 node.feed!
                 node.content
@@ -262,6 +262,7 @@ module Zorglub
             @request = Rack::Request.new env
             @response = Rack::Response.new
             @cli_vals ={}
+            @static = self.class.static
             self.class.cli_vals.each do |s,v| cli_val s, *v end
         end
         #
