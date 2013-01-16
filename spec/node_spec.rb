@@ -187,6 +187,14 @@ describe Zorglub do
             r = Node6.my_call '/no_static'
             r.body[0].should == 'VAL 4'
             r.header['Content-type'].should == 'text/static'
+            r = Node6.my_call '/do_static'
+            r.body[0].should == 'VAL 1'
+            r.header['Content-type'].should == 'text/static'
+            Node6.static! true, 0.000001
+            sleep 0.0001
+            r = Node6.my_call '/do_static'
+            r.body[0].should == 'VAL 6'
+            r.header['Content-type'].should == 'text/static'
         end
         #
         it "redirect should work" do

@@ -1,5 +1,7 @@
 # -*- coding: UTF-8 -*-
 #
+require 'fileutils'
+#
 module Zorglub
     #
     class Node
@@ -10,7 +12,7 @@ module Zorglub
         #
         class << self
             #
-            attr_reader :static
+            attr_reader :static, :cache_lifetime
             #
             def engine! engine
                 @engine = engine
@@ -34,8 +36,9 @@ module Zorglub
                 @layout
             end
             #
-            def static! val
+            def static! val, lifetime=0
                 @static = ( (val==true or val==false) ? val : false )
+                @cache_lifetime = lifetime
             end
             #
             def layout_base_path! path
@@ -83,8 +86,9 @@ module Zorglub
             File.join(self.class.view_base_path, @view)+ext
         end
         #
-        def static! val
+        def static! val, lifetime=0
             @static = ( (val==true or val==false) ? val : false )
+            @cache_lifetime = lifetime
         end
         #
         def static
@@ -257,6 +261,7 @@ module Zorglub
             @layout = ( partial ? nil : self.class.layout )
             @view = r(meth)
             @static = self.class.static
+            @cache_lifetime = self.class.cache_lifetime
             self.class.cli_vals.each do |s,v| cli_val s, *v end
         end
         #
@@ -288,17 +293,16 @@ module Zorglub
         end
         #
         def static_page! path
-            if not File.exists? path
-                compile_page!
-                Dir.mkdir app.static_base_path
-                Dir.mkdir File.dirname path
-                File.open(path, 'w') {|f| f.write("@mime:"+@mime+"\n"); f.write(@content); }
-                puts " * cache file created : #{path}" if @debug
-            else
+            if File.exists?(path) and  ( @cache_lifetime.nil? or @cache_lifetime==0 or ( (Time.now-File.stat(path).mtime) < @cache_lifetime ) )
                 puts " * use cache file : #{path}" if @debug
                 content = File.open(path, 'r') {|f| f.read }
                 @content = content.sub /^@mime:(.*)\n/,''
                 @mime = $1
+            else
+                compile_page!
+                FileUtils.mkdir_p File.dirname(path)
+                File.open(path, 'w') {|f| f.write("@mime:"+@mime+"\n"); f.write(@content); }
+                puts " * cache file created : #{path}" if @debug
             end
         end
         #
