@@ -123,14 +123,6 @@ module Zorglub
             self.class.app
         end
         #
-        def meth
-            @options[:method]
-        end
-        #
-        def args
-            @options[:args]
-        end
-        #
         def map
             self.class.r
         end
@@ -227,13 +219,13 @@ module Zorglub
                 meth, *args =  env['PATH_INFO'].sub(/^\//,'').split(/\//)
                 meth ||= 'index'
                 puts "=> #{meth}(#{args.join ','})" if app.opt :debug
-                node = self.new env, {:method=>meth,:args=>args}
+                node = self.new env, meth, args
                 return error_404 node if not node.respond_to? meth
                 node.realize!
             end
             #
             def partial meth, *args
-                node = self.new nil, {:partial=>true,:method=>meth.to_s,:args=>args}
+                node = self.new nil, meth.to_s, args, true
                 return error_404 node if not node.respond_to? meth
                 node.feed!
                 node.content
@@ -250,18 +242,20 @@ module Zorglub
             #
         end
         #
-        attr_reader :request, :response, :content, :mime, :state, :engine
+        attr_reader :request, :response, :content, :mime, :state, :engine, :meth, :args
         #
-        def initialize env, options
+        def initialize env, meth, args, partial=false
             @env = env
-            @options = options
+            @meth = meth
+            @args = args
+            @partial = partial
             @request = Rack::Request.new env
             @response = Rack::Response.new
             @cli_vals ={}
             @debug = app.opt :debug
             @engine = self.class.engine
-            @layout = ( options[:partial] ? nil : self.class.layout )
-            @view = r(options[:method])
+            @layout = ( partial ? nil : self.class.layout )
+            @view = r(meth)
             @static = self.class.static
             self.class.cli_vals.each do |s,v| cli_val s, *v end
         end
@@ -280,7 +274,7 @@ module Zorglub
             @state = :pre_cb
             self.class.call_before_hooks self
             @state = :meth
-            @content = self.send @options[:method], *@options[:args]
+            @content = self.send @meth, *@args
             static_path = static
             if static_path.nil?
                 compile_page!
@@ -316,7 +310,7 @@ module Zorglub
                 puts " * "+((l and File.exists?(l)) ? 'use layout' : 'no layout ')+" : "+(l ? l : '')
                 puts " * "+((v and File.exists?(v)) ? 'use view  ' : 'no view   ')+" : "+(v ? v : '')
             end
-            @state = (@options[:partial] ? :partial : :view)
+            @state = ( @partial ? :partial : :view )
             @content, mime = e.call v, self if e and v and File.exists? v
             @mime = mime unless mime.nil?
             @state = :layout
