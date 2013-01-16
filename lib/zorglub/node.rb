@@ -254,7 +254,7 @@ module Zorglub
             #
         end
         #
-        attr_reader :request, :response, :content, :mime
+        attr_reader :request, :response, :content, :mime, :state
         #
         def initialize env, options
             @env = env
@@ -263,11 +263,6 @@ module Zorglub
             @response = Rack::Response.new
             @cli_vals ={}
             self.class.cli_vals.each do |s,v| cli_val s, *v end
-        end
-        #
-        def state state=nil
-            @options[:state] = state unless state.nil?
-            @options[:state]
         end
         #
         def realize!
@@ -281,9 +276,9 @@ module Zorglub
         end
         #
         def feed!
-            state :pre_cb
+            @state = :pre_cb
             self.class.call_before_hooks self
-            state :meth
+            @state = :meth
             @content = self.send @options[:method], *@options[:args]
             static_path = static
             if static_path.nil?
@@ -291,9 +286,9 @@ module Zorglub
             else
                 static_page! static_path
             end
-            state :post_cb
+            @state = :post_cb
             self.class.call_after_hooks self
-            state :finished
+            @state = :finished
             return @content, @mime
         end
         #
@@ -317,10 +312,10 @@ module Zorglub
             v, l, debug = view, layout, app.opt(:debug)
             puts " * "+(File.exists?(l) ? 'use layout' : 'not found layout')+" : "+l if debug
             puts " * "+(File.exists?(v) ? 'use view  ' : 'not found view  ')+" : "+v if debug
-            state (@options[:layout].nil? ? :partial : :view)
+            @state = (@options[:layout].nil? ? :partial : :view)
             @content, mime = e.call v, self if e and File.exists? v
             @mime = mime unless mime.nil?
-            state :layout
+            @state = :layout
             @content, mime = e.call l, self if e and File.exists? l
             @mime = mime unless mime.nil?
         end
