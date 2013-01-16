@@ -75,12 +75,12 @@ module Zorglub
         end
         #
         def view! view
-            @options[:view] = view
+            @view = view
         end
         #
         def view
-            return '' if @options[:view].nil?
-            File.join(self.class.view_base_path, @options[:view])+ext
+            return nil if @view.nil?
+            File.join(self.class.view_base_path, @view)+ext
         end
         #
         def static! val
@@ -88,8 +88,8 @@ module Zorglub
         end
         #
         def static
-            return nil if not @static or @options[:view].nil?
-            File.join(app.static_base_path, @options[:view])+ext
+            return nil if not @static or @view.nil?
+            File.join(app.static_base_path, @view)+ext
         end
         #
         def ext! ext
@@ -227,13 +227,13 @@ module Zorglub
                 meth, *args =  env['PATH_INFO'].sub(/^\//,'').split(/\//)
                 meth||= 'index'
                 puts "=> #{meth}(#{args.join ','})" if app.opt :debug
-                node = self.new env, {:view=>r(meth),:method=>meth,:args=>args}
+                node = self.new env, {:method=>meth,:args=>args}
                 return error_404 node if not node.respond_to? meth
                 node.realize!
             end
             #
             def partial meth, *args
-                node = self.new nil, {:partial=>true,:view=>r(meth),:method=>meth.to_s,:args=>args}
+                node = self.new nil, {:partial=>true,:method=>meth.to_s,:args=>args}
                 return error_404 node if not node.respond_to? meth
                 node.feed!
                 node.content
@@ -260,6 +260,7 @@ module Zorglub
             @cli_vals ={}
             @engine = self.class.engine
             @layout = ( options[:partial] ? nil : self.class.layout )
+            @view = r(options[:method])
             @static = self.class.static
             self.class.cli_vals.each do |s,v| cli_val s, *v end
         end
@@ -310,9 +311,9 @@ module Zorglub
             e, @options[:ext] = app.engine_proc_ext @engine, @options[:ext]
             v, l, debug = view, layout, app.opt(:debug)
             puts " * "+((l and File.exists?(l)) ? 'use layout' : 'not found layout')+" : "+(l ? l : '') if debug
-            puts " * "+(File.exists?(v) ? 'use view  ' : 'not found view  ')+" : "+v if debug
+            puts " * "+((v and File.exists?(v)) ? 'use view  ' : 'not found view  ')+" : "+(v ? v : '') if debug
             @state = (@options[:partial] ? :partial : :view)
-            @content, mime = e.call v, self if e and File.exists? v
+            @content, mime = e.call v, self if e and v and File.exists? v
             @mime = mime unless mime.nil?
             @state = :layout
             @content, mime = e.call l, self if e and l and File.exists? l
