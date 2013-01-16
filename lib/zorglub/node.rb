@@ -258,6 +258,7 @@ module Zorglub
             @request = Rack::Request.new env
             @response = Rack::Response.new
             @cli_vals ={}
+            @debug = app.opt :debug
             @engine = self.class.engine
             @layout = ( options[:partial] ? nil : self.class.layout )
             @view = r(options[:method])
@@ -298,9 +299,9 @@ module Zorglub
                 Dir.mkdir app.static_base_path
                 Dir.mkdir File.dirname path
                 File.open(path, 'w') {|f| f.write("@mime:"+@mime+"\n"); f.write(@content); }
-                puts " * cache file created : #{path}" if app.opt :debug
+                puts " * cache file created : #{path}" if @debug
             else
-                puts " * use cache file : #{path}" if app.opt :debug
+                puts " * use cache file : #{path}" if @debug
                 content = File.open(path, 'r') {|f| f.read }
                 @content = content.sub /^@mime:(.*)\n/,''
                 @mime = $1
@@ -309,9 +310,12 @@ module Zorglub
         #
         def compile_page!
             e, @options[:ext] = app.engine_proc_ext @engine, @options[:ext]
-            v, l, debug = view, layout, app.opt(:debug)
-            puts " * "+((l and File.exists?(l)) ? 'use layout' : 'not found layout')+" : "+(l ? l : '') if debug
-            puts " * "+((v and File.exists?(v)) ? 'use view  ' : 'not found view  ')+" : "+(v ? v : '') if debug
+            v, l = view, layout
+            if @debug
+                puts " * "+(e ? 'use engine' : 'no engine ')+" : "+(e ? e.to_s : '')
+                puts " * "+((l and File.exists?(l)) ? 'use layout' : 'no layout ')+" : "+(l ? l : '')
+                puts " * "+((v and File.exists?(v)) ? 'use view  ' : 'no view   ')+" : "+(v ? v : '')
+            end
             @state = (@options[:partial] ? :partial : :view)
             @content, mime = e.call v, self if e and v and File.exists? v
             @mime = mime unless mime.nil?
