@@ -58,11 +58,7 @@ module Zorglub
         # instance level engine, layout, view, static configuration
         #
         def engine! engine
-            @options[:engine] = engine
-        end
-        #
-        def engine
-            @options[:engine]
+            @engine = engine
         end
         #
         def no_layout!
@@ -231,13 +227,13 @@ module Zorglub
                 meth, *args =  env['PATH_INFO'].sub(/^\//,'').split(/\//)
                 meth||= 'index'
                 puts "=> #{meth}(#{args.join ','})" if app.opt :debug
-                node = self.new env, {:engine=>engine,:layout=>layout,:view=>r(meth),:method=>meth,:args=>args}
+                node = self.new env, {:layout=>layout,:view=>r(meth),:method=>meth,:args=>args}
                 return error_404 node if not node.respond_to? meth
                 node.realize!
             end
             #
             def partial meth, *args
-                node = self.new nil, {:engine=>engine,:layout=>nil,:view=>r(meth),:method=>meth.to_s,:args=>args}
+                node = self.new nil, {:layout=>nil,:view=>r(meth),:method=>meth.to_s,:args=>args}
                 return error_404 node if not node.respond_to? meth
                 node.feed!
                 node.content
@@ -254,7 +250,7 @@ module Zorglub
             #
         end
         #
-        attr_reader :request, :response, :content, :mime, :state
+        attr_reader :request, :response, :content, :mime, :state, :engine
         #
         def initialize env, options
             @env = env
@@ -262,6 +258,7 @@ module Zorglub
             @request = Rack::Request.new env
             @response = Rack::Response.new
             @cli_vals ={}
+            @engine = self.class.engine
             @static = self.class.static
             self.class.cli_vals.each do |s,v| cli_val s, *v end
         end
@@ -309,7 +306,7 @@ module Zorglub
         end
         #
         def compile_page!
-            e, @options[:ext] = app.engine_proc_ext @options[:engine], @options[:ext]
+            e, @options[:ext] = app.engine_proc_ext @engine, @options[:ext]
             v, l, debug = view, layout, app.opt(:debug)
             puts " * "+(File.exists?(l) ? 'use layout' : 'not found layout')+" : "+l if debug
             puts " * "+(File.exists?(v) ? 'use view  ' : 'not found view  ')+" : "+v if debug
