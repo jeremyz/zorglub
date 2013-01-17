@@ -152,7 +152,7 @@ class Node6 < Zorglub::Node
         attr_accessor :static_cpt
     end
     attr_reader :value
-    static! true, 1
+    static! true, 5
     def no_static
         static! false
         engine! 'static'
