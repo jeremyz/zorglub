@@ -1,7 +1,9 @@
-2013-01-08 Jérémy Zurcher <jeremy@asynk.ch>
+2013-01-XX Jérémy Zurcher <jeremy@asynk.ch>
 	* release 0.7
 	* zorglub.rb swallows version.rb
 	* before_all and after_all accept parameter or proc
+	* use instance variables instead of @options hash
+	* add optional cache_lifetime to static pages
 
 2013-01-08 Jérémy Zurcher <jeremy@asynk.ch>
 	* release 0.6
