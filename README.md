@@ -1,8 +1,8 @@
 # zorglub
     by Jérémy Zurcher
     http://asynk.ch
-    [![Build Status](https://secure.travis-ci.org/jeremyz/zorglub.png)](http://travis-ci.org/jeremyz/zorglub)
-    [![Gem Version](https://badge.fury.io/rb/zorglub.png)](http://badge.fury.io/rb/zorglub)
+[![Build Status](https://secure.travis-ci.org/jeremyz/zorglub.png)](http://travis-ci.org/jeremyz/zorglub)
+[![Gem Version](https://badge.fury.io/rb/zorglub.png)](http://badge.fury.io/rb/zorglub)
 
 ## DESCRIPTION:
 
