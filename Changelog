@@ -1,5 +1,5 @@
-2013-01-XX Jérémy Zurcher <jeremy@asynk.ch>
-	* release 0.7
+2013-02-01 Jérémy Zurcher <jeremy@asynk.ch>
+	* release 0.0.7
 	* zorglub.rb swallows version.rb
 	* before_all and after_all accept parameter or proc
 	* use instance variables instead of @options hash
@@ -8,14 +8,14 @@
 	* allow by passing hooks in partials
 
 2013-01-08 Jérémy Zurcher <jeremy@asynk.ch>
-	* release 0.6
+	* release 0.0.6
 	* add sass engine
 	* use Bundler
 	* enable travis
 	* fix and rename inherited_vars in cli_vals
 
 2012-01-17 Jérémy Zurcher <jeremy@asynk.ch>
-	* release 0.5
+	* release 0.0.5
 	* Node code cleanup
 	* class and method level directives are now view!, layout!, no_layout!, ...
 	* add view_base_path! and layout_base_path!
@@ -24,7 +24,7 @@
 	* Zorglub::App swallows Zorglub::Config
 
 2012-01-05 Jérémy Zurcher <jeremy@asynk.ch>
-	* release 0.3 and 0.4
+	* release 0.0.3 and 0.0.4
 	* haml, file engines
 	* view/layout extention overriding at methode level
 	* optional engine cache
@@ -32,7 +32,7 @@
 	* optional static page generation/cache
 
 2012-01-04 Jérémy Zurcher <jeremy@asynk.ch>
-	* release 0.2
+	* release 0.0.2
 	* lots of code cleanup
 	* replace Helpers Module with Node#inherited_var Node@inherited_vars
 	* rewrite session so it is compatible with Rack SessionHash
