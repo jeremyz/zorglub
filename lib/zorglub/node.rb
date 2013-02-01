@@ -240,7 +240,7 @@ module Zorglub
                 resp = node.response
                 resp.status = 404
                 resp['Content-Type'] = 'text/plain'
-                resp.write "%s mapped at %p can't respond to : %p" % [ node.class.name, node.map, node.request.env['PATH_INFO'] ]
+                resp.write "%s mapped at %p can't respond to : %p" % [ node.class.name, node.map, node.meth ]
                 resp
             end
             #
@@ -249,7 +249,6 @@ module Zorglub
         attr_reader :request, :response, :content, :mime, :state, :engine, :meth, :args
         #
         def initialize env, meth, args, partial=false
-            @env = env
             @meth = meth
             @args = args
             @partial = partial
