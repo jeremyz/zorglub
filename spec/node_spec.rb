@@ -285,6 +285,11 @@ describe Zorglub do
             h[:layout].should == File.join(Node7.app.opt(:root), 'alt','layout','default')
         end
         #
+        it "debug out should work" do
+            APP.opt! :debug, true
+            Node0.my_call '/hello'
+        end
+        #
     end
     #
 end

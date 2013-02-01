@@ -222,7 +222,7 @@ module Zorglub
             def call env
                 meth, *args =  env['PATH_INFO'].sub(/^\/+/,'').split(/\//)
                 meth ||= 'index'
-                puts "=> #{meth}(#{args.join ','})" if app.opt :debug
+                $stderr << "=> #{meth}(#{args.join ','})\n" if app.opt :debug
                 node = self.new env, meth, args
                 return error_404 node if not node.respond_to? meth
                 node.realize!
@@ -236,7 +236,7 @@ module Zorglub
             end
             #
             def error_404 node
-                puts " !! method not found" if app.opt :debug
+                $stderr << " !! method not found\n" if app.opt :debug
                 resp = node.response
                 resp.status = 404
                 resp['Content-Type'] = 'text/plain'
@@ -293,7 +293,7 @@ module Zorglub
         #
         def static_page! path
             if File.exists?(path) and  ( @cache_lifetime.nil? or @cache_lifetime==0 or ( (Time.now-File.stat(path).mtime) < @cache_lifetime ) )
-                puts " * use cache file : #{path}" if @debug
+                $stderr << " * use cache file : #{path}\n" if @debug
                 content = File.open(path, 'r') {|f| f.read }
                 @content = content.sub /^@mime:(.*)\n/,''
                 @mime = $1
@@ -301,7 +301,7 @@ module Zorglub
                 compile_page!
                 FileUtils.mkdir_p File.dirname(path)
                 File.open(path, 'w') {|f| f.write("@mime:"+@mime+"\n"); f.write(@content); }
-                puts " * cache file created : #{path}" if @debug
+                $stderr << " * cache file created : #{path}\n" if @debug
             end
         end
         #
@@ -309,9 +309,9 @@ module Zorglub
             e, @ext = app.engine_proc_ext @engine, @ext
             v, l = view, layout
             if @debug
-                puts " * "+(e ? 'use engine' : 'no engine ')+" : "+(e ? e.to_s : '')
-                puts " * "+((l and File.exists?(l)) ? 'use layout' : 'no layout ')+" : "+(l ? l : '')
-                puts " * "+((v and File.exists?(v)) ? 'use view  ' : 'no view   ')+" : "+(v ? v : '')
+                $stderr << " * "+(e ? 'use engine' : 'no engine ')+" : "+(e ? e.to_s : '')+"\n"
+                $stderr << " * "+((l and File.exists?(l)) ? 'use layout' : 'no layout ')+" : "+(l ? l : '')+"\n"
+                $stderr << " * "+((v and File.exists?(v)) ? 'use view  ' : 'no view   ')+" : "+(v ? v : '')+"\n"
             end
             @state = ( @partial ? :partial : :view )
             @content, mime = e.call v, self if e and v and File.exists? v
