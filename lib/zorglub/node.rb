@@ -228,10 +228,10 @@ module Zorglub
                 node.realize!
             end
             #
-            def partial meth, *args
-                node = self.new nil, meth.to_s, args, true
+            def partial env, meth, *args
+                node = self.new env, meth.to_s, args, true
                 return error_404 node if not node.respond_to? meth
-                node.feed!
+                node.feed! env[:no_hooks]
                 node.content
             end
             #
@@ -274,9 +274,9 @@ module Zorglub
             }
         end
         #
-        def feed!
+        def feed! no_hooks=false
             @state = :pre_cb
-            self.class.call_before_hooks self
+            self.class.call_before_hooks self unless no_hooks
             @state = :meth
             @content = self.send @meth, *@args
             static_path = static
@@ -286,7 +286,7 @@ module Zorglub
                 static_page! static_path
             end
             @state = :post_cb
-            self.class.call_after_hooks self
+            self.class.call_after_hooks self unless no_hooks
             @state = :finished
             return @content, @mime
         end

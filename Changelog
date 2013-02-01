@@ -4,6 +4,8 @@
 	* before_all and after_all accept parameter or proc
 	* use instance variables instead of @options hash
 	* add optional cache_lifetime to static pages
+	* add firs parameter env to Node#partial
+	* allow by passing hooks in partials
 
 2013-01-08 Jérémy Zurcher <jeremy@asynk.ch>
 	* release 0.6

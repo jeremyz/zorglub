@@ -116,6 +116,10 @@ class Node3 < Zorglub::Node
     def index
         (Node3.before-Node3.after).should == 1
     end
+    def do_partial a1, a2
+        view! Node0.r('do_partial')
+        engine! 'real'
+    end
 end
 #
 class Node8 < Node3

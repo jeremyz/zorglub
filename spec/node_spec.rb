@@ -167,11 +167,27 @@ describe Zorglub do
         end
         #
         it "partial should render correctly" do
-            Node0.partial(:do_partial, 1, 2).should == 'partial_content'
+            Node0.partial({},:do_partial, 1, 2).should == 'partial_content'
         end
         #
         it "method level view should work" do
-            Node0.partial(:other_view).should == 'partial_content'
+            Node0.partial({},:other_view).should == 'partial_content'
+        end
+        #
+        it "partial with hooks should be default" do
+            Node3.before = 0
+            Node3.after = 0
+            Node3.partial({},:do_partial,1,2).should == 'partial_content'
+            Node3.before.should == 1
+            Node3.after.should == 1
+        end
+        #
+        it "partial without hooks should work" do
+            Node3.before = 0
+            Node3.after = 0
+            Node3.partial({:no_hooks=>true},:do_partial,1,2).should == 'partial_content'
+            Node3.before.should == 0
+            Node3.after.should == 0
         end
         #
         it "static pages should be generated" do
