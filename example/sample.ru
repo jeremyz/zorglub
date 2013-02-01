@@ -89,7 +89,7 @@ class Node2 < Zorglub::Node
     end
     #
     def meth1 *args
-        more = Node2.partial :meth0, *args
+        more = Node2.partial response.env, :meth0, *args
         "<title>Node2:meth1</title><b>partial</b><br/>#{more}<br/><b>done</b><br/><a href=#{Node0.r}>back</a>"
     end
 end
