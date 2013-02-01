@@ -220,7 +220,7 @@ module Zorglub
             end
             #
             def call env
-                meth, *args =  env['PATH_INFO'].sub(/^\//,'').split(/\//)
+                meth, *args =  env['PATH_INFO'].sub(/^\/+/,'').split(/\//)
                 meth ||= 'index'
                 puts "=> #{meth}(#{args.join ','})" if app.opt :debug
                 node = self.new env, meth, args
