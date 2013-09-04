@@ -104,6 +104,10 @@ module Zorglub
             @ext || ''
         end
         #
+        def mime! mime
+            @mime = mime
+        end
+        #
         # class level basic node functions
         #
         class << self
@@ -315,10 +319,10 @@ module Zorglub
             end
             @state = ( @partial ? :partial : :view )
             @content, mime = e.call v, self if e and v and File.exists? v
-            @mime = mime unless mime.nil?
+            @mime ||= mime
             @state = :layout
             @content, mime = e.call l, self if e and l and File.exists? l
-            @mime = mime unless mime.nil?
+            @mime = mime if @mime.nil? and not mime.nil?
         end
         #
     end
