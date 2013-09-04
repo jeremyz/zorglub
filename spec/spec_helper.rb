@@ -68,11 +68,13 @@ class Node0 < Zorglub::Node
         no_layout!
         engine! :file
         ext! 'xml'
+        mime! 'application/xml'
     end
     def plain_file
         no_layout!
         engine! :file
         ext! 'txt'
+        mime! 'text/plain'
     end
     def engines name
         no_layout!

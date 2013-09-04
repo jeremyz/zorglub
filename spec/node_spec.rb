@@ -251,8 +251,10 @@ describe Zorglub do
         it "ext definition and file engine should work" do
             r = Node0.my_call '/xml_file'
             r.body[0].should  == "<xml>file<\/xml>\n"
+            r.header['Content-type'].should == 'application/xml'
             r = Node0.my_call '/plain_file'
             r.body[0].should == "plain file\n"
+            r.header['Content-type'].should == 'text/plain'
         end
         #
         it "haml engine should work" do
