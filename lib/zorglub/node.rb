@@ -77,6 +77,10 @@ module Zorglub
             File.join(self.class.layout_base_path, @layout)+ext
         end
         #
+        def no_view!
+            view! nil
+        end
+        #
         def view! view
             @view = view
         end
