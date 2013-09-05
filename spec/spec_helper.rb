@@ -76,6 +76,11 @@ class Node0 < Zorglub::Node
         ext! 'txt'
         mime! 'text/plain'
     end
+    def no_view_no_layout
+        no_view!
+        no_layout!
+        'hello world'
+    end
     def engines name
         no_layout!
         case name

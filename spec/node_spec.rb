@@ -257,6 +257,11 @@ describe Zorglub do
             r.header['Content-type'].should == 'text/plain'
         end
         #
+        it "no view no layout should work as well" do
+            r = Node0.my_call '/no_view_no_layout'
+            r.body[0].should  == "hello world"
+        end
+        #
         it "haml engine should work" do
             Node0.app.opt! :engines_cache_enabled, false
             r = Node0.my_call '/engines/haml'
