@@ -166,6 +166,11 @@ describe Zorglub do
             r.header['Content-type'].should == 'text/view'
         end
         #
+        it "should be able to override through rack response mime-type" do
+            r = Node0.my_call '/do_content_type'
+            r.header['Content-type'].should == 'text/mine'
+        end
+        #
         it "partial should render correctly" do
             Node0.partial({},:do_partial, 1, 2).should == 'partial_content'
         end

@@ -276,7 +276,7 @@ module Zorglub
             catch(:stop_realize) {
                 feed!
                 response.write @content
-                response.header['Content-Type'] = ( @mime || 'text/html' )
+                response.header['Content-Type'] ||= ( @mime || 'text/html' )
                 response.finish
                 response
             }
