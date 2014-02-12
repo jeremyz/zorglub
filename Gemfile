@@ -14,3 +14,5 @@ group :test, :development do
     gem 'haml'
     gem 'sass'
 end
+
+gem 'coveralls', require: false

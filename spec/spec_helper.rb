@@ -1,6 +1,12 @@
 #! /usr/bin/env ruby
 #
 begin
+    require 'coveralls'
+    Coveralls.wear!
+    #
+rescue LoadError
+end
+begin
     require 'simplecov'
     SimpleCov.start do
         add_filter 'spec'
