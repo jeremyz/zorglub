@@ -232,19 +232,19 @@ module Zorglub
                 meth ||= 'index'
                 $stderr << "=> #{meth}(#{args.join ','})\n" if app.opt :debug
                 node = self.new env, meth, args
-                return error_404 node if not node.respond_to? meth
+                return error_404 node, meth if not node.respond_to? meth
                 node.realize!
             end
             #
             def partial env, meth, *args
                 node = self.new env, meth.to_s, args, true
-                return error_404 node if not node.respond_to? meth
+                return error_404 node, meth if not node.respond_to? meth
                 node.feed! env[:no_hooks]
                 node.content
             end
             #
-            def error_404 node
-                $stderr << " !! method not found\n" if app.opt :debug
+            def error_404 node, meth
+                $stderr << " !! #{node.class.name}::#{meth} not found\n" if app.opt :debug
                 resp = node.response
                 resp.status = 404
                 resp['Content-Type'] = 'text/plain'
