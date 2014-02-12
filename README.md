@@ -2,6 +2,7 @@
     by Jérémy Zurcher
     http://asynk.ch
 [![Build Status](https://secure.travis-ci.org/jeremyz/zorglub.png)](http://travis-ci.org/jeremyz/zorglub)
+[![Coverage Status](https://coveralls.io/repos/jeremyz/zorglub/badge.png?branch=master)](https://coveralls.io/r/jeremyz/zorglub?branch=master)
 [![Gem Version](https://badge.fury.io/rb/zorglub.png)](http://badge.fury.io/rb/zorglub)
 
 ## DESCRIPTION:
