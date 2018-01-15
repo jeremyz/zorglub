@@ -58,7 +58,7 @@ describe Zorglub do
         end
         #
         it "should return err404 response when no method found" do
-            Node0.respond_to?('noresponse').should be_false
+            Node0.respond_to?('noresponse').should be_falsey
             r = Node0.my_call '/noresponse'
             r.status.should == 404
         end
