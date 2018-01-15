@@ -22,7 +22,6 @@ module Zorglub
                 :engines => { },
                 :haml_options => {
                     :format => :html5,
-                    :ugly => false,
                     :encoding => 'utf-8'
                 },
                 :sass_options => {
