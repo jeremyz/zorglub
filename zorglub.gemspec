@@ -1,13 +1,13 @@
 #! /usr/bin/env ruby
 # -*- coding: UTF-8 -*-
-#
+
 $:.push File.expand_path("../lib", __FILE__)
-#
+
 begin
     require 'zorglub'
 rescue LoadError
 end
-#
+
 Gem::Specification.new do |s|
     s.name = "zorglub"
     s.version = Zorglub::VERSION
@@ -22,5 +22,5 @@ Gem::Specification.new do |s|
     s.executables = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
     s.require_paths = ["lib"]
 end
-#
+
 # EOF
