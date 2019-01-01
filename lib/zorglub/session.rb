@@ -1,24 +1,24 @@
 # -*- coding: UTF-8 -*-
-#
+
 require 'securerandom'
-#
+
 module Zorglub
-    #
+
     class Node
-        #
+
         @sessions = {}
-        #
+
         class << self
             attr_reader :sessions
         end
-        #
+
         def session
             @session ||= SessionHash.new @request, @response, Node.sessions, app.opt(:session_options)
         end
     end
-    #
+
     class SessionHash < Hash
-        #
+
         def initialize req, resp, sessions, options
             @request = req
             @response = resp
@@ -27,49 +27,49 @@ module Zorglub
             @options = options
             super()
         end
-        #
+
         def [] key
             load_data!
             super key
         end
-        #
+
         def has_key? key
             load_data!
             super key
         end
         alias :key? :has_key?
         alias :include? :has_key?
-        #
+
         def []= key, value
             load_data!
             super key, value
         end
-        #
+
         def clear
             load_data!
-#            @response.delete_cookie @options[:key]
-#            @sessions.delete @sid
-#            @sid = nil
+            # @response.delete_cookie @options[:key]
+            # @sessions.delete @sid
+            # @sid = nil
             super
         end
-        #
+
         def to_hash
             load_data!
             h = {}.replace(self)
             h.delete_if { |k,v| v.nil? }
             h
         end
-        #
+
         def update hash
             load_data!
             super stringify_keys(hash)
         end
-        #
+
         def delete key
             load_data!
             super key
         end
-        #
+
         def inspect
             if loaded?
                 super
@@ -77,22 +77,22 @@ module Zorglub
                 "#<#{self.class}:0x#{self.object_id.to_s(16)} not yet loaded>"
             end
         end
-        #
+
         def exists?
             ( loaded? ? @sessions.has_key?(@sid) : false )
         end
-        #
+
         def loaded?
             not @sid.nil?
         end
-        #
+
         def empty?
             load_data!
             super
         end
-        #
+
         private
-        #
+
         def load_data!
             return if loaded?
             if @options[:enabled]
@@ -106,7 +106,7 @@ module Zorglub
                 @sid = sid
             end
         end
-        #
+
         def stringify_keys other
             hash = {}
             other.each do |key, value|
@@ -114,12 +114,12 @@ module Zorglub
             end
             hash
         end
-        #
+
         def generate_sid!
             begin sid = sid_algorithm end while @sessions.has_key? sid
             sid
         end
-        #
+
         begin
             require 'securerandom'
             # Using SecureRandom, optional length.
@@ -148,9 +148,9 @@ module Zorglub
                 Digest::SHA2.hexdigest(entropy.join)
             end
         end
-        #
+
     end
-    #
+
 end
-#
+
 # EOF

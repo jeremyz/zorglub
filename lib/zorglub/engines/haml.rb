@@ -1,8 +1,8 @@
 # -*- coding: UTF-8 -*-
-#
+
 require 'haml/util'
 require 'haml/engine'
-#
+
 module Zorglub
     module Engines
         module Haml
@@ -19,5 +19,5 @@ module Zorglub
         end
     end
 end
-#
+
 # EOF

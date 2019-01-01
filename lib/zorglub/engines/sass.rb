@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
-#
+
 require 'sass'
-#
+
 module Zorglub
     module Engines
         module Sass
@@ -18,5 +18,5 @@ module Zorglub
         end
     end
 end
-#
+
 # EOF
