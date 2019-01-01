@@ -1,15 +1,19 @@
 #! /usr/bin/env ruby
 
 begin
-    require 'coveralls'
-    Coveralls.wear!
-rescue LoadError
-end
-begin
     require 'simplecov'
     SimpleCov.start do
         add_filter 'spec'
     end
+rescue LoadError
+end
+
+begin
+    require 'coveralls'
+    SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+        SimpleCov::Formatter::HTMLFormatter,
+        Coveralls::SimpleCov::Formatter
+    ]
 rescue LoadError
 end
 
