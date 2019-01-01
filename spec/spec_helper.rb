@@ -40,6 +40,9 @@ class Zorglub::Node
     def self.my_call uri
         call( {'PATH_INFO'=>uri} )
     end
+    def self.my_call_i uri
+        call( {'PATH_INFO'=>uri} ).body[0].to_i
+    end
 end
 
 class Temp < Zorglub::Node
@@ -130,7 +133,7 @@ class Node3 < Zorglub::Node
     layout! 'layout-2'
     engine! 'engine-2'
     def index
-        (Node3.before-Node3.after).should == 1
+        Node3.before-Node3.after
     end
     def do_partial a1, a2
         view! Node0.r('do_partial')
