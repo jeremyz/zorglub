@@ -148,9 +148,5 @@ module Zorglub
                 Digest::SHA2.hexdigest(entropy.join)
             end
         end
-
     end
-
 end
-
-# EOF

@@ -78,11 +78,10 @@ module Zorglub
         end
 
         def register_engine! name, ext, proc
-            return unless name
             if ext.nil? or ext.empty?
                 x = nil
             else
-                x = (ext[0]=='.' ? (ext.length==1 ? nil : ext) : '.'+ext)
+                x = (ext[0]=='.' ? (ext.length==1 ? nil : ext) : '.' + ext)
             end
             @options[:engines][name]=[ proc, x ]
         end
@@ -94,20 +93,20 @@ module Zorglub
         end
 
         def view_base_path
-            p = @options[:view_path]
-            ( p.nil? ? File.join(@options[:root], @options[:view_dir]) : p )
+            _base_path @options[:view_path], :view_dir
         end
 
         def layout_base_path
-            p = @options[:layout_path]
-            ( p.nil? ? File.join(@options[:root], @options[:layout_dir]) : p )
+            _base_path @options[:layout_path], :layout_dir
         end
 
         def static_base_path
-            p = @options[:static_path]
-            ( p.nil? ? File.join(@options[:root], @options[:static_dir]) : p )
+            _base_path @options[:static_path], :static_dir
+        end
+
+        private
+        def _base_path p, sym
+            ( p.nil? ? File.join(@options[:root], @options[sym]) : p )
         end
     end
 end
-#
-# EOF

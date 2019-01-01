@@ -74,7 +74,7 @@ module Zorglub
 
         def layout
             return nil if @layout.nil?
-            File.join(self.class.layout_base_path, @layout)+ext
+            File.join(self.class.layout_base_path, @layout) + ext
         end
 
         def no_view!
@@ -87,7 +87,7 @@ module Zorglub
 
         def view
             return nil if @view.nil?
-            File.join(self.class.view_base_path, @view)+ext
+            File.join(self.class.view_base_path, @view) + ext
         end
 
         def static! val, lifetime=0
@@ -97,11 +97,11 @@ module Zorglub
 
         def static
             return nil if not @static or @view.nil?
-            File.join(app.static_base_path, @view)+ext
+            File.join(app.static_base_path, @view) + ext
         end
 
         def ext! ext
-            @ext = ( (ext.nil? or ext.empty?) ? nil : (ext[0]=='.' ? (ext.length==1 ? nil : ext) : '.'+ext) )
+            @ext = ( (ext.nil? or ext.empty?) ? nil : (ext[0]=='.' ? (ext.length==1 ? nil : ext) : '.' + ext) )
         end
 
         def ext
@@ -332,5 +332,3 @@ module Zorglub
     end
 
 end
-
-# EOF
