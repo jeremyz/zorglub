@@ -297,10 +297,18 @@ describe Zorglub do
             expect(h[:layout]).to eq File.join(Node7.app.opt(:root), 'alt','layout','default')
         end
 
-        # it "debug out should work" do
-        #     APP.opt! :debug, true
-        #     Node0.my_call '/hello'
-        # end
+        it "debug out should work" do
+            stderr0= $stderr.dup
+            stderrs = StringIO.new
+            $stderr = stderrs
+            begin
+                APP.opt! :debug, true
+                Node0.my_call '/hello'
+            ensure
+                $stderr = stderr0
+            end
+            expect(stderrs.string.include?('spec/data/view/node0/hello')).to be true
+        end
 
     end
 
