@@ -1,9 +1,8 @@
 #! /usr/bin/env ruby
-#
+
 begin
     require 'coveralls'
     Coveralls.wear!
-    #
 rescue LoadError
 end
 begin
@@ -13,14 +12,14 @@ begin
     end
 rescue LoadError
 end
-#
+
 require 'yaml'
-#
+
 require 'zorglub'
 require 'zorglub/engines/file'
 require 'zorglub/engines/haml'
 require 'zorglub/engines/sass'
-#
+
 HASH_PROC = Proc.new { |path,obj| {:path=>path,:layout=>obj.layout,:view=>obj.view,:args=>obj.args,:map=>obj.map}.to_yaml }
 STATIC_PROC = Proc.new { |path,obj| ["VAL #{obj.value}",'text/static'] }
 RENDER_PROC = Proc.new { |path,obj|
@@ -36,16 +35,16 @@ RENDER_PROC = Proc.new { |path,obj|
     end
 }
 APP_ROOT = File.join Dir.pwd, 'spec', 'data'
-#
+
 class Zorglub::Node
     def self.my_call uri
         call( {'PATH_INFO'=>uri} )
     end
 end
-#
+
 class Temp < Zorglub::Node
 end
-#
+
 class Node0 < Zorglub::Node
     # default
     def index
@@ -101,7 +100,7 @@ class Node0 < Zorglub::Node
         end
     end
 end
-#
+
 class Node1 < Zorglub::Node
     layout! 'layout-1'
     engine! 'engine-1'
@@ -110,11 +109,11 @@ class Node1 < Zorglub::Node
         engine! 'engine-2'
     end
 end
-#
+
 class Node2 < Node1
     # inherited from Node1
 end
-#
+
 class Node3 < Zorglub::Node
     @before=0
     @after=0
@@ -138,10 +137,10 @@ class Node3 < Zorglub::Node
         engine! 'real'
     end
 end
-#
+
 class Node8 < Node3
 end
-#
+
 class Node4 < Zorglub::Node
     no_layout!
     cli_val :js,'js0'
@@ -154,7 +153,7 @@ class Node4 < Zorglub::Node
         cli_val(:js).to_yaml
     end
 end
-#
+
 class Node5 < Node4
     cli_val :js, 'js3'
     cli_val :css, 'css0', 'css1'
@@ -166,7 +165,7 @@ class Node5 < Node4
         js.concat(css).to_yaml
     end
 end
-#
+
 class Node6 < Zorglub::Node
     @static_cpt=0
     class << self
@@ -188,7 +187,7 @@ class Node6 < Zorglub::Node
         @value = Node6.static_cpt
     end
 end
-#
+
 class Node7 < Zorglub::Node
     layout_base_path! File.join APP_ROOT, 'alt','layout'
     view_base_path! File.join APP_ROOT, 'alt'
@@ -196,7 +195,7 @@ class Node7 < Zorglub::Node
         view! 'do_render'
     end
 end
-#
+
 APP = Zorglub::App.new do
     register_engine! :file, nil, Zorglub::Engines::File.method(:proc)
     register_engine! :haml, 'haml', Zorglub::Engines::Haml.method(:proc)
@@ -217,8 +216,7 @@ APP = Zorglub::App.new do
     map '/node7', Node7
     map '/node8', Node8
 end
-#
+
 class Node2
     map APP, '/node2'
 end
-#
