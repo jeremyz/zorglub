@@ -150,7 +150,7 @@ module Zorglub
         def redirect target, options={}, &block
             status = options[:status] || 302
             body   = options[:body] || redirect_body(target)
-            header = response.header.merge('Location' => target.to_s)
+            header = response.headers.merge('Location' => target.to_s)
             throw :stop_realize, Rack::Response.new(body, status, header, &block)
         end
 
@@ -276,7 +276,7 @@ module Zorglub
             catch(:stop_realize) {
                 feed!
                 response.write @content
-                response.header['Content-Type'] ||= ( @mime || 'text/html' )
+                response.headers['Content-Type'] ||= ( @mime || 'text/html' )
                 response.finish
                 response
             }

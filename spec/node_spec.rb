@@ -158,17 +158,17 @@ describe Zorglub do
 
         it "default mime-type should be text/html" do
             r = Node0.my_call '/index'
-            expect(r.header['Content-type']).to eq 'text/html'
+            expect(r.headers['Content-type']).to eq 'text/html'
         end
 
         it "should be able to override mime-type" do
             r = Node0.my_call '/do_render'
-            expect(r.header['Content-type']).to eq 'text/view'
+            expect(r.headers['Content-type']).to eq 'text/view'
         end
 
         it "should be able to override through rack response mime-type" do
             r = Node0.my_call '/do_content_type'
-            expect(r.header['Content-type']).to eq 'text/mine'
+            expect(r.headers['Content-type']).to eq 'text/mine'
         end
 
         it "partial should render correctly" do
@@ -198,30 +198,30 @@ describe Zorglub do
         it "static pages should be generated" do
             r = Node6.my_call '/do_static'
             expect(r.body[0]).to eq 'VAL 1'
-            expect(r.header['Content-type']).to eq 'text/static'
+            expect(r.headers['Content-type']).to eq 'text/static'
             r = Node6.my_call '/do_static'
             expect(r.body[0]).to eq 'VAL 1'
-            expect(r.header['Content-type']).to eq 'text/static'
+            expect(r.headers['Content-type']).to eq 'text/static'
             r = Node6.my_call '/do_static'
             expect(r.body[0]).to eq 'VAL 1'
-            expect(r.header['Content-type']).to eq 'text/static'
+            expect(r.headers['Content-type']).to eq 'text/static'
             r = Node6.my_call '/no_static'
             expect(r.body[0]).to eq 'VAL 4'
-            expect(r.header['Content-type']).to eq 'text/static'
+            expect(r.headers['Content-type']).to eq 'text/static'
             r = Node6.my_call '/do_static'
             expect(r.body[0]).to eq 'VAL 1'
-            expect(r.header['Content-type']).to eq 'text/static'
+            expect(r.headers['Content-type']).to eq 'text/static'
             Node6.static! true, 0.000001
             sleep 0.0001
             r = Node6.my_call '/do_static'
             expect(r.body[0]).to eq 'VAL 6'
-            expect(r.header['Content-type']).to eq 'text/static'
+            expect(r.headers['Content-type']).to eq 'text/static'
         end
 
         it "redirect should work" do
             r = Node0.my_call '/do_redirect'
             expect(r.status).to eq 302
-            expect(r.header['location']).to eq Node0.r(:do_partial,1,2,3)
+            expect(r.headers['location']).to eq Node0.r(:do_partial,1,2,3)
         end
 
         it "no_layout! should be inherited" do
@@ -256,10 +256,10 @@ describe Zorglub do
         it "ext definition and file engine should work" do
             r = Node0.my_call '/xml_file'
             expect(r.body[0]).to eq "<xml>file<\/xml>\n"
-            expect(r.header['Content-type']).to eq 'application/xml'
+            expect(r.headers['Content-type']).to eq 'application/xml'
             r = Node0.my_call '/plain_file'
             expect(r.body[0]).to eq "plain file\n"
-            expect(r.header['Content-type']).to eq 'text/plain'
+            expect(r.headers['Content-type']).to eq 'text/plain'
         end
 
         it "no view no layout should work as well" do
