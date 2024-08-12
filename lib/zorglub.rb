@@ -1,11 +1,8 @@
 #! /usr/bin/env ruby
-# -*- coding: UTF-8 -*-
 
 module Zorglub
-    VERSION = '0.1.0'
+  VERSION = '0.1.1'.freeze
 end
 
 require 'zorglub/node'
 require 'zorglub/app'
-
-# EOF
