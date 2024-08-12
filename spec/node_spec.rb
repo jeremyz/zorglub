@@ -266,10 +266,10 @@ describe Zorglub do
     it 'haml engine should work' do
       Node0.app.opt! :engines_cache_enabled, false
       r = Node0.my_call '/engines/haml'
-      expect(r.body[0]).to eq "<h1>Hello world</h1>\n"
+      expect(r.body[0]).to eq "<h1>Hello <i>world</i></h1>\n"
       Node0.app.opt! :engines_cache_enabled, true
       r = Node0.my_call '/engines/haml'
-      expect(r.body[0]).to eq "<h1>Hello world</h1>\n"
+      expect(r.body[0]).to eq "<h1>Hello <i>world</i></h1>\n"
     end
 
     it 'sass engine should work' do

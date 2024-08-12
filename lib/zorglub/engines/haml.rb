@@ -5,12 +5,13 @@ module Zorglub
   module Engines
     module Haml
       def self.proc(path, obj)
-        haml = ::Haml::Template.new(path)
         if obj.app.opt(:engines_cache_enabled)
           key = path.sub obj.app.opt(:root), ''
-          obj.app.engines_cache[key] ||= haml
+          haml = obj.app.engines_cache[key] || ::Haml::Template.new(obj.app.opt(:haml_options)) { ::File.read(path) }
+        else
+          haml = ::Haml::Template.new(obj.app.opt(:haml_options)) { ::File.read(path) }
         end
-        html = haml.render(obj, obj.app.opt(:haml_options))
+        html = haml.render(obj)
         [html, 'text/html']
       end
     end

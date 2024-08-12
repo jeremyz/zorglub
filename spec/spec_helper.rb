@@ -112,6 +112,7 @@ class Node0 < Zorglub::Node
     no_layout!
     case name
     when 'haml'
+      @name = '<i>world</i>'
       engine! :haml
     when 'sass'
       engine! :sass
