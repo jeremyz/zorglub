@@ -300,7 +300,7 @@ module Zorglub
         end
 
         def static_page! path
-            if File.exists?(path) and  ( @cache_lifetime.nil? or @cache_lifetime==0 or ( (Time.now-File.stat(path).mtime) < @cache_lifetime ) )
+            if File.exist?(path) and  ( @cache_lifetime.nil? or @cache_lifetime==0 or ( (Time.now-File.stat(path).mtime) < @cache_lifetime ) )
                 $stderr << " * use cache file : #{path}\n" if @debug
                 content = File.open(path, 'r') {|f| f.read }
                 @content = content.sub /^@mime:(.*)\n/,''
@@ -318,14 +318,14 @@ module Zorglub
             v, l = view, layout
             if @debug
                 $stderr << " * "+(e ? 'use engine' : 'no engine ')+" : "+(e ? e.to_s : '')+"\n"
-                $stderr << " * "+((l and File.exists?(l)) ? 'use layout' : 'no layout ')+" : "+(l ? l : '')+"\n"
-                $stderr << " * "+((v and File.exists?(v)) ? 'use view  ' : 'no view   ')+" : "+(v ? v : '')+"\n"
+                $stderr << " * "+((l and File.exist?(l)) ? 'use layout' : 'no layout ')+" : "+(l ? l : '')+"\n"
+                $stderr << " * "+((v and File.exist?(v)) ? 'use view  ' : 'no view   ')+" : "+(v ? v : '')+"\n"
             end
             @state = ( @partial ? :partial : :view )
-            @content, mime = e.call v, self if e and v and File.exists? v
+            @content, mime = e.call v, self if e and v and File.exist? v
             @mime ||= mime
             @state = :layout
-            @content, mime = e.call l, self if e and l and File.exists? l
+            @content, mime = e.call l, self if e and l and File.exist? l
             @mime = mime if @mime.nil? and not mime.nil?
         end
 

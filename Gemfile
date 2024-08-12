@@ -12,7 +12,7 @@ end
 
 group :test, :development do
     gem 'haml'
-    gem 'sass'
+    gem 'sassc'
 end
 
 gem 'coveralls', require: false
