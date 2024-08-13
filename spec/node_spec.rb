@@ -73,7 +73,7 @@ describe Zorglub do
     end
 
     it 'should raise error when too much arguments' do
-      expect(-> { Node0.my_call '/with_2args/1/2/3' }).to raise_error ArgumentError
+      expect { Node0.my_call '/with_2args/1/2/3' }.to raise_error ArgumentError
     end
 
     it 'layout proc, method level layout and engine definitions should work' do
