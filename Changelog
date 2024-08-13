@@ -1,3 +1,32 @@
+2024-08-13 Jérémy Zurcher <jeremy@asynk.ch>
+	* release 0.1.3
+	* fix specs
+	* remove Haml __encoding__ option
+
+2024-08-12 Jérémy Zurcher <jeremy@asynk.ch>
+	* release 0.1.2
+	* fix haml && sass caching
+
+2024-08-12 Jérémy Zurcher <jeremy@asynk.ch>
+	* release 0.1.1
+	* support ruby 3.x
+	* major update && code formatting
+
+2019-01-01 Jérémy Zurcher <jeremy@asynk.ch>
+	* release 0.1.0
+	* spec and coverage improvement
+	* remove Haml __ugly__ option
+
+2014-02-12 Jérémy Zurcher <jeremy@asynk.ch>
+	* release 0.0.9
+	* accept Content-Type change via rack response
+	* improve error_404 log msg
+	* implement Node#no_view!
+
+2013-09-04 Jérémy Zurcher <jeremy@asynk.ch>
+	* release 0.0.8
+	* implement Node#mime!
+
 2013-02-01 Jérémy Zurcher <jeremy@asynk.ch>
 	* release 0.0.7
 	* zorglub.rb swallows version.rb
