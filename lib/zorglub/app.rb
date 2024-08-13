@@ -18,7 +18,6 @@ module Zorglub
         engines: {},
         haml_options: {
           format: :html5,
-          encoding: 'utf-8',
           escape_html: false
         },
         sass_options: {
