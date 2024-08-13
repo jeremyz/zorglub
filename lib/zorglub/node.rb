@@ -278,7 +278,6 @@ module Zorglub
         response.write @content
         response.headers['content-type'] ||= @mime || 'text/html'
         response.finish
-        response
       end
     end
 
