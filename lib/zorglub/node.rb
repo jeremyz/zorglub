@@ -248,7 +248,7 @@ module Zorglub
         $stderr << " !! #{node.class.name}::#{meth} not found\n" if app.opt :debug
         resp = node.response
         resp.status = 404
-        resp['Content-Type'] = 'text/plain'
+        resp['content-type'] = 'text/plain'
         resp.write "%<node.class.name>s mapped at %<node.map>p can't respond to : %<node.meth>p"
         resp
       end
@@ -276,7 +276,7 @@ module Zorglub
       catch(:stop_realize) do
         feed!
         response.write @content
-        response.headers['Content-Type'] ||= @mime || 'text/html'
+        response.headers['content-type'] ||= @mime || 'text/html'
         response.finish
         response
       end

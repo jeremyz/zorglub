@@ -72,7 +72,7 @@ class Node0 < Zorglub::Node
 
   def do_content_type
     engine! 'real'
-    response.headers['Content-Type'] = 'text/mine'
+    response.headers['content-type'] = 'text/mine'
   end
 
   def do_partial(_arg1, _arg2)
