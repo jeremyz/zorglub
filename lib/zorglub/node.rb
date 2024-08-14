@@ -154,7 +154,7 @@ module Zorglub
       status = options[:status] || 302
       body   = options[:body] || redirect_body(target)
       header = response.headers.merge('Location' => target.to_s)
-      throw :stop_realize, Rack::Response.new(body, status, header, &block)
+      throw :stop_realize, Rack::Response.new(body, status, header, &block).finish
     end
 
     def redirect_body(target)
