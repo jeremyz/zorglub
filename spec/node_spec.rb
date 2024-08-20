@@ -49,25 +49,25 @@ describe Zorglub do
 
     it 'instance level map should work' do
       r = Node0.my_call '/with_2args/1/2'
-      h = YAML.load r.body[0]
+      h = YAML.load r[2][0]
       expect(h[:map]).to eq '/node0'
     end
 
     it 'should return err404 response when no method found' do
       expect(Node0.respond_to?('noresponse')).to be_falsey
       r = Node0.my_call '/noresponse'
-      expect(r.status).to eq 404
+      expect(r[0]).to eq 404
     end
 
     it 'simple method should respond' do
       r = Node0.my_call '/hello'
-      expect(r.status).to eq 200
-      expect(r.body[0]).to eq 'world'
+      expect(r[0]).to eq 200
+      expect(r[2][0]).to eq 'world'
     end
 
     it 'instance level args should work' do
       r = Node0.my_call '/with_2args/1/2'
-      h = YAML.load r.body[0]
+      h = YAML.load r[2][0]
       expect(h[:args][0]).to eq '1'
       expect(h[:args][1]).to eq '2'
     end
@@ -78,8 +78,8 @@ describe Zorglub do
 
     it 'layout proc, method level layout and engine definitions should work' do
       r = Node0.my_call '/index'
-      expect(r.status).to eq 200
-      h = YAML.load r.body[0]
+      expect(r[0]).to eq 200
+      h = YAML.load r[2][0]
       ly = File.join Node0.app.layout_base_path, Node0.layout
       vu = File.join Node0.app.view_base_path, Node0.r, 'index'
       expect(h[:path]).to eq ly
@@ -89,8 +89,8 @@ describe Zorglub do
 
     it 'layout proc, method level layout and engine definitions should work' do
       r = Node1.my_call '/index'
-      expect(r.status).to eq 200
-      h = YAML.load r.body[0]
+      expect(r[0]).to eq 200
+      h = YAML.load r[2][0]
       ly = File.join Node1.app.layout_base_path, 'main.spec'
       vu = File.join Node1.app.view_base_path, Node1.r, 'index.spec'
       expect(h[:path]).to eq ly
@@ -148,23 +148,23 @@ describe Zorglub do
 
     it 'should find view and layout and render them' do
       r = Node0.my_call '/do_render'
-      expect(r.status).to eq 200
-      expect(r.body[0]).to eq 'layout_start view_content layout_end'
+      expect(r[0]).to eq 200
+      expect(r[2][0]).to eq 'layout_start view_content layout_end'
     end
 
     it 'default mime-type should be text/html' do
       r = Node0.my_call '/index'
-      expect(r.headers['Content-type']).to eq 'text/html'
+      expect(r[1]['Content-type']).to eq 'text/html'
     end
 
     it 'should be able to override mime-type' do
       r = Node0.my_call '/do_render'
-      expect(r.headers['Content-type']).to eq 'text/view'
+      expect(r[1]['Content-type']).to eq 'text/view'
     end
 
     it 'should be able to override through rack response mime-type' do
       r = Node0.my_call '/do_content_type'
-      expect(r.headers['Content-type']).to eq 'text/mine'
+      expect(r[1]['Content-type']).to eq 'text/mine'
     end
 
     it 'partial should render correctly' do
@@ -193,31 +193,31 @@ describe Zorglub do
 
     it 'static pages should be generated' do
       r = Node6.my_call '/do_static'
-      expect(r.body[0]).to eq 'VAL 1'
-      expect(r.headers['Content-type']).to eq 'text/static'
+      expect(r[2][0]).to eq 'VAL 1'
+      expect(r[1]['Content-type']).to eq 'text/static'
       r = Node6.my_call '/do_static'
-      expect(r.body[0]).to eq 'VAL 1'
-      expect(r.headers['Content-type']).to eq 'text/static'
+      expect(r[2][0]).to eq 'VAL 1'
+      expect(r[1]['Content-type']).to eq 'text/static'
       r = Node6.my_call '/do_static'
-      expect(r.body[0]).to eq 'VAL 1'
-      expect(r.headers['Content-type']).to eq 'text/static'
+      expect(r[2][0]).to eq 'VAL 1'
+      expect(r[1]['Content-type']).to eq 'text/static'
       r = Node6.my_call '/no_static'
-      expect(r.body[0]).to eq 'VAL 4'
-      expect(r.headers['Content-type']).to eq 'text/static'
+      expect(r[2][0]).to eq 'VAL 4'
+      expect(r[1]['Content-type']).to eq 'text/static'
       r = Node6.my_call '/do_static'
-      expect(r.body[0]).to eq 'VAL 1'
-      expect(r.headers['Content-type']).to eq 'text/static'
+      expect(r[2][0]).to eq 'VAL 1'
+      expect(r[1]['Content-type']).to eq 'text/static'
       Node6.static! true, 0.000001
       sleep 0.0001
       r = Node6.my_call '/do_static'
-      expect(r.body[0]).to eq 'VAL 6'
-      expect(r.headers['Content-type']).to eq 'text/static'
+      expect(r[2][0]).to eq 'VAL 6'
+      expect(r[1]['Content-type']).to eq 'text/static'
     end
 
     it 'redirect should work' do
       r = Node0.my_call '/do_redirect'
-      expect(r.status).to eq 302
-      expect(r.headers['location']).to eq Node0.r(:do_partial, 1, 2, 3)
+      expect(r[0]).to eq 302
+      expect(r[1]['location']).to eq Node0.r(:do_partial, 1, 2, 3)
     end
 
     it 'no_layout! should be inherited' do
@@ -226,70 +226,70 @@ describe Zorglub do
 
     it 'cli_vals should be inherited and extended' do
       r = Node5.my_call '/index'
-      vars = YAML.load r.body[0]
+      vars = YAML.load r[2][0]
       expect(vars).to eq %w[js0 js1 js3 jsx css0 css1 css2]
       expect(vars[7]).to be_nil
     end
 
     it 'cli_vals should be extended at method level' do
       r = Node4.my_call '/more'
-      vars = YAML.load r.body[0]
+      vars = YAML.load r[2][0]
       expect(vars).to eq %w[js0 js1 js2]
       expect(vars[3]).to be_nil
     end
 
     it 'cli_vals should be untouched' do
       r = Node4.my_call '/index'
-      vars = YAML.load r.body[0]
+      vars = YAML.load r[2][0]
       expect(vars).to eq %w[js0 js1]
       expect(vars[2]).to be_nil
       r = Node5.my_call '/index'
-      vars = YAML.load r.body[0]
+      vars = YAML.load r[2][0]
       expect(vars).to eq %w[js0 js1 js3 jsx css0 css1 css2]
       expect(vars[7]).to be_nil
     end
 
     it 'ext definition and file engine should work' do
       r = Node0.my_call '/xml_file'
-      expect(r.body[0]).to eq "<xml>file<\/xml>\n"
-      expect(r.headers['Content-type']).to eq 'application/xml'
+      expect(r[2][0]).to eq "<xml>file<\/xml>\n"
+      expect(r[1]['Content-type']).to eq 'application/xml'
       r = Node0.my_call '/plain_file'
-      expect(r.body[0]).to eq "plain file\n"
-      expect(r.headers['Content-type']).to eq 'text/plain'
+      expect(r[2][0]).to eq "plain file\n"
+      expect(r[1]['Content-type']).to eq 'text/plain'
     end
 
     it 'no view no layout should work as well' do
       r = Node0.my_call '/no_view_no_layout'
-      expect(r.body[0]).to eq 'hello world'
+      expect(r[2][0]).to eq 'hello world'
     end
 
     it 'haml engine should work' do
       Node0.app.opt! :engines_cache_enabled, false
       r = Node0.my_call '/engines/haml'
-      expect(r.body[0]).to eq "<h1>Hello <i>world</i></h1>\n"
+      expect(r[2][0]).to eq "<h1>Hello <i>world</i></h1>\n"
       Node0.app.opt! :engines_cache_enabled, true
       r = Node0.my_call '/engines/haml'
-      expect(r.body[0]).to eq "<h1>Hello <i>world</i></h1>\n"
+      expect(r[2][0]).to eq "<h1>Hello <i>world</i></h1>\n"
     end
 
     it 'sass engine should work' do
       Node0.app.opt! :engines_cache_enabled, true
       r = Node0.my_call '/engines/sass'
-      expect(r.body[0]).to eq "vbar{width:80%;height:23px}vbar ul{list-style-type:none}vbar li{float:left}vbar li a{font-weight:bold}\n"
+      expect(r[2][0]).to eq "vbar{width:80%;height:23px}vbar ul{list-style-type:none}vbar li{float:left}vbar li a{font-weight:bold}\n"
       Node0.app.opt! :engines_cache_enabled, false
       r = Node0.my_call '/engines/sass'
-      expect(r.body[0]).to eq "vbar{width:80%;height:23px}vbar ul{list-style-type:none}vbar li{float:left}vbar li a{font-weight:bold}\n"
+      expect(r[2][0]).to eq "vbar{width:80%;height:23px}vbar ul{list-style-type:none}vbar li{float:left}vbar li a{font-weight:bold}\n"
     end
 
     it 'view_base_path! should work' do
       r = Node7.my_call '/view_path'
-      h = YAML.load r.body[0]
+      h = YAML.load r[2][0]
       expect(h[:view]).to eq File.join(Node7.app.opt(:root), 'alt', 'do_render')
     end
 
     it 'layout_base_path! should work' do
       r = Node7.my_call '/view_path'
-      h = YAML.load r.body[0]
+      h = YAML.load r[2][0]
       expect(h[:layout]).to eq File.join(Node7.app.opt(:root), 'alt', 'layout', 'default')
     end
 

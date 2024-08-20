@@ -46,7 +46,7 @@ class Zorglub::Node
   end
 
   def self.my_call_i(uri)
-    call({ 'PATH_INFO' => uri }).body[0].to_i
+    call({ 'PATH_INFO' => uri })[2][0].to_i
   end
 end
 
