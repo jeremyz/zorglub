@@ -1,3 +1,8 @@
+2024-08-20 Jérémy Zurcher <jeremy@asynk.ch>
+	* release 0.1.6
+	* fix specs
+	* fix Node#error404
+
 2024-08-14 Jérémy Zurcher <jeremy@asynk.ch>
 	* release 0.1.5
 	* fix Node#redirect
