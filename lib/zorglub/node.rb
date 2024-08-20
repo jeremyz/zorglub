@@ -154,7 +154,7 @@ module Zorglub
       status = options[:status] || 302
       body   = options[:body] || redirect_body(target)
       header = response.headers.merge('Location' => target.to_s)
-      throw :stop_realize, Rack::Response.new(body, status, header, &block).finish
+      throw :stop_realize, Rack::Response.new(body, status, header, &block)
     end
 
     def redirect_body(target)
@@ -277,8 +277,8 @@ module Zorglub
         feed!
         response.write @content
         response.headers['content-type'] ||= @mime || 'text/html'
-        response.finish
-      end
+        response
+      end.finish
     end
 
     def feed!(no_hooks = false)
