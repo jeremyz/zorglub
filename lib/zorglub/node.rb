@@ -237,10 +237,10 @@ module Zorglub
       end
 
       def partial(env, meth, *args)
-        node = new env, meth.to_s, args, true
+        node = new(env, meth.to_s, args, partial: true)
         return error404 node, meth unless node.respond_to? meth
 
-        node.feed! env[:no_hooks]
+        node.feed!(no_hooks: env[:no_hooks])
         node.content
       end
 
@@ -256,7 +256,7 @@ module Zorglub
 
     attr_reader :request, :response, :content, :mime, :state, :engine, :meth, :args
 
-    def initialize(env, meth, args, partial = false)
+    def initialize(env, meth, args, partial: false)
       @meth = meth
       @args = args
       @partial = partial
@@ -281,7 +281,7 @@ module Zorglub
       end.finish
     end
 
-    def feed!(no_hooks = false)
+    def feed!(no_hooks: false)
       @state = :pre_cb
       self.class.call_before_hooks self unless no_hooks
       @state = :meth
