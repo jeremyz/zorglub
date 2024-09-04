@@ -56,6 +56,7 @@ describe Zorglub do
     it 'should return err404 response when no method found' do
       expect(Node0.respond_to?('noresponse')).to be_falsey
       r = Node0.my_call '/noresponse'
+      expect(r[2][0]).to eq "Node0 mapped at /node0 can't respond to : noresponse"
       expect(r[0]).to eq 404
     end
 
