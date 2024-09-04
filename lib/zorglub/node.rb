@@ -286,11 +286,10 @@ module Zorglub
       self.class.call_before_hooks self unless no_hooks
       @state = :meth
       @content = send @meth, *@args
-      static_path = static
-      if static_path.nil?
-        compile_page!
-      else
+      if (static_path = static)
         static_page! static_path
+      else
+        compile_page!
       end
       @state = :post_cb
       self.class.call_after_hooks self unless no_hooks
