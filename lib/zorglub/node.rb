@@ -249,7 +249,7 @@ module Zorglub
         resp = node.response
         resp.status = 404
         resp['content-type'] = 'text/plain'
-        resp.write "%<node.class.name>s mapped at %<node.map>p can't respond to : %<node.meth>p"
+        resp.write "#{node.class.name} mapped at #{node.map} can't respond to : #{node.meth}"
         resp.finish
       end
     end
