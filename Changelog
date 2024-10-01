@@ -1,3 +1,11 @@
+2024-10-01 Jérémy Zurcher <jeremy@asynk.ch>
+	* release 0.1.7
+	* debug to stdout
+	* simplify static code path
+	* fix error404 msg
+	* use keyword arguments
+
+
 2024-08-20 Jérémy Zurcher <jeremy@asynk.ch>
 	* release 0.1.6
 	* fix specs
