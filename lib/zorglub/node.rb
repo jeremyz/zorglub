@@ -229,7 +229,7 @@ module Zorglub
       def call(env)
         meth, *args =  env['PATH_INFO'].sub(%r{^/+}, '').split(%r{/})
         meth ||= 'index'
-        $stderr << "=> #{meth}(#{args.join ','})\n" if app.opt :debug
+        $stdout << "=> #{meth}(#{args.join ','})\n" if app.opt :debug
         node = new(env, meth, args)
         return error404 node, meth unless node.respond_to? meth
 
@@ -245,7 +245,7 @@ module Zorglub
       end
 
       def error404(node, meth)
-        $stderr << " !! #{node.class.name}::#{meth} not found\n" if app.opt :debug
+        $stdout << " !! #{node.class.name}::#{meth} not found\n" if app.opt :debug
         resp = node.response
         resp.status = 404
         resp['content-type'] = 'text/plain'
@@ -300,7 +300,7 @@ module Zorglub
     def static_page!(path)
       if File.exist?(path) && (@cache_lifetime.nil? || @cache_lifetime.zero? ||
           (Time.now - File.stat(path).mtime) < @cache_lifetime)
-        $stderr << " * use cache file : #{path}\n" if @debug
+        $stdout << " * use cache file : #{path}\n" if @debug
         content = File.read(path)
         @content = content.sub(/^@mime:(.*)\n/, '')
         @mime = ::Regexp.last_match(1)
@@ -308,7 +308,7 @@ module Zorglub
         compile_page!
         FileUtils.mkdir_p File.dirname(path)
         File.open(path, 'w') { |f| f.write("@mime:#{@mime}\n#{@content}") }
-        $stderr << " * cache file created : #{path}\n" if @debug
+        $stdout << " * cache file created : #{path}\n" if @debug
       end
     end
 
@@ -317,9 +317,9 @@ module Zorglub
       v = view
       l = layout
       if @debug
-        $stderr << " * #{e ? 'use engine' : 'no engine '} : #{e ? e.to_s : ''}\n"
-        $stderr << " * #{l && File.exist?(l) ? 'use layout' : 'no layout '} : #{l || ''}\n"
-        $stderr << " * #{v && File.exist?(v) ? 'use view  ' : 'no view   '} : #{v || ''}\n"
+        $stdout << " * #{e ? 'use engine' : 'no engine '} : #{e ? e.to_s : ''}\n"
+        $stdout << " * #{l && File.exist?(l) ? 'use layout' : 'no layout '} : #{l || ''}\n"
+        $stdout << " * #{v && File.exist?(v) ? 'use view  ' : 'no view   '} : #{v || ''}\n"
       end
       @state = @partial ? :partial : :view
       @content, mime = e.call(v, self) if e && v && File.exist?(v)

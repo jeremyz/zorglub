@@ -295,16 +295,16 @@ describe Zorglub do
     end
 
     it 'debug out should work' do
-      stderr0 = $stderr.dup
-      stderrs = StringIO.new
-      $stderr = stderrs
+      stdout0 = $stdout.dup
+      stdouts = StringIO.new
+      $stdout = stdouts
       begin
         APP.opt! :debug, true
         Node0.my_call '/hello'
       ensure
-        $stderr = stderr0
+        $stdout = stdout0
       end
-      expect(stderrs.string.include?('spec/data/view/node0/hello')).to be true
+      expect(stdouts.string.include?('spec/data/view/node0/hello')).to be true
     end
   end
 end
