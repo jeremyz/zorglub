@@ -6,13 +6,13 @@ gemspec
 gem 'rack'
 
 group :test do
-    gem 'rake'
-    gem 'rspec'
+  gem 'rake'
+  gem 'rspec'
 end
 
 group :test, :development do
-    gem 'haml'
-    gem 'sassc'
+  gem 'haml'
+  gem 'sassc'
 end
 
 gem 'coveralls', require: false
