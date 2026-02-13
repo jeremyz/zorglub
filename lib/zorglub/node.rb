@@ -236,11 +236,11 @@ module Zorglub
         node.realize!
       end
 
-      def partial(env, meth, *args)
+      def partial(meth, *args, env: {}, no_hooks: false)
         node = new(env, meth.to_s, args, partial: true)
         return error404 node, meth unless node.respond_to? meth
 
-        node.feed!(no_hooks: env[:no_hooks])
+        node.feed!(no_hooks: no_hooks)
         node.content
       end
 

@@ -169,17 +169,17 @@ describe Zorglub do
     end
 
     it 'partial should render correctly' do
-      expect(Node0.partial({}, :do_partial, 1, 2)).to eq 'partial_content'
+      expect(Node0.partial(:do_partial, 1, 2)).to eq 'partial_content'
     end
 
     it 'method level view should work' do
-      expect(Node0.partial({}, :other_view)).to eq 'partial_content'
+      expect(Node0.partial(:other_view)).to eq 'partial_content'
     end
 
     it 'partial with hooks should be default' do
       Node3.before = 0
       Node3.after = 0
-      expect(Node3.partial({}, :do_partial, 1, 2)).to eq 'partial_content'
+      expect(Node3.partial(:do_partial, 1, 2)).to eq 'partial_content'
       expect(Node3.before).to eq 1
       expect(Node3.after).to eq 1
     end
@@ -187,7 +187,7 @@ describe Zorglub do
     it 'partial without hooks should work' do
       Node3.before = 0
       Node3.after = 0
-      expect(Node3.partial({ no_hooks: true }, :do_partial, 1, 2)).to eq 'partial_content'
+      expect(Node3.partial(:do_partial, 1, 2, no_hooks: true)).to eq 'partial_content'
       expect(Node3.before).to eq 0
       expect(Node3.after).to eq 0
     end
