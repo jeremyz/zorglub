@@ -4,6 +4,7 @@ source "http://rubygems.org"
 gemspec
 
 gem 'rack'
+gem 'securerandom'
 
 group :test do
   gem 'rake'
