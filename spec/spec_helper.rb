@@ -118,6 +118,17 @@ class Node0 < Zorglub::Node
       engine! :sass
     end
   end
+
+  def test_locals
+    @my_local
+  end
+
+  def test_recursive(val)
+    val = val.to_i
+    return 'end' if val <= 0
+
+    "#{val}-" + partial(:test_recursive, val - 1)
+  end
 end
 
 class Node1 < Zorglub::Node

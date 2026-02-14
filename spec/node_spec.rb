@@ -192,6 +192,18 @@ describe Zorglub do
       expect(Node3.after).to eq 0
     end
 
+    it 'partial with locals should work' do
+      expect(Node0.partial(:test_locals, locals: { my_local: 'hello' })).to eq 'hello'
+    end
+
+    it 'recursive partial should work' do
+      expect(Node0.partial(:test_recursive, 3)).to eq '3-2-1-end'
+    end
+
+    it 'recursive partial depth limit should be enforced' do
+      expect { Node0.partial(:test_recursive, 25) }.to raise_error('Recursive partial depth limit exceeded')
+    end
+
     it 'static pages should be generated' do
       r = Node6.my_call '/do_static'
       expect(r[2][0]).to eq 'VAL 1'

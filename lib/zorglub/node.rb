@@ -146,6 +146,10 @@ module Zorglub
       File.join map, (args.empty? ? meth : args.map(&:to_s))
     end
 
+    def partial(meth, *args, **options)
+      self.class.partial(meth, *args, env: request.env, parent: self, **options)
+    end
+
     def html
       %i[map r args engine layout view].inject('') { |s, sym| s + "<p>#{sym} => #{send sym}</p>" }
     end
@@ -236,11 +240,11 @@ module Zorglub
         node.realize!
       end
 
-      def partial(meth, *args, env: {}, no_hooks: false)
-        node = new(env, meth.to_s, args, partial: true)
+      def partial(meth, *args, **options)
+        node = new(options[:env] || {}, meth.to_s, args, partial: true, **options)
         return error404 node, meth unless node.respond_to? meth
 
-        node.feed!(no_hooks: no_hooks)
+        node.feed!(no_hooks: options[:no_hooks] || false)
         node.content
       end
 
@@ -254,22 +258,30 @@ module Zorglub
       end
     end
 
-    attr_reader :request, :response, :content, :mime, :state, :engine, :meth, :args
+    attr_reader :request, :response, :content, :mime, :state, :engine, :meth, :args, :depth, :parent
 
-    def initialize(env, meth, args, partial: false)
+    def initialize(env, meth, args, **options)
+      @parent = options[:parent]
+      @depth = @parent ? @parent.depth + 1 : 0
+      raise 'Recursive partial depth limit exceeded' if @depth > 20
+
       @meth = meth
       @args = args
-      @partial = partial
-      @request = Rack::Request.new env
-      @response = Rack::Response.new
+      @partial = options[:partial] || false
+      @request = @parent ? @parent.request : Rack::Request.new(env)
+      @response = @parent ? @parent.response : Rack::Response.new
       @cli_vals = {}
       @debug = app.opt :debug
       @engine = self.class.engine
-      @layout = (partial ? nil : self.class.layout)
+      @layout = (options[:partial] ? nil : self.class.layout)
       @view = r(meth)
       @static = self.class.static
       @cache_lifetime = self.class.cache_lifetime
       self.class.cli_vals.each { |s, v| cli_val s, *v }
+
+      (options[:locals] || {}).each do |k, v|
+        instance_variable_set("@#{k}", v)
+      end
     end
 
     def realize!
