@@ -275,7 +275,7 @@ module Zorglub
       @request = @parent ? @parent.request : Rack::Request.new(env)
       @response = @parent ? @parent.response : Rack::Response.new
 
-      @view = r(meth)
+      @view = options[:view] || r(meth)
       @partial = options[:partial] || false
       @layout = (options[:partial] ? nil : self.class.layout)
 

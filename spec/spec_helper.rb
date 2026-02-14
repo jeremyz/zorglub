@@ -33,7 +33,7 @@ RENDER_PROC = proc { |_path, obj|
   when :view
     ['view_content', 'text/view']
   when :partial
-    ['partial_content', 'text/partial']
+    [obj.view =~ /do_render/ ? 'do_render' : 'partial_content', 'text/partial']
   else
     raise Exception.new
   end

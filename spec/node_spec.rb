@@ -176,6 +176,10 @@ describe Zorglub do
       expect(Node0.partial(:other_view)).to eq 'partial_content'
     end
 
+    it 'partial may override the view' do
+      expect(Node0.partial(:do_partial, 1, 2, view: Node0.r(:do_render))).to eq 'do_render'
+    end
+
     it 'partial with hooks should be default' do
       Node3.before = 0
       Node3.after = 0
