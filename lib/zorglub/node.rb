@@ -265,18 +265,21 @@ module Zorglub
       @depth = @parent ? @parent.depth + 1 : 0
       raise 'Recursive partial depth limit exceeded' if @depth > 20
 
+      @debug = app.opt :debug
+      @static = self.class.static
+      @engine = self.class.engine
+      @cache_lifetime = self.class.cache_lifetime
+
       @meth = meth
       @args = args
-      @partial = options[:partial] || false
       @request = @parent ? @parent.request : Rack::Request.new(env)
       @response = @parent ? @parent.response : Rack::Response.new
-      @cli_vals = {}
-      @debug = app.opt :debug
-      @engine = self.class.engine
-      @layout = (options[:partial] ? nil : self.class.layout)
+
       @view = r(meth)
-      @static = self.class.static
-      @cache_lifetime = self.class.cache_lifetime
+      @partial = options[:partial] || false
+      @layout = (options[:partial] ? nil : self.class.layout)
+
+      @cli_vals = {}
       self.class.cli_vals.each { |s, v| cli_val s, *v }
 
       (options[:locals] || {}).each do |k, v|
