@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    zorglub (0.1.8)
+    zorglub (0.1.9)
 
 GEM
   remote: http://rubygems.org/
@@ -23,7 +23,7 @@ GEM
     io-console (0.8.2)
     json (2.18.1)
     mize (0.6.1)
-    rack (3.2.4)
+    rack (3.2.5)
     rake (13.3.1)
     readline (0.0.4)
       reline
