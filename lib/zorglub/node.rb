@@ -235,14 +235,14 @@ module Zorglub
         meth ||= 'index'
         $stdout << "=> #{meth}(#{args.join ','})\n" if app.opt :debug
         node = new(env, meth, args)
-        return error404 node, meth unless node.respond_to? meth
+        return error404(node, meth) unless node.respond_to?(meth)
 
         node.realize!
       end
 
       def partial(meth, *args, **options)
-        node = new(options[:env] || {}, meth.to_s, args, partial: true, **options)
-        return error404 node, meth unless node.respond_to? meth
+        node = new(options[:env] || {}, meth, args, partial: true, **options)
+        return error404(node, meth) unless meth.nil? || node.respond_to?(meth)
 
         node.feed!(no_hooks: options[:no_hooks] || false)
         node.content
@@ -270,12 +270,12 @@ module Zorglub
       @engine = self.class.engine
       @cache_lifetime = self.class.cache_lifetime
 
-      @meth = meth
+      @meth = meth.to_s
       @args = args
       @request = @parent ? @parent.request : Rack::Request.new(env)
       @response = @parent ? @parent.response : Rack::Response.new
 
-      @view = options[:view] || r(meth)
+      @view = options[:view] || r(@meth)
       @partial = options[:partial] || false
       @layout = (options[:partial] ? nil : self.class.layout)
 
@@ -300,7 +300,7 @@ module Zorglub
       @state = :pre_cb
       self.class.call_before_hooks self unless no_hooks
       @state = :meth
-      @content = send @meth, *@args
+      @content = send(@meth, *@args) unless @meth.empty?
       if (static_path = static)
         static_page! static_path
       else
